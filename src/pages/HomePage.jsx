@@ -5,6 +5,7 @@ import Product from "../components/Home/Product";
 import TentangKami from "../components/Home/TentangKami";
 import Testimoni from "../components/Home/Testimoni";
 import Footer from "../components/Footer";
+import LiveChat from "../components/LiveChat"; // Import LiveChat
 
 const HomePage = () => {
   return (
@@ -14,6 +15,7 @@ const HomePage = () => {
       <TentangKami />
       <Product />
       <Testimoni />
+      <LiveChat /> {/* Tambahkan LiveChat di sini */}
       <Footer />
     </>
   );
