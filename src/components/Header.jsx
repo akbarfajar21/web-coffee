@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../utils/SupaClient";
 import Swal from "sweetalert2";
+import { FiSettings, FiLogOut } from "react-icons/fi";
 
 const Header = () => {
   const location = useLocation();
@@ -12,14 +13,11 @@ const Header = () => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   useEffect(() => {
-    // Fetch the current authenticated user
     const fetchUser = async () => {
       const { data: session } = await supabase.auth.getSession();
 
       if (session?.session?.user) {
         setUser(session.session.user);
-
-        // Fetch the profile data from Supabase
         const { data: profileData, error } = await supabase
           .from("profiles")
           .select("username, avatar_url, email, full_name")
@@ -36,7 +34,6 @@ const Header = () => {
     };
 
     fetchUser();
-
     const { data: authListener } = supabase.auth.onAuthStateChange(() => {
       fetchUser();
     });
@@ -56,11 +53,6 @@ const Header = () => {
         confirmButtonText: "OK",
         confirmButtonColor: "#ff6632",
       }).then(() => {
-        if (role === "admin") {
-          localStorage.removeItem("admin-auth-token");
-        } else {
-          localStorage.removeItem("user-auth-token");
-        }
         navigate("/");
       });
     }
@@ -79,7 +71,7 @@ const Header = () => {
         aria-hidden="true"
         onChange={toggleMenu}
       />
-      <nav className="fixed z-20 w-full bg-[#f8f5f2]/80 dark:bg-[#3e2723]/80 backdrop-blur navbar shadow-md shadow-[#6d4c41]/10 peer-checked:navbar-active md:relative md:bg-transparent dark:shadow-none">
+      <nav className="fixed z-20 w-full bg-gradient-to-r from-[#f8f5f2] to-[#f8f5f2]/80 dark:bg-gradient-to-r dark:from-[#3e2723] dark:to-[#3e2723]/80 backdrop-blur-lg shadow-lg">
         <div className="px-6 md:px-12 w-full">
           <div className="w-full flex flex-wrap items-center justify-between gap-6 md:py-3 md:gap-0">
             <div className="w-full flex justify-between lg:w-auto">
@@ -88,7 +80,7 @@ const Header = () => {
                 aria-label="logo"
                 className="flex space-x-2 items-center"
               >
-                <span className="text-base font-bold text-[#6d4c41] dark:text-[#d7ccc8]">
+                <span className="text-2xl font-semibold text-[#6d4c41] dark:text-[#d7ccc8] hover:text-[#ff6632] transition duration-300">
                   Coffee Shop
                 </span>
               </Link>
@@ -107,26 +99,26 @@ const Header = () => {
               </label>
             </div>
             <div
-              className={`navmenu w-full flex-wrap justify-end items-center space-y-8 p-6 lg:space-y-0 lg:p-0 lg:flex md:flex-nowrap lg:w-7/12 ${
+              className={`navmenu w-full flex-wrap justify-center items-center space-y-8 p-6 lg:space-y-0 lg:p-0 lg:flex md:flex-nowrap lg:w-7/12 ${
                 menuVisible ? "peer-checked:flex" : "hidden"
               }`}
             >
-              <ul className="space-y-6 tracking-wide font-medium text-base lg:text-sm lg:flex lg:space-y-0 lg:space-x-6">
-                {["/", "/about", "/product", "/contact"].map((path, index) => {
-                  const labels = ["Home", "About", "Product", "Contact"];
+              <ul className="space-y-6 tracking-wide font-medium text-base lg:text-sm lg:flex lg:space-y-0 lg:space-x-6 justify-center items-center">
+                {["/", "/product", "/about", "/contact"].map((path, index) => {
+                  const labels = ["Home", "Product", "About", "Contact"];
                   const isActive = location.pathname === path;
 
                   return (
-                    <li key={index}>
+                    <li key={index} className="relative group">
                       <Link
                         to={path}
-                        className={`relative block md:px-6 py-2 transition ${
+                        className={`relative inline-block px-6 py-2 transition-all transform rounded-lg shadow-md ${
                           isActive
-                            ? "bg-[#ff6632] text-white shadow-md rounded-tl-lg rounded-br-lg"
-                            : "text-[#ffffff]"
-                        } hover:bg-[#ff6632] hover:text-white rounded-tl-lg rounded-br-lg`}
+                            ? "bg-gradient-to-r from-[#ff6632] to-[#ff9966] text-white scale-105"
+                            : "text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:shadow-lg hover:scale-110"
+                        }`}
                       >
-                        <span className="relative">{labels[index]}</span>
+                        <span className="relative z-10">{labels[index]}</span>
                       </Link>
                     </li>
                   );
@@ -140,50 +132,31 @@ const Header = () => {
                       onClick={() => setDropdownVisible(!dropdownVisible)}
                     >
                       <img
-                        src={profile.avatar_url}
-                        alt={profile.username}
+                        src={profile.avatar_url || "default-avatar-url"}
+                        alt={profile.username || profile.email}
                         className="w-9 h-9 rounded-full object-cover"
                       />
-                      <span className="text-sm font-medium text-[#3e2723] dark:text-[#d7ccc8]">
-                        {profile.full_name}
+                      <span className="text-sm font-medium text-[#6d4c41] dark:text-[#ffffff]">
+                        {profile.full_name || profile.email}
                       </span>
                     </div>
 
                     {dropdownVisible && (
-                      <div
-                        className={`absolute -right-0 mt-4 bg-white rounded-lg shadow-lg z-30 transform transition-all duration-300 ease-in-out`}
-                      >
-                        <div className="px-4 py-2 text-gray-800 border-b">
-                          <p className="text-sm text-gray-500">
-                            {profile.email}
-                          </p>
-                        </div>
+                      <div className="absolute right-0 mt-4 bg-white dark:bg-[#d3d3d3] rounded-lg shadow-lg z-30 w-48 transform transition-all duration-300 ease-in-out">
                         <div>
                           <Link
                             to="/settings"
-                            className="flex items-center w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg"
+                            className="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white hover:shadow-md"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-5 h-5 mr-2 text-gray-500"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM21 10.7l-1.4-1.4c-.25-.25-.62-.25-.87 0l-2.1 2.1c-.52-.42-1.08-.8-1.66-1.2l-.24-2.16c-.06-.28-.31-.48-.58-.48h-2.1c-.27 0-.52.2-.58.48l-.24 2.16c-.58.4-1.14.78-1.66 1.2l-2.1-2.1c-.25-.25-.62-.25-.87 0L14.8 10.7c-.46.46-.48 1.12-.06 1.59l1.2 1.2c-.52.4-1.1.78-1.7 1.14L14.3 17c-.06.28-.31.48-.58.48h-2.1c-.27 0-.52-.2-.58-.48l-.24-2.16c-.6-.36-1.18-.74-1.7-1.14l-1.2 1.2c-.42.47-.4 1.13.06 1.59l-1.4 1.4c-.25.25-.25.62 0 .87l2.1 2.1c-.39.52-.78 1.08-1.2 1.66l-2.16.24c-.28.06-.48.31-.48.58v2.1c0 .27.2.52.48.58l2.16.24c.42.39.8.78 1.2 1.2l-2.1 2.1c-.25.25-.25.62 0 .87l1.4 1.4c.25.25.62.25.87 0l2.1-2.1c.52.39 1.08.78 1.66 1.2l.24 2.16c.06.28.31.48.58.48h2.1c.27 0 .52-.2.58-.48l.24-2.16c.39-.42.78-.8 1.2-1.2l2.1 2.1c.25.25.62.25.87 0l1.4-1.4c.25-.25.25-.62 0-.87l-2.1-2.1c.42-.52.8-1.08 1.2-1.66l2.16-.24c.28-.06.48-.31.48-.58v-2.1c0-.27-.2-.52-.48-.58l-2.16-.24c-.42-.39-.8-.78-1.2-1.2l2.1-2.1c.25-.25.25-.62 0-.87L21 10.7z"></path>
-                            </svg>
-                            Settings
+                            <FiSettings className="mr-2" /> Settings
                           </Link>
                         </div>
                         <div>
                           <button
                             onClick={handleLogout}
-                            className="flex items-center w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-b-lg"
+                            className="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white hover:shadow-md"
                           >
-                            Log Out
+                            <FiLogOut className="mr-2" /> Log Out
                           </button>
                         </div>
                       </div>
@@ -191,7 +164,7 @@ const Header = () => {
                   </div>
                 ) : (
                   <Link to="/login">
-                    <button className="bg-[#ff6632] text-white px-4 py-2 rounded-md hover:bg-[#834a34] transition duration-300">
+                    <button className="bg-[#ff6632] text-white px-4 py-2 rounded-md hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] transition-all duration-300 transform hover:scale-110">
                       Login
                     </button>
                   </Link>

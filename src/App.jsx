@@ -11,6 +11,8 @@ import ProductPage from "./pages/ProductPage";
 import LoginPage from "./Auth/LoginPage";
 import SettingPage from "./pages/SettingPage";
 import ContactPage from "./pages/ContactPage";
+import CartPage from "./components/CartPage";
+import DetailProduct from "./pages/DetailProduct";
 
 const App = () => {
   return (
@@ -22,6 +24,8 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/settings" element={<SettingPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/product-detail/:id" element={<DetailProduct />} />
       </Routes>
     </BrowserRouter>
   );

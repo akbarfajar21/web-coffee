@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../utils/SupaClient";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
-import ProfileEditableField from "../components/ProfileEditableField";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const SettingPage = () => {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State untuk kontrol modal
+  const [editData, setEditData] = useState({}); // State untuk menyimpan data yang sedang diedit
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,6 +36,7 @@ const SettingPage = () => {
           });
         } else {
           setProfile(data);
+          setEditData(data); // Set data untuk edit
         }
       }
       setLoading(false);
@@ -39,61 +45,79 @@ const SettingPage = () => {
     fetchProfile();
   }, []);
 
-  const handleUpdate = async (field, value) => {
-    if (field === "avatar_url") {
-      const file = value;
-      const fileName = `${profile.id}-${Date.now()}`; 
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("avatars") 
-        .upload(fileName, file);
+  const handleUpdate = async () => {
+    let interval;
+    setUploading(true);
+    setProgress(0);
 
-      if (uploadError) {
-        Swal.fire({
-          title: "Error",
-          text: "Gagal mengunggah foto.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-        return;
+    interval = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress >= 100) {
+          clearInterval(interval);
+          setUploading(false);
+          Swal.fire({
+            title: "Berhasil!",
+            text: "Profil berhasil diperbarui.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          }).then(() => {
+            window.location.reload();
+          });
+          return 100;
+        }
+        return prevProgress + 5;
+      });
+    }, 100);
+
+    document.body.classList.add("overflow-hidden");
+
+    try {
+      if (!profile.id) {
+        throw new Error("ID profil tidak ditemukan.");
       }
-      const { data: publicUrlData } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(fileName);
 
-      if (publicUrlData) {
-        value = publicUrlData.publicUrl; 
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "Gagal mendapatkan URL foto.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-        return;
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          username: editData.username,
+          full_name: editData.full_name,
+          email: editData.email,
+          no_telepon: editData.no_telepon,
+        })
+        .eq("id", profile.id);
+
+      if (error) {
+        throw new Error(error.message);
       }
-    }
-    const { error } = await supabase
-      .from("profiles")
-      .update({ [field]: value })
-      .eq("id", profile.id);
-
-    if (error) {
+    } catch (error) {
+      clearInterval(interval);
+      setUploading(false);
+      document.body.classList.remove("overflow-hidden");
       Swal.fire({
         title: "Error",
-        text: `Gagal memperbarui ${field}.`,
+        text: error.message || "Gagal memperbarui profil.",
         icon: "error",
         confirmButtonText: "OK",
       });
-    } else {
-      Swal.fire({
-        title: "Berhasil!",
-        text: `${field} berhasil diperbarui.`,
-        icon: "success",
-        confirmButtonText: "OK",
-      }).then(() => {
-        window.location.reload();
-      });
     }
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   if (loading) {
@@ -105,72 +129,154 @@ const SettingPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
-      <div className="flex flex-1 items-center justify-center bg-gray-100">
-        <div className="bg-white p-6 rounded shadow-md w-full max-w-lg">
-          <h1 className="text-2xl font-bold mb-6 text-center">
+      <div className="mt-14 flex flex-1 items-center justify-center p-4 bg-gradient-to-r from-indigo-100 via-indigo-50 to-indigo-200">
+        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg relative">
+          <button
+            onClick={handleBack}
+            className="absolute top-4 left-4 text-gray-700 hover:text-indigo-600 transition duration-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800">
             Pengaturan Profil
           </h1>
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center space-y-6">
             <div className="relative">
               <img
                 src={profile.avatar_url || "/default-avatar.png"}
                 alt="Avatar"
-                className="w-24 h-24 rounded-full object-cover border shadow"
-              />
-              <label
-                htmlFor="avatar"
-                className="absolute bottom-0 right-0 bg-indigo-500 p-2 rounded-full cursor-pointer hover:bg-indigo-600"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="white"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.232 5.232l3.536 3.536M16.88 3.88a3 3 0 114.24 4.24l-9.192 9.192a4.5 4.5 0 01-1.591 1.04l-3.338 1.112 1.112-3.338a4.5 4.5 0 011.04-1.592l9.192-9.192z"
-                  />
-                </svg>
-              </label>
-              <input
-                type="file"
-                id="avatar"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => handleUpdate("avatar_url", e.target.files[0])}
+                className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-lg"
               />
             </div>
-            <div className="w-full">
-              <ProfileEditableField
-                label="Username"
-                value={profile.username}
-                onSave={(value) => handleUpdate("username", value)}
-              />
-              <ProfileEditableField
-                label="Full Name"
-                value={profile.full_name}
-                onSave={(value) => handleUpdate("full_name", value)}
-              />
-              <ProfileEditableField
-                label="Email"
-                value={profile.email}
-                onSave={(value) => handleUpdate("email", value)}
-              />
-              <ProfileEditableField
-                label="No Telepon"
-                value={profile.no_telepon}
-                onSave={(value) => handleUpdate("no_telepon", value)}
-              />
+            <div className="w-full space-y-4">
+              <div>
+                <label className="text-gray-700 font-semibold">Username</label>
+                <div className="text-gray-500">{profile.username}</div>
+              </div>
+              <div>
+                <label className="text-gray-700 font-semibold">Full Name</label>
+                <div className="text-gray-500">{profile.full_name}</div>
+              </div>
+              <div>
+                <label className="text-gray-700 font-semibold">Email</label>
+                <div className="text-gray-500">{profile.email}</div>
+              </div>
+              <div>
+                <label className="text-gray-700 font-semibold">
+                  No Telepon
+                </label>
+                <div className="text-gray-500">{profile.no_telepon}</div>
+              </div>
             </div>
+            <button
+              onClick={toggleModal}
+              className="w-full mt-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+            >
+              Edit Profil
+            </button>
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-lg">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">
+              Edit Profil
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="text-gray-700 font-semibold">Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={editData.username}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="text-gray-700 font-semibold">Full Name</label>
+                <input
+                  type="text"
+                  name="full_name"
+                  value={editData.full_name}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="text-gray-700 font-semibold">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={editData.email}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="text-gray-700 font-semibold">
+                  No Telepon
+                </label>
+                <input
+                  type="text"
+                  name="no_telepon"
+                  value={editData.no_telepon}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex justify-between">
+              <button
+                onClick={toggleModal}
+                className="px-6 py-2 bg-gray-300 rounded-lg text-gray-700 hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {uploading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="w-full max-w-md p-6 bg-white rounded-md shadow-xl">
+            <div className="h-2 bg-indigo-500 rounded-full">
+              <div
+                className="h-full bg-indigo-700 rounded-full"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="mt-4 text-center text-indigo-700 font-semibold">
+              {progress === 100 ? "Uploading Complete!" : "Uploading..."}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

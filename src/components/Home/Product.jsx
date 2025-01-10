@@ -7,6 +7,7 @@ const Product = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [imageLoading, setImageLoading] = useState({});
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -52,6 +53,10 @@ const Product = () => {
     setSelectedProduct(null);
   };
 
+  const handleImageLoad = (id) => {
+    setImageLoading((prev) => ({ ...prev, [id]: false }));
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -67,19 +72,30 @@ const Product = () => {
         {currentProducts.map((product) => (
           <div
             key={product.id}
-            className="max-w-sm rounded-lg shadow-lg overflow-hidden bg-white cursor-pointer"
+            className="max-w-sm rounded-lg shadow-lg overflow-hidden bg-white cursor-pointer hover:shadow-xl transition-shadow duration-300"
             onClick={() => openModal(product)}
           >
-            <img
-              src={product.image}
-              alt={product.title}
-              className="w-full object-cover h-96"
-            />
+            <div className="relative w-full h-96">
+              {imageLoading[product.id] && (
+                <div className="absolute inset-0 flex justify-center items-center bg-gray-200">
+                  <ClipLoader size={30} color="#4A90E2" />
+                </div>
+              )}
+              <img
+                src={product.image}
+                alt={product.title}
+                className="w-full object-cover h-full"
+                onLoad={() => handleImageLoad(product.id)}
+                onError={() => handleImageLoad(product.id)}
+              />
+            </div>
             <div className="p-4">
               <h3 className="text-xl font-semibold text-gray-800">
                 {product.title}
               </h3>
-              <p className="text-gray-600 mt-2">{product.description}</p>
+              <p className="text-gray-600 mt-2 line-clamp-3">
+                {product.description}
+              </p>
             </div>
           </div>
         ))}
@@ -119,30 +135,36 @@ const Product = () => {
       </div>
 
       {selectedProduct && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full relative">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-4xl w-full relative transform transition-transform scale-95 animate-fade-in">
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-600 font-bold text-2xl"
+              className="absolute top-3 right-3 text-gray-600 font-bold text-2xl hover:text-red-500 transition-colors"
             >
               &times;
             </button>
-            <h3 className="text-3xl font-semibold text-gray-800">
-              {selectedProduct.title}
-            </h3>
-            <img
-              src={selectedProduct.image}
-              alt={selectedProduct.title}
-              className="w-full object-cover h-96 mt-4"
-            />
-            <p className="text-gray-600 mt-4">{selectedProduct.description}</p>
-            <ul className="mt-4">
-              {selectedProduct.ingredients.map((ingredient, index) => (
-                <li key={index} className="text-sm text-gray-500">
-                  {ingredient}
-                </li>
-              ))}
-            </ul>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.title}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+              <div>
+                <h3 className="text-3xl font-semibold text-gray-800">
+                  {selectedProduct.title}
+                </h3>
+                <p className="text-gray-600 mt-4">{selectedProduct.description}</p>
+                <ul className="mt-6 list-disc pl-5 text-gray-700">
+                  {selectedProduct.ingredients.map((ingredient, index) => (
+                    <li key={index} className="text-sm">
+                      {ingredient}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       )}
