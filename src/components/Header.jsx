@@ -134,27 +134,27 @@ const Header = () => {
                       <img
                         src={profile.avatar_url || "default-avatar-url"}
                         alt={profile.username || profile.email}
-                        className="w-9 h-9 rounded-full object-cover"
+                        className="w-9 h-9 rounded-full object-cover transition-transform duration-300 transform hover:scale-105"
                       />
-                      <span className="text-sm font-medium text-[#6d4c41] dark:text-[#ffffff]">
-                        {profile.full_name || profile.email}
+                      <span className="text-sm font-medium text-[#6d4c41] dark:text-[#ffffff] truncate">
+                        {profile.full_name || profile.username}
                       </span>
                     </div>
 
                     {dropdownVisible && (
-                      <div className="absolute right-0 mt-4 bg-white dark:bg-[#d3d3d3] rounded-lg shadow-lg z-30 w-48 transform transition-all duration-300 ease-in-out">
-                        <div>
+                      <div className="absolute right-0 mt-2 bg-white  rounded-lg shadow-lg w-48 py-2 transform transition-all duration-300 ease-in-out z-30">
+                        <div className="px-4 py-2">
                           <Link
                             to="/settings"
-                            className="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white hover:shadow-md"
+                            className="flex items-center text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white rounded-lg p-2 transition duration-200"
                           >
                             <FiSettings className="mr-2" /> Settings
                           </Link>
                         </div>
-                        <div>
+                        <div className="px-4 py-2">
                           <button
                             onClick={handleLogout}
-                            className="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white hover:shadow-md"
+                            className="flex w-full items-center text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white rounded-lg p-2 transition duration-200"
                           >
                             <FiLogOut className="mr-2" /> Log Out
                           </button>

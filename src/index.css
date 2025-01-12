@@ -33,3 +33,70 @@
 .animate-move-right {
   animation: moveRight 3s infinite alternate;
 }
+
+/* Dropdown menu */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 12rem;
+  background-color: white;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px 0;
+  z-index: 50;
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease, transform 0.3s ease;
+}
+
+.dropdown-container:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Style untuk masing-masing item di dalam dropdown */
+.dropdown-item {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-item:hover {
+  background-color: #ff6632;
+  color: white;
+  cursor: pointer;
+}
+
+/* Animasi pada avatar */
+.avatar-image {
+  transition: transform 0.3s ease;
+}
+
+.avatar-image:hover {
+  transform: scale(1.1);
+}
+
+.dropdown-btn {
+  background: #ff6632;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.dropdown-btn:hover {
+  background: #ff9966;
+}
+
+

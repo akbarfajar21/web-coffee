@@ -29,7 +29,7 @@ export default function ProductPage() {
         const { data, error } = await supabase
           .from("coffee")
           .select(
-            "id, nama_produk, harga_produk, deskripsi, stok, foto_barang"
+            "id, nama_produk, harga_produk, deskripsi, stok, foto_barang, rating_produk"
           );
 
         if (error) throw error;
@@ -88,6 +88,7 @@ export default function ProductPage() {
 
     handleSort();
   }, [priceSortOrder, stockSortOrder, nameSortOrder, products]); // Remove filteredProducts from the dependency array
+
   const handleAddToCart = (product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
@@ -159,6 +160,7 @@ export default function ProductPage() {
             )}
           </button>
         </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
           <aside className="bg-white rounded-lg shadow-lg p-6 space-y-6 divide-y divide-gray-200">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">
@@ -170,8 +172,7 @@ export default function ProductPage() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
-                >
-                </svg>
+                ></svg>
                 Filter Produk
               </span>
             </h2>
@@ -309,6 +310,13 @@ export default function ProductPage() {
                       <div className="text-sm text-gray-600 mb-4">
                         <strong>Stok: </strong>
                         {product.stok}
+                      </div>
+                      <div className="text-sm text-gray-600 mb-4">
+                        {product.rating_produk ? (
+                          <span>{product.rating_produk} ⭐</span>
+                        ) : (
+                          <span>No Rating</span>
+                        )}
                       </div>
                       <div className="flex justify-between items-center mt-auto">
                         <p className="text-base font-bold text-orange-600">

@@ -57,7 +57,7 @@ const Hero = () => {
               </motion.h1>
 
               <motion.div
-                className="mt-8" // Menambahkan jarak lebih besar dari teks ke tombol
+                className="mt-8"
                 variants={FADE_DOWN_ANIMATION_VARIANTS}
               >
                 <Link
@@ -70,7 +70,6 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          {/* Kolom Kanan (Image) */}
           <div className="w-full flex justify-center z-10 mb-6">
             <img
               src="./coffee.gif"
