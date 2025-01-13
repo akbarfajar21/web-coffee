@@ -19,6 +19,7 @@
     "@heroicons/react": "^2.2.0",
     "@nextui-org/react": "^2.6.11",
     "@supabase/supabase-js": "^2.46.2",
+    "animate.css": "^4.1.1",
     "aos": "^2.3.4",
     "axios": "^1.7.8",
     "chart.js": "^4.4.6",
@@ -36,6 +37,7 @@
     "react-router-dom": "^7.0.1",
     "react-slick": "^0.30.2",
     "react-spinners": "^0.14.1",
+    "react-switch": "^7.1.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.14.5",
     "uuid": "^11.0.3"

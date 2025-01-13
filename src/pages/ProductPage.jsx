@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { supabase } from "../utils/SupaClient";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
+import { Checkbox } from "@nextui-org/react";
+import Swal from "sweetalert2";
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -15,13 +16,13 @@ export default function ProductPage() {
   const [priceSortOrder, setPriceSortOrder] = useState("");
   const [stockSortOrder, setStockSortOrder] = useState("");
   const [nameSortOrder, setNameSortOrder] = useState("");
-  const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+  const [cart, setCart] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [cartAnimation, setCartAnimation] = useState(false);
 
   const navigate = useNavigate();
 
+  // Fetch products from Supabase
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -36,18 +37,7 @@ export default function ProductPage() {
         setProducts(data);
         setFilteredProducts(data);
       } catch (error) {
-        Swal.fire({
-          title: "Koneksi Gagal!",
-          text: "Gagal memuat produk. Silakan periksa koneksi Anda.",
-          imageUrl: "/NoConnection.gif",
-          imageWidth: 400,
-          imageHeight: 400,
-          imageAlt: "No connection",
-          confirmButtonText: "Coba Lagi",
-          confirmButtonColor: "#ff6632",
-        }).then(() => {
-          fetchProducts();
-        });
+        console.error("Error fetching products:", error.message);
       } finally {
         setLoading(false);
       }
@@ -56,11 +46,35 @@ export default function ProductPage() {
     fetchProducts();
   }, []);
 
+  // Fetch cart from Supabase
+  useEffect(() => {
+    const fetchCart = async () => {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: cartData, error: cartError } = await supabase
+        .from("cart")
+        .select("coffee_id, quantity")
+        .eq("profile_id", user.user.id);
+
+      if (cartError) {
+        console.error("Error fetching cart:", cartError.message);
+      } else {
+        setCart(cartData);
+        const totalItems = cartData.reduce(
+          (acc, item) => acc + item.quantity,
+          0
+        );
+        setCartCount(totalItems);
+      }
+    };
+
+    fetchCart();
+  }, [cart]);
+
   useEffect(() => {
     const handleSort = () => {
-      let sortedProducts = [...products]; // Use the original products, not filteredProducts
-
-      // Sorting logic...
+      let sortedProducts = [...products];
       if (priceSortOrder) {
         sortedProducts.sort((a, b) =>
           priceSortOrder === "asc"
@@ -83,28 +97,13 @@ export default function ProductPage() {
         );
       }
 
-      setFilteredProducts(sortedProducts); // Update filteredProducts here
+      setFilteredProducts(sortedProducts);
     };
 
     handleSort();
-  }, [priceSortOrder, stockSortOrder, nameSortOrder, products]); // Remove filteredProducts from the dependency array
+  }, [priceSortOrder, stockSortOrder, nameSortOrder, products]);
 
-  const handleAddToCart = (product) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      const updatedCart = [...prevCart, { ...product, quantity: 1 }];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return updatedCart;
-    });
-  };
-
+  // Handle search
   const handleSearch = (query) => {
     setSearchQuery(query);
     const searchedProducts = products.filter((product) =>
@@ -113,6 +112,7 @@ export default function ProductPage() {
     setFilteredProducts(searchedProducts);
   };
 
+  // Reset filters
   const resetFilters = () => {
     setPriceSortOrder("");
     setStockSortOrder("");
@@ -121,20 +121,81 @@ export default function ProductPage() {
     setFilteredProducts(products);
   };
 
+  // Format currency
   const formatRupiah = (amount) => {
     return "Rp " + amount.toLocaleString("id-ID");
   };
 
+  // Handle Add to Cart functionality
+  const handleAddToCart = async (product) => {
+    const { data: user, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      Swal.fire({
+        title: "Oops!",
+        text: "Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.",
+        icon: "warning",
+        confirmButtonText: "Login Sekarang",
+        confirmButtonColor: "#ff6632",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // Arahkan ke halaman login
+        }
+      });
+      return;
+    }
+
+    // Cek apakah produk sudah ada di keranjang
+    const { data: cartData, error: cartError } = await supabase
+      .from("cart")
+      .select("*")
+      .eq("profile_id", user.user.id)
+      .eq("coffee_id", product)
+      .single();
+
+    if (cartData) {
+      // Jika produk sudah ada, update quantity
+      const updatedQuantity = cartData.quantity + 1;
+      const { error: updateError } = await supabase
+        .from("cart")
+        .update({ quantity: updatedQuantity })
+        .eq("profile_id", user.user.id)
+        .eq("coffee_id", product);
+
+      if (updateError) {
+        console.error("Error updating cart:", updateError.message);
+      } else {
+        setCartAnimation(true);
+        setTimeout(() => setCartAnimation(false), 1000);
+      }
+    } else {
+      const { error: insertError } = await supabase.from("cart").insert([
+        {
+          profile_id: user.user.id,
+          coffee_id: product,
+          quantity: 1,
+        },
+      ]);
+
+      if (insertError) {
+        console.error("Error inserting to cart:", insertError.message);
+      } else {
+        setCartAnimation(true);
+        setTimeout(() => setCartAnimation(false), 1000);
+      }
+    }
+  };
+
+  // Navigate to product detail
   const handleProductClick = (productId) => {
-    navigate(`/product-detail/${productId}`); // Navigate to the product detail page
+    navigate(`/product-detail/${productId}`);
   };
 
   return (
     <>
       <Header />
-      <div className="min-h-screen py-8 px-4 lg:px-12">
+      <div className="min-h-screen py-8 px-4 lg:px-12 dark:bg-gray-800">
         <div className="mb-8">
-          <h1 className="mt-10 text-4xl font-bold text-center mb-4 text-gray-800">
+          <h1 className="mt-14 text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
             Produk Kami
           </h1>
         </div>
@@ -145,62 +206,50 @@ export default function ProductPage() {
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             placeholder="Cari produk..."
-            className="w-full max-w-md px-4 py-3 border justify-center border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632]"
+            className="w-full max-w-md px-4 py-3 border justify-center border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white"
           />
 
           <button
             onClick={() => navigate("/cart")}
-            className="relative text-2xl text-[#ff6632]"
+            className={`relative text-2xl text-[#ff6632] ${
+              cartAnimation ? "animate-bounce" : ""
+            }`}
           >
             <FaShoppingCart />
-            {cart.length > 0 && (
+            {cartCount > 0 && (
               <span className="absolute top-0 right-0 text-xs font-bold text-white bg-red-600 rounded-full px-2">
-                {cart.reduce((total, item) => total + item.quantity, 0)}
+                {cartCount}
               </span>
             )}
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-          <aside className="bg-white rounded-lg shadow-lg p-6 space-y-6 divide-y divide-gray-200">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">
-              <span className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 mr-2 text-orange-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                ></svg>
-                Filter Produk
-              </span>
+          <aside className="bg-white rounded-lg shadow-lg p-6 space-y-6 divide-y divide-gray-200 dark:bg-gray-700 dark:text-white">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+              Filter Produk
             </h2>
-
+            {/* Filter form */}
             <div className="pt-4">
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
                 Harga
               </h3>
               <div className="space-y-3">
-                <label className="flex items-center space-x-3 text-base text-gray-600">
-                  <input
-                    type="radio"
-                    name="priceSort"
-                    value="asc"
-                    checked={priceSortOrder === "asc"}
+                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
+                  <Checkbox
+                    defaultSelected
+                    isSelected={priceSortOrder === "asc"}
                     onChange={() => setPriceSortOrder("asc")}
-                    className="h-5 w-5 border-gray-300 text-orange-500 focus:ring-orange-500 rounded-full"
+                    color="success"
                   />
                   <span>Harga Termurah</span>
                 </label>
-                <label className="flex items-center space-x-3 text-base text-gray-600">
-                  <input
-                    type="radio"
-                    name="priceSort"
-                    value="desc"
-                    checked={priceSortOrder === "desc"}
+                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
+                  <Checkbox
+                    defaultSelected
+                    isSelected={priceSortOrder === "desc"}
                     onChange={() => setPriceSortOrder("desc")}
-                    className="h-5 w-5 border-gray-300 text-orange-500 focus:ring-orange-500 rounded-full"
+                    color="success"
                   />
                   <span>Harga Termahal</span>
                 </label>
@@ -208,59 +257,26 @@ export default function ProductPage() {
             </div>
 
             <div className="pt-4">
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">Stok</h3>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
+                Stok
+              </h3>
               <div className="space-y-3">
-                <label className="flex items-center space-x-3 text-base text-gray-600">
-                  <input
-                    type="radio"
-                    name="stockSort"
-                    value="asc"
-                    checked={stockSortOrder === "asc"}
+                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
+                  <Checkbox
+                    defaultSelected
+                    isSelected={stockSortOrder === "asc"}
                     onChange={() => setStockSortOrder("asc")}
-                    className="h-5 w-5 border-gray-300 text-orange-500 focus:ring-orange-500 rounded-full"
+                    color="success"
                   />
                   <span>Stok Terdikit</span>
                 </label>
-                <label className="flex items-center space-x-3 text-base text-gray-600">
-                  <input
-                    type="radio"
-                    name="stockSort"
-                    value="desc"
-                    checked={stockSortOrder === "desc"}
+                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
+                  <Checkbox
+                    isSelected={stockSortOrder === "desc"}
                     onChange={() => setStockSortOrder("desc")}
-                    className="h-5 w-5 border-gray-300 text-orange-500 focus:ring-orange-500 rounded-full"
+                    color="success"
                   />
                   <span>Stok Terbanyak</span>
-                </label>
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">
-                Nama Produk
-              </h3>
-              <div className="space-y-3">
-                <label className="flex items-center space-x-3 text-base text-gray-600">
-                  <input
-                    type="radio"
-                    name="nameSort"
-                    value="asc"
-                    checked={nameSortOrder === "asc"}
-                    onChange={() => setNameSortOrder("asc")}
-                    className="h-5 w-5 border-gray-300 text-orange-500 focus:ring-orange-500 rounded-full"
-                  />
-                  <span>A-Z</span>
-                </label>
-                <label className="flex items-center space-x-3 text-base text-gray-600">
-                  <input
-                    type="radio"
-                    name="nameSort"
-                    value="desc"
-                    checked={nameSortOrder === "desc"}
-                    onChange={() => setNameSortOrder("desc")}
-                    className="h-5 w-5 border-gray-300 text-orange-500 focus:ring-orange-500 rounded-full"
-                  />
-                  <span>Z-A</span>
                 </label>
               </div>
             </div>
@@ -279,12 +295,12 @@ export default function ProductPage() {
                 <ClipLoader color="#ff6632" size={60} />
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {filteredProducts.map((product, index) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {filteredProducts.map((product) => (
                   <div
-                    key={index}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                    onClick={() => handleProductClick(product.id)} // Klik pada card
+                    key={product.id}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 dark:bg-gray-700"
+                    onClick={() => handleProductClick(product.id)}
                   >
                     <div className="relative group">
                       <img
@@ -301,17 +317,17 @@ export default function ProductPage() {
                       )}
                     </div>
                     <div className="p-6 flex flex-col">
-                      <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                      <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                         {product.nama_produk}
                       </h2>
-                      <p className="text-sm text-gray-600 flex-grow mb-4 line-clamp-3">
+                      <p className="text-sm text-gray-600 dark:text-white flex-grow mb-4 line-clamp-3">
                         {product.deskripsi}
                       </p>
-                      <div className="text-sm text-gray-600 mb-4">
+                      <div className="text-sm text-gray-600 dark:text-white mb-4">
                         <strong>Stok: </strong>
                         {product.stok}
                       </div>
-                      <div className="text-sm text-gray-600 mb-4">
+                      <div className="text-sm text-gray-600 dark:text-white mb-4">
                         {product.rating_produk ? (
                           <span>{product.rating_produk} ⭐</span>
                         ) : (
@@ -319,33 +335,22 @@ export default function ProductPage() {
                         )}
                       </div>
                       <div className="flex justify-between items-center mt-auto">
-                        <p className="text-base font-bold text-orange-600">
+                        <p className="text-base font-bold text-orange-600 dark:text-white">
                           {formatRupiah(product.harga_produk)}
                         </p>
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); // Mencegah event bubbling
-                            handleAddToCart(product);
+                            e.stopPropagation();
+                            handleAddToCart(product.id);
                           }}
-                          className={`bg-[#ff6632] text-white px-4 py-2 rounded-lg hover:bg-[#ff5511] transition-colors 
-                          ${
+                          disabled={product.stok === 0}
+                          className={`px-4 py-2 text-white rounded-lg text-sm transition-colors ${
                             product.stok === 0
                               ? "bg-gray-400 cursor-not-allowed"
-                              : ""
-                          }
-                        `}
-                          disabled={product.stok === 0}
+                              : "bg-orange-500 hover:bg-orange-600"
+                          }`}
                         >
-                          {product.stok === 0 ? (
-                            "Stok Habis"
-                          ) : (
-                            <div className="flex items-center space-x-2">
-                              <FaShoppingCart />
-                              <span className="hidden sm:inline">
-                                Add to Cart
-                              </span>
-                            </div>
-                          )}
+                          {product.stok === 0 ? "Stok Habis" : "Add to Cart"}
                         </button>
                       </div>
                     </div>
@@ -356,7 +361,6 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../utils/SupaClient";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const SettingPage = () => {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State untuk kontrol modal
-  const [editData, setEditData] = useState({}); // State untuk menyimpan data yang sedang diedit
-  const navigate = useNavigate(); // Initialize navigate
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -36,7 +37,7 @@ const SettingPage = () => {
           });
         } else {
           setProfile(data);
-          setEditData(data); // Set data untuk edit
+          setEditData(data);
         }
       }
       setLoading(false);
@@ -45,26 +46,58 @@ const SettingPage = () => {
     fetchProfile();
   }, []);
 
+  // Fungsi untuk mengunggah avatar
+  const uploadAvatarToStorage = async (file) => {
+    try {
+      if (!file) {
+        throw new Error("File avatar tidak ditemukan.");
+      }
+
+      const fileName = `${profile.id}-${Date.now()}-${file.name}`;
+      const { data, error } = await supabase.storage
+        .from("avatars")
+        .upload(`public/avatars/${fileName}`, file);
+
+      if (error) {
+        throw new Error("Gagal mengunggah file avatar ke storage.");
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(`public/avatars/${fileName}`);
+
+      return urlData.publicUrl; // URL file yang diunggah
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   const handleUpdate = async () => {
     let interval;
     setUploading(true);
     setProgress(0);
 
+    // Progress bar interval
     interval = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress >= 100) {
           clearInterval(interval);
           setUploading(false);
+
           Swal.fire({
             title: "Berhasil!",
             text: "Profil berhasil diperbarui.",
             icon: "success",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 1200, 
             timerProgressBar: true,
           }).then(() => {
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
           });
+
           return 100;
         }
         return prevProgress + 5;
@@ -85,6 +118,7 @@ const SettingPage = () => {
           full_name: editData.full_name,
           email: editData.email,
           no_telepon: editData.no_telepon,
+          avatar_url: editData.avatar_url,
         })
         .eq("id", profile.id);
 
@@ -120,6 +154,75 @@ const SettingPage = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const toggleAvatarModal = () => {
+    setIsAvatarModalOpen(!isAvatarModalOpen);
+  };
+
+  const handleAvatarSelect = async (event) => {
+    try {
+      const file = event.target.files[0];
+      if (!file) {
+        throw new Error("Tidak ada file yang dipilih.");
+      }
+
+      // Mulai progress bar sebelum upload
+      setUploading(true);
+      setProgress(0);
+
+      let interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          if (prevProgress >= 100) {
+            clearInterval(interval);
+            setUploading(false);
+            return 100;
+          }
+          return prevProgress + 10; // Update progress setiap 100ms
+        });
+      }, 100);
+
+      // Unggah file ke storage dan dapatkan URL-nya
+      const avatarUrl = await uploadAvatarToStorage(file);
+
+      // Perbarui avatar_url di state lokal
+      setEditData((prevData) => ({
+        ...prevData,
+        avatar_url: avatarUrl,
+      }));
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        avatar_url: avatarUrl,
+      }));
+
+      // Perbarui ke database Supabase
+      const { error } = await supabase
+        .from("profiles")
+        .update({ avatar_url: avatarUrl })
+        .eq("id", profile.id);
+
+      if (error) {
+        throw new Error("Gagal memperbarui avatar di database.");
+      }
+
+      setIsAvatarModalOpen(false);
+      Swal.fire({
+        title: "Berhasil!",
+        text: "Foto profil berhasil diubah.",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.location.reload();
+      });
+    } catch (error) {
+      setUploading(false);
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Terjadi kesalahan saat memperbarui avatar.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -129,13 +232,13 @@ const SettingPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
-      <div className="mt-14 flex flex-1 items-center justify-center p-4 bg-gradient-to-r from-indigo-100 via-indigo-50 to-indigo-200">
-        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg relative">
+      <div className="mt-14 flex flex-1 items-center justify-center p-4 bg-gradient-to-r from-indigo-100 via-indigo-50 to-indigo-200 dark:from-indigo-900 dark:via-indigo-700 dark:to-indigo-800">
+        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg relative dark:bg-gray-700 dark:text-white">
           <button
             onClick={handleBack}
-            className="absolute top-4 left-4 text-gray-700 hover:text-indigo-600 transition duration-300"
+            className="absolute top-4 left-4 text-gray-700 hover:text-indigo-600 transition duration-300 dark:text-white dark:hover:text-indigo-400"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +256,7 @@ const SettingPage = () => {
             </svg>
           </button>
 
-          <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800">
+          <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">
             Pengaturan Profil
           </h1>
           <div className="flex flex-col items-center space-y-6">
@@ -163,30 +266,63 @@ const SettingPage = () => {
                 alt="Avatar"
                 className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-lg"
               />
+              <button
+                onClick={toggleAvatarModal}
+                className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+              </button>
             </div>
             <div className="w-full space-y-4">
               <div>
-                <label className="text-gray-700 font-semibold">Username</label>
-                <div className="text-gray-500">{profile.username}</div>
+                <label className="text-gray-700 font-semibold dark:text-gray-300">
+                  Username
+                </label>
+                <div className="text-gray-500 dark:text-gray-400">
+                  {profile.username}
+                </div>
               </div>
               <div>
-                <label className="text-gray-700 font-semibold">Full Name</label>
-                <div className="text-gray-500">{profile.full_name}</div>
+                <label className="text-gray-700 font-semibold dark:text-gray-300">
+                  Full Name
+                </label>
+                <div className="text-gray-500 dark:text-gray-400">
+                  {profile.full_name}
+                </div>
               </div>
               <div>
-                <label className="text-gray-700 font-semibold">Email</label>
-                <div className="text-gray-500">{profile.email}</div>
+                <label className="text-gray-700 font-semibold dark:text-gray-300">
+                  Email
+                </label>
+                <div className="text-gray-500 dark:text-gray-400">
+                  {profile.email}
+                </div>
               </div>
               <div>
-                <label className="text-gray-700 font-semibold">
+                <label className="text-gray-700 font-semibold dark:text-gray-300">
                   No Telepon
                 </label>
-                <div className="text-gray-500">{profile.no_telepon}</div>
+                <div className="text-gray-500 dark:text-gray-400">
+                  {profile.no_telepon}
+                </div>
               </div>
             </div>
             <button
               onClick={toggleModal}
-              className="w-full mt-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+              className="w-full mt-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
               Edit Profil
             </button>
@@ -195,44 +331,50 @@ const SettingPage = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-lg">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">
+        <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
+            <h2 className="text-xl font-semibold dark:text-white text-center mb-6">
               Edit Profil
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="text-gray-700 font-semibold">Username</label>
+                <label className="text-gray-700 dark:text-gray-300">
+                  Username
+                </label>
                 <input
                   type="text"
                   name="username"
                   value={editData.username}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
               <div>
-                <label className="text-gray-700 font-semibold">Full Name</label>
+                <label className="text-gray-700 dark:text-gray-300">
+                  Full Name
+                </label>
                 <input
                   type="text"
                   name="full_name"
                   value={editData.full_name}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
               <div>
-                <label className="text-gray-700 font-semibold">Email</label>
+                <label className="text-gray-700 dark:text-gray-300">
+                  Email
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={editData.email}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
               <div>
-                <label className="text-gray-700 font-semibold">
+                <label className="text-gray-700 dark:text-gray-300">
                   No Telepon
                 </label>
                 <input
@@ -240,22 +382,22 @@ const SettingPage = () => {
                   name="no_telepon"
                   value={editData.no_telepon}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
             </div>
             <div className="mt-6 flex justify-between">
               <button
-                onClick={toggleModal}
-                className="px-6 py-2 bg-gray-300 rounded-lg text-gray-700 hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
                 onClick={handleUpdate}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
               >
                 Simpan
+              </button>
+              <button
+                onClick={toggleModal}
+                className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
+              >
+                Batal
               </button>
             </div>
           </div>
@@ -263,16 +405,52 @@ const SettingPage = () => {
       )}
 
       {uploading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="w-full max-w-md p-6 bg-white rounded-md shadow-xl">
-            <div className="h-2 bg-indigo-500 rounded-full">
+        <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
+            <h2 className="text-xl font-semibold text-center mb-6">
+              Memperbarui Profil...
+            </h2>
+            <div className="w-full bg-gray-200 h-2 rounded-full">
               <div
-                className="h-full bg-indigo-700 rounded-full"
+                className="bg-indigo-600 h-2 rounded-full"
                 style={{ width: `${progress}%` }}
-              />
+              ></div>
             </div>
-            <div className="mt-4 text-center text-indigo-700 font-semibold">
-              {progress === 100 ? "Uploading Complete!" : "Uploading..."}
+          </div>
+        </div>
+      )}
+
+      {isAvatarModalOpen && (
+        <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
+            <h2 className="text-xl font-semibold text-center dark:text-white mb-6">
+              Pilih Foto Avatar
+            </h2>
+            <input
+              type="file"
+              onChange={handleAvatarSelect}
+              className="dark:text-white w-full p-2 border border-gray-300 rounded-lg"
+            />
+            {uploading && (
+              <div className="w-full mt-4">
+                <div className="text-gray-700 dark:text-gray-300 mb-2">
+                  Uploading...
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                  <div
+                    className="bg-indigo-600 h-2.5 rounded-full"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
+            <div className="mt-6 flex justify-between">
+              <button
+                onClick={toggleAvatarModal}
+                className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
+              >
+                Batal
+              </button>
             </div>
           </div>
         </div>

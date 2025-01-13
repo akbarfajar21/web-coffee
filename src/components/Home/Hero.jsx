@@ -1,3 +1,4 @@
+// Hero.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -26,7 +27,6 @@ const Hero = () => {
       >
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative w-full flex flex-col items-center p-10">
-          {/* Kolom Kiri (Teks dan Tombol) */}
           <div className="w-full text-center z-10 mb-6">
             <motion.div
               initial="hidden"
@@ -52,7 +52,7 @@ const Hero = () => {
                   animate="show"
                   variants={SLIDE_TEXT_VARIANTS}
                 >
-                  DI MyWebsite Coffee ☕
+                  DI MyWebsite Coffee
                 </motion.span>
               </motion.h1>
 

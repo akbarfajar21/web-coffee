@@ -66,13 +66,15 @@ const Product = () => {
   }
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold text-center mb-8">Our Products</h2>
+    <div className="p-6 dark:bg-gray-700">
+      <h2 className="text-3xl font-bold text-center mb-8 dark:text-white">
+        Our Products
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
         {currentProducts.map((product) => (
           <div
             key={product.id}
-            className="max-w-sm rounded-lg shadow-lg overflow-hidden bg-white cursor-pointer hover:shadow-xl transition-shadow duration-300"
+            className="max-w-sm rounded-lg shadow-lg overflow-hidden bg-white cursor-pointer hover:shadow-xl transition-shadow duration-300 dark:bg-gray-700"
             onClick={() => openModal(product)}
           >
             <div className="relative w-full h-96">
@@ -89,11 +91,11 @@ const Product = () => {
                 onError={() => handleImageLoad(product.id)}
               />
             </div>
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800">
+            <div className="p-4 dark:text-white">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
                 {product.title}
               </h3>
-              <p className="text-gray-600 mt-2 line-clamp-3">
+              <p className="text-gray-600 mt-2 line-clamp-3 dark:text-gray-300">
                 {product.description}
               </p>
             </div>
@@ -115,7 +117,7 @@ const Product = () => {
         >
           &lt;
         </button>
-        <span className="px-4 py-2 mx-1 text-lg font-semibold rounded-full bg-gray-200">
+        <span className="px-4 py-2 mx-1 text-lg font-semibold rounded-full bg-gray-200 dark:bg-gray-600 dark:text-white">
           {currentPage}
         </span>
         <button
@@ -135,28 +137,30 @@ const Product = () => {
       </div>
 
       {selectedProduct && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-4xl w-full relative transform transition-transform scale-95 animate-fade-in">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-4 rounded-lg shadow-xl w-full max-w-lg sm:max-w-sm md:max-w-md lg:max-w-lg relative transform transition-transform scale-95 animate-fade-in dark:bg-gray-700">
             <button
               onClick={closeModal}
-              className="absolute top-3 right-3 text-gray-600 font-bold text-2xl hover:text-red-500 transition-colors"
+              className="absolute top-2 right-2 text-gray-600 font-bold text-2xl hover:text-red-500 transition-colors"
             >
               &times;
             </button>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <img
                   src={selectedProduct.image}
                   alt={selectedProduct.title}
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-auto object-cover rounded-lg"
                 />
               </div>
               <div>
-                <h3 className="text-3xl font-semibold text-gray-800">
+                <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
                   {selectedProduct.title}
                 </h3>
-                <p className="text-gray-600 mt-4">{selectedProduct.description}</p>
-                <ul className="mt-6 list-disc pl-5 text-gray-700">
+                <p className="text-gray-600 mt-2 text-sm dark:text-gray-300">
+                  {selectedProduct.description}
+                </p>
+                <ul className="mt-4 list-disc pl-5 text-gray-700 text-sm dark:text-gray-400">
                   {selectedProduct.ingredients.map((ingredient, index) => (
                     <li key={index} className="text-sm">
                       {ingredient}

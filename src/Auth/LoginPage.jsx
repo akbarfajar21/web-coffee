@@ -25,9 +25,11 @@ const Login = () => {
     if (user) {
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
-        .select("id, email, role")
+        .select("id, username, email, role")
         .eq("id", user.id)
         .single();
+
+      let fullName;
 
       if (profileError || !profileData) {
         const { error: insertError } = await supabase.from("profiles").upsert({
@@ -45,12 +47,16 @@ const Login = () => {
             icon: "error",
             confirmButtonText: "OK",
           });
+          return;
         }
+        fullName = user.user_metadata.full_name;
+      } else {
+        fullName = profileData.username;
       }
 
       Swal.fire({
         title: "Login Berhasil!",
-        text: "Selamat datang kembali!",
+        text: `Selamat datang kembali, ${fullName}!`,
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => {
@@ -133,65 +139,6 @@ const Login = () => {
     }
   };
 
-  // Fungsi login dengan Figma
-  const handleFigmaLogin = async () => {
-    const { user, error } = await supabase.auth.signInWithOAuth({
-      provider: "figma",
-    });
-
-    if (error) {
-      Swal.fire({
-        title: "Login Gagal!",
-        text: "Terjadi masalah saat login dengan Figma.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      return;
-    }
-
-    if (user) {
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("id, email, role")
-        .eq("id", user.id)
-        .single();
-
-      if (profileError || !profileData) {
-        const { error: insertError } = await supabase.from("profiles").upsert({
-          id: user.id,
-          username: user.user_metadata.full_name,
-          avatar_url: user.user_metadata.picture,
-          email: user.user_metadata.email,
-          role: "user",
-        });
-
-        if (insertError) {
-          Swal.fire({
-            title: "Error",
-            text: "Gagal menyimpan profil pengguna.",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-          return;
-        }
-      }
-
-      // Menampilkan username dan avatar
-      Swal.fire({
-        title: "Login Berhasil!",
-        text: `Selamat datang, ${user.user_metadata.full_name}!`,
-        imageUrl: user.user_metadata.picture,
-        imageWidth: 100,
-        imageHeight: 100,
-        imageAlt: "Avatar",
-        icon: "success",
-        confirmButtonText: "OK",
-      }).then(() => {
-        navigate("/");
-      });
-    }
-  };
-
   return (
     <section className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-indigo-700 via-blue-500 to-blue-600 p-6">
       <div className="max-w-4xl w-full bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col md:flex-row">
@@ -246,21 +193,6 @@ const Login = () => {
               />
             </svg>
             <span>Login dengan GitHub</span>
-          </button>
-          <button
-            onClick={handleFigmaLogin}
-            className="w-full bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-purple-700 transition-all flex items-center justify-center space-x-3 mt-4"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d="M12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7C17 8.32608 16.4732 9.59785 15.5355 10.5355C14.5979 11.4732 13.3261 12 12 12C10.6739 12 9.40215 11.4732 8.46447 10.5355C7.52678 9.59785 7 8.32608 7 7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2ZM12 14C13.3261 14 14.5979 14.5268 15.5355 15.4645C16.4732 16.4021 17 17.6739 17 19C17 20.3261 16.4732 21.5979 15.5355 22.5355C14.5979 23.4732 13.3261 24 12 24C10.6739 24 9.40215 23.4732 8.46447 22.5355C7.52678 21.5979 7 20.3261 7 19C7 17.6739 7.52678 16.4021 8.46447 15.4645C9.40215 14.5268 10.6739 14 12 14ZM19 2C20.3261 2 21.5979 2.52678 22.5355 3.46447C23.4732 4.40215 24 5.67392 24 7C24 8.32608 23.4732 9.59785 22.5355 10.5355C21.5979 11.4732 20.3261 12 19 12C17.6739 12 16.4021 11.4732 15.4645 10.5355C14.5268 9.59785 14 8.32608 14 7C14 5.67392 14.5268 4.40215 15.4645 3.46447C16.4021 2.52678 17.6739 2 19 2ZM5 2C6.32608 2 7.59785 2.52678 8.53553 3.46447C9.47322 4.40215 10 5.67392 10 7C10 8.32608 9.47322 9.59785 8.53553 10.5355C7.59785 11.4732 6.32608 12 5 12C3.67392 12 2.40215 11.4732 1.46447 10.5355C0.526784 9.59785 0 8.32608 0 7C0 5.67392 0.526784 4.40215 1.46447 3.46447C2.40215 2.52678 3.67392 2 5 2ZM5 14C6.32608 14 7.59785 14.5268 8.53553 15.4645C9.47322 16.4021 10 17.6739 10 19C10 20.3261 9.47322 21.5979 8.53553 22.5355C7.59785 23.4732 6.32608 24 5 24C3.67392 24 2.40215 23.4732 1.46447 22.5355C0.526784 21.5979 0 20.3261 0 19C0 17.6739 0.526784 16.4021 1.46447 15.4645C2.40215 14.5268 3.67392 14 5 14Z" />
-            </svg>
-            <span>Login dengan Figma</span>
           </button>
         </div>
         <div className="hidden md:block w-1/2 bg-gray-100 p-6 flex justify-center items-center">

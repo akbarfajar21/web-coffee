@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  BrowserRouter,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
@@ -13,10 +8,11 @@ import SettingPage from "./pages/SettingPage";
 import ContactPage from "./pages/ContactPage";
 import CartPage from "./components/CartPage";
 import DetailProduct from "./pages/DetailProduct";
+import NotFoundPage from "./pages/NotFoundPage"; // Import halaman 404
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -26,8 +22,11 @@ const App = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/product-detail/:id" element={<DetailProduct />} />
+
+        {/* Menambahkan route untuk menangani halaman 404 */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 };
 

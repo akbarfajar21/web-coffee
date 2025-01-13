@@ -33,18 +33,20 @@ const Testimoni = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center text-gray-500">Memuat testimoni...</p>;
+    return <p className="text-center text-gray-500 dark:text-gray-300">Memuat testimoni...</p>;
   }
 
   if (error) {
     return (
-      <p className="text-center text-red-500">Terjadi kesalahan: {error}</p>
+      <p className="text-center text-red-500 dark:text-red-400">
+        Terjadi kesalahan: {error}
+      </p>
     );
   }
 
   return (
-    <div className="py-8 px-4 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold text-center mb-6">
+    <div className="py-8 px-4 w-full mx-auto dark:bg-gray-800">
+      <h2 className="text-3xl font-bold text-center mb-6 dark:text-white">
         Testimoni Pengguna
       </h2>
 
@@ -55,7 +57,7 @@ const Testimoni = () => {
             alt="Testimoni GIF"
             className="w-80 h-80 object-cover mb-4"
           />
-          <h2 className="text-3xl font-semibold text-gray-600">
+          <h2 className="text-3xl font-semibold text-gray-600 dark:text-gray-300">
             Belum ada testimoni
           </h2>
         </div>
@@ -64,17 +66,17 @@ const Testimoni = () => {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="border border-gray-300 rounded-lg p-6 text-center shadow-lg"
+              className="border border-gray-300 rounded-lg p-6 text-center shadow-lg dark:bg-gray-700 dark:border-gray-600"
             >
               <img
                 src={testimonial.profiles.avatar_url}
                 alt={`Avatar for ${testimonial.profiles.full_name}`}
                 className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
               />
-              <h3 className="text-lg font-semibold mb-2">
+              <h3 className="text-lg font-semibold mb-2 dark:text-white">
                 {testimonial.profiles.full_name}
               </h3>
-              <p className="italic text-sm text-gray-600">
+              <p className="italic text-sm text-gray-600 dark:text-gray-300">
                 "{testimonial.message}"
               </p>
               <div className="mt-2">
