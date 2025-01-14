@@ -9,6 +9,8 @@ import ContactPage from "./pages/ContactPage";
 import CartPage from "./components/CartPage";
 import DetailProduct from "./pages/DetailProduct";
 import NotFoundPage from "./pages/NotFoundPage"; // Import halaman 404
+import PaymentSuccess from "./pages/PaymentSuccess";
+import HistoryPage from "./pages/HistoryPage";
 
 const App = () => {
   return (
@@ -22,6 +24,8 @@ const App = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/product-detail/:id" element={<DetailProduct />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/history" element={<HistoryPage />} />
 
         {/* Menambahkan route untuk menangani halaman 404 */}
         <Route path="*" element={<NotFoundPage />} />

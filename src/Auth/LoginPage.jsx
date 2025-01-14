@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 const Login = () => {
   const navigate = useNavigate();
 
-  // Fungsi login dengan Google
   const handleGoogleLogin = async () => {
     const { user, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -65,7 +64,6 @@ const Login = () => {
     }
   };
 
-  // Fungsi login dengan GitHub
   const handleGithubLogin = async () => {
     const { user, error } = await supabase.auth.signInWithOAuth({
       provider: "github",
@@ -82,11 +80,8 @@ const Login = () => {
     }
 
     if (user) {
-      // Ambil nama pengguna GitHub yang benar
       const githubUsername =
         user.user_metadata.full_name || user.user_metadata.username;
-
-      // Ambil profil pengguna dari Supabase
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("id, email, role")

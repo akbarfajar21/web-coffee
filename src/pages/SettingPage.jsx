@@ -12,6 +12,7 @@ const SettingPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState({});
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -84,20 +85,7 @@ const SettingPage = () => {
         if (prevProgress >= 100) {
           clearInterval(interval);
           setUploading(false);
-
-          Swal.fire({
-            title: "Berhasil!",
-            text: "Profil berhasil diperbarui.",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1200, 
-            timerProgressBar: true,
-          }).then(() => {
-            setTimeout(() => {
-              window.location.reload();
-            }, 1500);
-          });
-
+          setIsProcessing(true); // Tampilkan spinner setelah progress bar selesai
           return 100;
         }
         return prevProgress + 5;
@@ -125,9 +113,27 @@ const SettingPage = () => {
       if (error) {
         throw new Error(error.message);
       }
+
+      // Beri jeda untuk spinner sebelum SweetAlert muncul
+      setTimeout(() => {
+        setIsProcessing(false);
+        Swal.fire({
+          title: "Berhasil!",
+          text: "Profil berhasil diperbarui.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1200,
+          timerProgressBar: true,
+        }).then(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        });
+      }, 3000);
     } catch (error) {
       clearInterval(interval);
       setUploading(false);
+      setIsProcessing(false);
       document.body.classList.remove("overflow-hidden");
       Swal.fire({
         title: "Error",
@@ -204,11 +210,14 @@ const SettingPage = () => {
       }
 
       setIsAvatarModalOpen(false);
+
       Swal.fire({
-        title: "Berhasil!",
-        text: "Foto profil berhasil diubah.",
-        icon: "success",
-        confirmButtonText: "OK",
+        title: "Foto profil berhasil diubah...",
+        timer: 2000,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
       }).then(() => {
         window.location.reload();
       });
@@ -223,7 +232,7 @@ const SettingPage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || isProcessing) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-500"></div>
@@ -407,7 +416,7 @@ const SettingPage = () => {
       {uploading && (
         <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
-            <h2 className="text-xl font-semibold text-center mb-6">
+            <h2 className="text-xl font-semibold text-center mb-6 dark:text-white">
               Memperbarui Profil...
             </h2>
             <div className="w-full bg-gray-200 h-2 rounded-full">

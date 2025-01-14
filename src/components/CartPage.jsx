@@ -131,6 +131,80 @@ export default function CartPage() {
     0
   );
 
+  const handleCheckout = async () => {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user) {
+      Swal.fire("Silakan login terlebih dahulu", "", "info");
+      return;
+    }
+
+    try {
+      // Simpan data ke tabel `history`
+      const { error: historyError } = await supabase.from("history").insert(
+        cart.map((item) => ({
+          profile_id: user.user.id,
+          coffee_id: item.coffee_id,
+          quantity: item.quantity,
+        }))
+      );
+
+      if (historyError) {
+        console.error(historyError);
+        Swal.fire(
+          "Gagal menyimpan data history pembayaran",
+          historyError.message,
+          "error"
+        );
+        return;
+      }
+
+      // Kurangi stok produk di tabel `coffee`
+      for (const item of cart) {
+        const newStock = item.coffee.stok - item.quantity;
+        const { error: stockError } = await supabase
+          .from("coffee")
+          .update({ stok: newStock })
+          .eq("id", item.coffee_id);
+
+        if (stockError) {
+          console.error(stockError);
+          Swal.fire(
+            `Gagal memperbarui stok untuk ${item.coffee.nama_produk}`,
+            stockError.message,
+            "error"
+          );
+          return;
+        }
+      }
+
+      // Hapus data keranjang setelah pembayaran
+      const { error: cartError } = await supabase
+        .from("cart")
+        .delete()
+        .eq("profile_id", user.user.id);
+
+      if (cartError) {
+        console.error(cartError);
+        Swal.fire(
+          "Gagal menghapus keranjang setelah pembayaran",
+          cartError.message,
+          "error"
+        );
+        return;
+      }
+
+      // Navigasi ke halaman sukses
+      Swal.fire({
+        title: "Pembayaran Berhasil",
+        text: "Pesanan Anda sedang diproses.",
+        icon: "success",
+      }).then(() => navigate("/payment-success"));
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Terjadi kesalahan saat memproses pembayaran", "", "error");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <div className="p-8 flex-grow max-w-7xl mx-auto">
@@ -225,7 +299,7 @@ export default function CartPage() {
               Total: {formatHarga(totalHarga)}
             </p>
             <button
-              onClick={() => navigate("/checkout")}
+              onClick={handleCheckout}
               className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 shadow-lg w-full sm:w-auto"
             >
               Lanjutkan Pembayaran

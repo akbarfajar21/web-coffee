@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../utils/SupaClient";
 import Swal from "sweetalert2";
-import { FiSettings, FiLogOut } from "react-icons/fi";
+import { FiSettings, FiLogOut, FiClipboard } from "react-icons/fi";
 import { FaMoon, FaSun } from "react-icons/fa"; // Import untuk ikon tema
 
 const Header = () => {
@@ -228,6 +228,14 @@ const Header = () => {
                             className="flex items-center text-sm text-gray-700 dark:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white rounded-lg p-2 transition duration-200"
                           >
                             <FiSettings className="mr-2" /> Settings
+                          </Link>
+                        </div>
+                        <div className="px-4 py-2">
+                          <Link
+                            to="/history"
+                            className="flex items-center text-sm text-gray-700 dark:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white rounded-lg p-2 transition duration-200"
+                          >
+                            <FiClipboard className="mr-2" /> History
                           </Link>
                         </div>
                         <div className="px-4 py-2">
