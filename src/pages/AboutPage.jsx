@@ -30,7 +30,7 @@ const AboutPage = () => {
             <img
               src="https://www.impulsecoffees.com/cdn/shop/articles/health_benefits_of_drinking_coffee_on_a_empty_stomach.jpg?crop=center&height=1200&v=1720594811&width=1200"
               alt="Kopi"
-              className="rounded-lg shadow-lg w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
+              className="rounded-lg shadow-lg w-full h-auto object-cover"
             />
           </div>
         </div>

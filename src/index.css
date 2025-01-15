@@ -113,3 +113,36 @@
 .animate-fade-in {
   animation: fade-in 0.3s ease-in-out;
 }
+
+/* Animasi untuk notifikasi berjalan dari ujung ke ujung */
+.notification-slide-in {
+  position: fixed;
+  top: 0;
+  left: 100%; /* Mulai dari luar layar */
+  width: 100%;
+  background-color: #22c55e; /* Warna hijau */
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1rem;
+  z-index: 1000;
+  animation: slideIn 4s ease-in-out;
+}
+
+@keyframes slideIn {
+  0% {
+    left: 100%; /* Mulai dari luar layar */
+  }
+  10% {
+    left: 0; /* Masuk ke layar */
+  }
+  90% {
+    left: 0; /* Tetap di tengah layar */
+  }
+  100% {
+    left: -100%; /* Keluar dari layar di sisi kiri */
+  }
+}
+
+
+

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaTrashAlt, FaArrowLeft } from "react-icons/fa";
-import Footer from "./Footer";
 import { supabase } from "../utils/SupaClient";
+import  Header  from "../components/Header";
 import Swal from "sweetalert2";
 
 export default function CartPage() {
@@ -207,7 +207,8 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-      <div className="p-8 flex-grow max-w-7xl mx-auto">
+      <Header />
+      <div className="p-2 flex-grow max-w-7xl mx-auto">
         <div className="flex items-center space-x-4 mb-6">
           <button
             onClick={() => navigate("/product")}
@@ -216,7 +217,7 @@ export default function CartPage() {
             <FaArrowLeft />
           </button>
 
-          <h1 className="text-3xl font-bold text-center flex-grow text-gray-800 dark:text-gray-200">
+          <h1 className="mt-32 text-3xl font-bold text-center flex-grow text-gray-800 dark:text-gray-200">
             Keranjang Belanja
           </h1>
         </div>
@@ -235,7 +236,7 @@ export default function CartPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
             {cart.map((item) => (
               <div
                 key={item.coffee_id}
@@ -307,7 +308,6 @@ export default function CartPage() {
           </div>
         )}
       </div>
-      <Footer />
     </div>
   );
 }

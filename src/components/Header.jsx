@@ -13,7 +13,6 @@ const Header = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [theme, setTheme] = useState("light");
-  const [time, setTime] = useState("");
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -26,26 +25,6 @@ const Header = () => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
     document.documentElement.classList.toggle("dark", savedTheme === "dark");
-  }, []);
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const options = {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      };
-      const formattedTime = now.toLocaleString("id-ID", options);
-      setTime(formattedTime);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -180,7 +159,7 @@ const Header = () => {
                     <li key={index} className="relative group">
                       <Link
                         to={path}
-                        className={`relative inline-block px-6 py-2 transition-all transform rounded-lg shadow-md ${
+                        className={`relative inline-block w-full text-center px-6 py-2 transition-all transform rounded-lg shadow-md ${
                           isActive
                             ? "bg-gradient-to-r from-[#ff6632] to-[#ff9966] text-white scale-105"
                             : "text-[#2c2c2c] dark:text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:shadow-lg hover:scale-110"
@@ -194,9 +173,6 @@ const Header = () => {
               </ul>
               <div className="w-full flex justify-end lg:border-l border-[#6d4c41]/10 items-center gap-3 pl-4 relative">
                 <div className="flex items-center gap-4">
-                  <div className="text-sm font-medium text-[#3e2723] dark:text-[#d7ccc8]">
-                    {time}
-                  </div>
                   <button
                     onClick={toggleTheme}
                     className="p-2 rounded-full bg-gray-200 dark:bg-gray-600 text-black dark:text-white"

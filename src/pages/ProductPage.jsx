@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
 import { Checkbox } from "@nextui-org/react";
+import { Card, Skeleton } from "@nextui-org/react";
 import Swal from "sweetalert2";
 
 export default function ProductPage() {
@@ -144,6 +145,17 @@ export default function ProductPage() {
       return;
     }
 
+    // Menampilkan SweetAlert loading
+    const swalLoading = Swal.fire({
+      title: "Menambahkan ke Keranjang...",
+      text: "Tunggu sebentar.",
+      didOpen: () => {
+        Swal.showLoading(); // Menampilkan loading spinner
+      },
+      allowOutsideClick: false,
+      showConfirmButton: false, // Tidak menampilkan tombol konfirmasi
+    });
+
     // Cek apakah produk sudah ada di keranjang
     const { data: cartData, error: cartError } = await supabase
       .from("cart")
@@ -163,9 +175,15 @@ export default function ProductPage() {
 
       if (updateError) {
         console.error("Error updating cart:", updateError.message);
+        swalLoading.close(); // Menutup loading jika ada error
       } else {
         setCartAnimation(true);
         setTimeout(() => setCartAnimation(false), 1000);
+
+        // Tampilkan SweetAlert loading lebih lama sebelum menutup
+        setTimeout(() => {
+          swalLoading.close(); // Menutup loading setelah 2 detik
+        }, 2000); // Atur delay 2 detik (atau 3000 untuk 3 detik)
       }
     } else {
       const { error: insertError } = await supabase.from("cart").insert([
@@ -178,9 +196,14 @@ export default function ProductPage() {
 
       if (insertError) {
         console.error("Error inserting to cart:", insertError.message);
+        swalLoading.close(); // Menutup loading jika ada error
       } else {
         setCartAnimation(true);
         setTimeout(() => setCartAnimation(false), 1000);
+
+        setTimeout(() => {
+          swalLoading.close();
+        }, 2000);
       }
     }
   };
@@ -208,7 +231,6 @@ export default function ProductPage() {
             placeholder="Cari produk..."
             className="w-full max-w-md px-4 py-3 border justify-center border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white"
           />
-
           <button
             onClick={() => navigate("/cart")}
             className={`relative text-2xl text-[#ff6632] ${
@@ -291,11 +313,38 @@ export default function ProductPage() {
 
           <div className="lg:col-span-3">
             {loading ? (
-              <div className="flex justify-center items-center h-full">
-                <ClipLoader color="#ff6632" size={60} />
+              // Tampilkan skeleton saat loading
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <Card
+                    key={index}
+                    className="w-[200px] space-y-5 p-4"
+                    radius="lg"
+                  >
+                    <Skeleton className="rounded-lg">
+                      <div className="h-24 rounded-lg bg-default-300" />
+                    </Skeleton>
+                    <div className="space-y-3">
+                      <Skeleton className="w-3/5 rounded-lg">
+                        <div className="h-3 w-3/5 rounded-lg bg-default-200" />
+                      </Skeleton>
+                      <Skeleton className="w-4/5 rounded-lg">
+                        <div className="h-3 w-4/5 rounded-lg bg-default-200" />
+                      </Skeleton>
+                      <Skeleton className="w-2/5 rounded-lg">
+                        <div className="h-3 w-2/5 rounded-lg bg-default-300" />
+                      </Skeleton>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="flex justify-center items-center h-full text-center text-gray-600 dark:text-white">
+                <p>Produk tidak tersedia</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              // Tampilkan produk yang sudah dimuat
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {filteredProducts.map((product) => (
                   <div
                     key={product.id}
@@ -306,7 +355,7 @@ export default function ProductPage() {
                       <img
                         src={product.foto_barang}
                         alt={product.nama_produk}
-                        className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-48 object-cover"
                       />
                       {product.stok === 0 && (
                         <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -317,27 +366,29 @@ export default function ProductPage() {
                       )}
                     </div>
                     <div className="p-6 flex flex-col">
-                      <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                      <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-2">
                         {product.nama_produk}
                       </h2>
-                      <p className="text-sm text-gray-600 dark:text-white flex-grow mb-4 line-clamp-3">
+                      <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-white flex-grow mb-4 line-clamp-3">
                         {product.deskripsi}
                       </p>
                       <div className="text-sm text-gray-600 dark:text-white mb-4">
                         <strong>Stok: </strong>
                         {product.stok}
                       </div>
-                      <div className="text-sm text-gray-600 dark:text-white mb-4">
-                        {product.rating_produk ? (
-                          <span>{product.rating_produk} ⭐</span>
-                        ) : (
-                          <span>No Rating</span>
-                        )}
-                      </div>
-                      <div className="flex justify-between items-center mt-auto">
-                        <p className="text-base font-bold text-orange-600 dark:text-white">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                        <div className="text-sm text-gray-600 dark:text-white">
+                          {product.rating_produk ? (
+                            <span>{product.rating_produk} ⭐</span>
+                          ) : (
+                            <span>No Rating</span>
+                          )}
+                        </div>
+                        <p className="text-base font-bold text-orange-600 dark:text-white mt-2 sm:mt-0">
                           {formatRupiah(product.harga_produk)}
                         </p>
+                      </div>
+                      <div className="flex justify-between items-center mt-auto">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -350,7 +401,11 @@ export default function ProductPage() {
                               : "bg-orange-500 hover:bg-orange-600"
                           }`}
                         >
-                          {product.stok === 0 ? "Stok Habis" : "Add to Cart"}
+                          {product.stok === 0 ? (
+                            "Stok Habis"
+                          ) : (
+                            <i className="fas fa-cart-plus text-lg sm:text-base md:text-lg"></i>
+                          )}
                         </button>
                       </div>
                     </div>

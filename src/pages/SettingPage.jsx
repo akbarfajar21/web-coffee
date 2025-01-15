@@ -437,6 +437,7 @@ const SettingPage = () => {
             </h2>
             <input
               type="file"
+              accept="image/*"
               onChange={handleAvatarSelect}
               className="dark:text-white w-full p-2 border border-gray-300 rounded-lg"
             />
