@@ -14,7 +14,7 @@ export default function HistoryPage() {
       const { data, error } = await supabase
         .from("history")
         .select(
-          "id, quantity, status, created_at, coffee(nama_produk, foto_barang, harga_produk)"
+          "id, quantity, status, created_at, harga_saat_transaksi, coffee(nama_produk, foto_barang, harga_produk)"
         )
         .eq("profile_id", user.user.id);
 
@@ -30,20 +30,15 @@ export default function HistoryPage() {
       JSON.parse(localStorage.getItem("notifiedItems")) || [];
 
     history.forEach((item) => {
-      if (
-        item.status === "Approved" &&
-        !notifiedItems.includes(item.id) // Periksa apakah item belum pernah ditampilkan
-      ) {
+      if (item.status === "Approved" && !notifiedItems.includes(item.id)) {
         setShowNotification(true);
 
-        // Tambahkan ID item ke `localStorage`
         const updatedNotifiedItems = [...notifiedItems, item.id];
         localStorage.setItem(
           "notifiedItems",
           JSON.stringify(updatedNotifiedItems)
         );
 
-        // Hilangkan notifikasi setelah animasi selesai (4 detik)
         setTimeout(() => setShowNotification(false), 4000);
       }
     });
@@ -66,48 +61,56 @@ export default function HistoryPage() {
             Belum ada riwayat pembayaran.
           </p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 m-3">
-            {history.map((item) => (
-              <div
-                key={item.id}
-                className="relative bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md"
-              >
-                <img
-                  src={item.coffee.foto_barang}
-                  alt={item.coffee.nama_produk}
-                  className="w-full h-36 sm:h-40 object-cover rounded-lg mb-4"
-                />
-                <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
-                  {item.coffee.nama_produk}
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  Jumlah : {item.quantity} produk
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  Harga : Rp{" "}
-                  {item.coffee.harga_produk.toLocaleString("id-ID")}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Total : Rp{" "}
-                  {(item.quantity * item.coffee.harga_produk).toLocaleString(
-                    "id-ID"
-                  )}
-                </p>
-                <p
-                  className={`mt-2 text-sm font-medium py-1 px-3 rounded-full inline-block text-center ${
-                    item.status === "Approved"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-yellow-100 text-yellow-600"
-                  }`}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-8 gap-1 m-2">
+            {history.map((item) => {
+              const hargaTerbaru = item.coffee.harga_produk;
+              const hargaTransaksi = item.harga_saat_transaksi || hargaTerbaru;
+
+              return (
+                <div
+                  key={item.id}
+                  className="relative bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md"
                 >
-                  {item.status}
-                </p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
-                  Terakhir dibeli:{" "}
-                  {new Date(item.created_at).toLocaleString("id-ID")}
-                </p>
-              </div>
-            ))}
+                  <img
+                    src={item.coffee.foto_barang}
+                    alt={item.coffee.nama_produk}
+                    className="w-full h-36 sm:h-40 object-cover rounded-lg mb-4"
+                  />
+                  <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+                    {item.coffee.nama_produk}
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    Jumlah: {item.quantity} produk
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    Harga Saat Transaksi: Rp{" "}
+                    {hargaTransaksi.toLocaleString("id-ID")}
+                  </p>
+                  {hargaTransaksi !== hargaTerbaru && (
+                    <p className="text-sm text-gray-400 dark:text-gray-500 line-through">
+                      Harga Terbaru: Rp {hargaTerbaru.toLocaleString("id-ID")}
+                    </p>
+                  )}
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Total: Rp{" "}
+                    {(item.quantity * hargaTransaksi).toLocaleString("id-ID")}
+                  </p>
+                  <p
+                    className={`mt-2 text-sm font-medium py-1 px-3 rounded-full inline-block text-center ${
+                      item.status === "Approved"
+                        ? "bg-green-100 text-green-600"
+                        : "bg-yellow-100 text-yellow-600"
+                    }`}
+                  >
+                    {item.status}
+                  </p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
+                    Terakhir dibeli:{" "}
+                    {new Date(item.created_at).toLocaleString("id-ID")}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         )}
       </main>

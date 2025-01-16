@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaTrashAlt, FaArrowLeft } from "react-icons/fa";
 import { supabase } from "../utils/SupaClient";
-import  Header  from "../components/Header";
+import Header from "../components/Header";
 import Swal from "sweetalert2";
 
 export default function CartPage() {
@@ -139,66 +139,119 @@ export default function CartPage() {
     }
 
     try {
-      // Simpan data ke tabel `history`
-      const { error: historyError } = await supabase.from("history").insert(
-        cart.map((item) => ({
-          profile_id: user.user.id,
-          coffee_id: item.coffee_id,
-          quantity: item.quantity,
-        }))
+      const itemDetails = cart.map((item) => ({
+        id: item.coffee_id,
+        price: item.coffee.harga_produk,
+        quantity: item.quantity,
+        name: item.coffee.nama_produk,
+      }));
+
+      const transactionDetails = {
+        order_id: `ORDER-${new Date().getTime()}`,
+        gross_amount: totalHarga,
+      };
+
+      const customerDetails = {
+        email: user.user.email,
+      };
+
+      const response = await fetch(
+        "http://localhost:5000/api/midtrans/create-payment",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            transactionDetails,
+            customerDetails,
+            itemDetails,
+          }),
+        }
       );
 
-      if (historyError) {
-        console.error(historyError);
-        Swal.fire(
-          "Gagal menyimpan data history pembayaran",
-          historyError.message,
-          "error"
-        );
-        return;
-      }
+      const { token } = await response.json();
 
-      // Kurangi stok produk di tabel `coffee`
-      for (const item of cart) {
-        const newStock = item.coffee.stok - item.quantity;
-        const { error: stockError } = await supabase
-          .from("coffee")
-          .update({ stok: newStock })
-          .eq("id", item.coffee_id);
+      window.snap.pay(token, {
+        onSuccess: async () => {
+          // Tambahkan data ke tabel history
+          const { error: historyError } = await supabase.from("history").insert(
+            cart.map((item) => ({
+              profile_id: user.user.id,
+              coffee_id: item.coffee_id,
+              quantity: item.quantity,
+              status: "Pending",
+              harga_saat_transaksi: item.coffee.harga_produk,
+            }))
+          );
 
-        if (stockError) {
-          console.error(stockError);
+          if (historyError) {
+            console.error(historyError);
+            Swal.fire(
+              "Terjadi kesalahan saat menyimpan riwayat",
+              historyError.message,
+              "error"
+            );
+            return;
+          }
+
+          // Kurangi stok pada tabel produk
+          for (const item of cart) {
+            const { error: stockError } = await supabase
+              .from("coffee")
+              .update({
+                stok: item.coffee.stok - item.quantity, // Kurangi stok sesuai jumlah pembelian
+              })
+              .eq("id", item.coffee_id);
+
+            if (stockError) {
+              console.error(stockError);
+              Swal.fire(
+                `Gagal mengurangi stok untuk ${item.coffee.nama_produk}`,
+                stockError.message,
+                "error"
+              );
+              return;
+            }
+          }
+
+          // Hapus data dari tabel cart
+          const { error: cartError } = await supabase
+            .from("cart")
+            .delete()
+            .eq("profile_id", user.user.id);
+
+          if (cartError) {
+            console.error(cartError);
+            Swal.fire(
+              "Terjadi kesalahan saat menghapus keranjang",
+              cartError.message,
+              "error"
+            );
+            return;
+          }
+
+          // Notifikasi sukses dan navigasi ke halaman HistoryPage
           Swal.fire(
-            `Gagal memperbarui stok untuk ${item.coffee.nama_produk}`,
-            stockError.message,
+            "Pembayaran Berhasil",
+            "Pesanan Anda sedang diproses.",
+            "success"
+          ).then(() => navigate("/history"));
+        },
+
+        onPending: () => {
+          Swal.fire(
+            "Pembayaran Tertunda",
+            "Silakan selesaikan pembayaran Anda.",
+            "info"
+          );
+        },
+        onError: () => {
+          Swal.fire(
+            "Pembayaran Gagal",
+            "Terjadi kesalahan saat memproses pembayaran.",
             "error"
           );
-          return;
-        }
-      }
-
-      // Hapus data keranjang setelah pembayaran
-      const { error: cartError } = await supabase
-        .from("cart")
-        .delete()
-        .eq("profile_id", user.user.id);
-
-      if (cartError) {
-        console.error(cartError);
-        Swal.fire(
-          "Gagal menghapus keranjang setelah pembayaran",
-          cartError.message,
-          "error"
-        );
-        return;
-      }
-
-      // Navigasi ke halaman sukses
-      Swal.fire({
-        title: "Pembayaran Berhasil",
-        text: "Pesanan Anda sedang diproses.",
-        icon: "success",
-      }).then(() => navigate("/payment-success"));
+        },
+      });
     } catch (error) {
       console.error(error);
       Swal.fire("Terjadi kesalahan saat memproses pembayaran", "", "error");
