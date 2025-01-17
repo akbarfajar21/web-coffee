@@ -83,14 +83,9 @@ export default function HistoryPage() {
                     Jumlah: {item.quantity} produk
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                    Harga Saat Transaksi: Rp{" "}
-                    {hargaTransaksi.toLocaleString("id-ID")}
+                    Harga Transaksi: Rp {hargaTransaksi.toLocaleString("id-ID")}
                   </p>
-                  {hargaTransaksi !== hargaTerbaru && (
-                    <p className="text-sm text-gray-400 dark:text-gray-500 line-through">
-                      Harga Terbaru: Rp {hargaTerbaru.toLocaleString("id-ID")}
-                    </p>
-                  )}
+
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                     Total: Rp{" "}
                     {(item.quantity * hargaTransaksi).toLocaleString("id-ID")}

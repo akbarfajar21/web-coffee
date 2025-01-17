@@ -4,10 +4,10 @@ import Footer from "../components/Footer";
 import { supabase } from "../utils/SupaClient";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import { ClipLoader } from "react-spinners";
 import { Checkbox } from "@nextui-org/react";
 import { Card, Skeleton } from "@nextui-org/react";
 import Swal from "sweetalert2";
+import LoadingBar from "react-top-loading-bar"; // Import LoadingBar
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -20,6 +20,7 @@ export default function ProductPage() {
   const [cart, setCart] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartAnimation, setCartAnimation] = useState(false);
+  const [progress, setProgress] = useState(0); // State for loading bar
 
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ export default function ProductPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
+      setProgress(30); // Set progress on fetch start
       try {
         const { data, error } = await supabase
           .from("coffee")
@@ -41,6 +43,7 @@ export default function ProductPage() {
         console.error("Error fetching products:", error.message);
       } finally {
         setLoading(false);
+        setProgress(100); // Set progress to 100% when fetch is done
       }
     };
 
@@ -175,7 +178,7 @@ export default function ProductPage() {
 
       if (updateError) {
         console.error("Error updating cart:", updateError.message);
-        swalLoading.close(); // Menutup loading jika ada error
+        swalLoading.close();
       } else {
         setCartAnimation(true);
         setTimeout(() => setCartAnimation(false), 1000);
@@ -215,6 +218,11 @@ export default function ProductPage() {
 
   return (
     <>
+      <LoadingBar
+        color="#ff6632"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Header />
       <div className="min-h-screen py-8 px-4 lg:px-12 dark:bg-gray-800">
         <div className="mb-8">
@@ -303,6 +311,30 @@ export default function ProductPage() {
               </div>
             </div>
 
+            <div className="pt-4">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
+                Nama
+              </h3>
+              <div className="space-y-3">
+                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
+                  <Checkbox
+                    isSelected={nameSortOrder === "asc"}
+                    onChange={() => setNameSortOrder("asc")}
+                    color="success"
+                  />
+                  <span>A - Z</span>
+                </label>
+                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
+                  <Checkbox
+                    isSelected={nameSortOrder === "desc"}
+                    onChange={() => setNameSortOrder("desc")}
+                    color="success"
+                  />
+                  <span>Z - A</span>
+                </label>
+              </div>
+            </div>
+
             <button
               onClick={resetFilters}
               className="w-full bg-orange-500 text-white font-semibold px-4 py-3 rounded-lg shadow-md hover:bg-orange-600 transition-all mt-6"
@@ -343,74 +375,129 @@ export default function ProductPage() {
                 <p>Produk tidak tersedia</p>
               </div>
             ) : (
-              // Tampilkan produk yang sudah dimuat
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 dark:bg-gray-700"
-                    onClick={() => handleProductClick(product.id)}
-                  >
-                    <div className="relative group">
-                      <img
-                        src={product.foto_barang}
-                        alt={product.nama_produk}
-                        className="w-full h-48 object-cover"
-                      />
-                      {product.stok === 0 && (
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                          <span className="text-white font-semibold text-xl">
-                            Stok Habis
-                          </span>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {/* Tampilkan Skeleton selama loading */}
+                {loading
+                  ? Array.from({ length: 8 }).map((_, index) => (
+                      <Card
+                        key={index}
+                        className="w-[200px] space-y-5 p-4"
+                        radius="lg"
+                      >
+                        {/* Skeleton untuk gambar */}
+                        <Skeleton className="rounded-lg">
+                          <div className="h-24 rounded-lg bg-default-300" />
+                        </Skeleton>
+                        <div className="space-y-3">
+                          {/* Skeleton untuk nama produk */}
+                          <Skeleton className="w-3/5 rounded-lg">
+                            <div className="h-3 w-3/5 rounded-lg bg-default-200" />
+                          </Skeleton>
+                          {/* Skeleton untuk deskripsi produk */}
+                          <Skeleton className="w-4/5 rounded-lg">
+                            <div className="h-3 w-4/5 rounded-lg bg-default-200" />
+                          </Skeleton>
+                          {/* Skeleton untuk stok */}
+                          <Skeleton className="w-2/5 rounded-lg">
+                            <div className="h-3 w-2/5 rounded-lg bg-default-300" />
+                          </Skeleton>
                         </div>
-                      )}
-                    </div>
-                    <div className="p-6 flex flex-col">
-                      <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-2">
-                        {product.nama_produk}
-                      </h2>
-                      <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-white flex-grow mb-4 line-clamp-3">
-                        {product.deskripsi}
-                      </p>
-                      <div className="text-sm text-gray-600 dark:text-white mb-4">
-                        <strong>Stok: </strong>
-                        {product.stok}
-                      </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                        <div className="text-sm text-gray-600 dark:text-white">
-                          {product.rating_produk ? (
-                            <span>{product.rating_produk} ⭐</span>
+                      </Card>
+                    ))
+                  : filteredProducts.map((product) => (
+                      <div
+                        key={product.id}
+                        className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 dark:bg-gray-700"
+                        onClick={() => handleProductClick(product.id)}
+                      >
+                        <div className="relative group">
+                          {/* Gambar produk */}
+                          {loading ? (
+                            <Skeleton className="rounded-lg">
+                              <div className="h-48 w-full rounded-lg bg-default-300" />
+                            </Skeleton>
                           ) : (
-                            <span>No Rating</span>
+                            <img
+                              src={product.foto_barang}
+                              alt={product.nama_produk}
+                              className="w-full h-48 object-cover"
+                            />
+                          )}
+                          {product.stok === 0 && (
+                            <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                              <span className="text-white font-semibold text-xl">
+                                Stok Habis
+                              </span>
+                            </div>
                           )}
                         </div>
-                        <p className="text-base font-bold text-orange-600 dark:text-white mt-2 sm:mt-0">
-                          {formatRupiah(product.harga_produk)}
-                        </p>
-                      </div>
-                      <div className="flex justify-between items-center mt-auto">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(product.id);
-                          }}
-                          disabled={product.stok === 0}
-                          className={`px-4 py-2 text-white rounded-lg text-sm transition-colors ${
-                            product.stok === 0
-                              ? "bg-gray-400 cursor-not-allowed"
-                              : "bg-orange-500 hover:bg-orange-600"
-                          }`}
-                        >
-                          {product.stok === 0 ? (
-                            "Stok Habis"
+                        <div className="p-6 flex flex-col">
+                          {/* Nama produk */}
+                          {loading ? (
+                            <Skeleton className="w-3/5 rounded-lg">
+                              <div className="h-4 w-3/5 bg-default-200" />
+                            </Skeleton>
                           ) : (
-                            <i className="fas fa-cart-plus text-lg sm:text-base md:text-lg"></i>
+                            <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                              {product.nama_produk}
+                            </h2>
                           )}
-                        </button>
+                          {/* Deskripsi produk */}
+                          {loading ? (
+                            <Skeleton className="w-4/5 rounded-lg">
+                              <div className="h-3 w-4/5 bg-default-200" />
+                            </Skeleton>
+                          ) : (
+                            <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-white flex-grow mb-4 line-clamp-3">
+                              {product.deskripsi}
+                            </p>
+                          )}
+                          {/* Stok produk */}
+                          {loading ? (
+                            <Skeleton className="w-2/5 rounded-lg">
+                              <div className="h-3 w-2/5 bg-default-300" />
+                            </Skeleton>
+                          ) : (
+                            <div className="text-sm text-gray-600 dark:text-white mb-4">
+                              <strong>Stok: </strong>
+                              {product.stok}
+                            </div>
+                          )}
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <div className="text-sm text-gray-600 dark:text-white">
+                              {product.rating_produk ? (
+                                <span>{product.rating_produk} ⭐</span>
+                              ) : (
+                                <span>No Rating</span>
+                              )}
+                            </div>
+                            <p className="text-base font-bold text-orange-600 dark:text-white mt-2 sm:mt-0">
+                              {formatRupiah(product.harga_produk)}
+                            </p>
+                          </div>
+                          <div className="flex justify-between items-center mt-auto">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(product.id);
+                              }}
+                              disabled={product.stok === 0}
+                              className={`px-4 py-2 text-white rounded-lg text-sm transition-colors ${
+                                product.stok === 0
+                                  ? "bg-gray-400 cursor-not-allowed"
+                                  : "bg-orange-500 hover:bg-orange-600"
+                              }`}
+                            >
+                              {product.stok === 0 ? (
+                                "Stok Habis"
+                              ) : (
+                                <i className="fas fa-cart-plus text-lg sm:text-base md:text-lg"></i>
+                              )}
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    ))}
               </div>
             )}
           </div>

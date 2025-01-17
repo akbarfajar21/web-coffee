@@ -139,6 +139,16 @@ export default function CartPage() {
     }
 
     try {
+      // Tampilkan SweetAlert loading
+      Swal.fire({
+        title: "Memproses Pembayaran",
+        text: "Mohon tunggu, pembayaran sedang diproses...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       const itemDetails = cart.map((item) => ({
         id: item.coffee_id,
         price: item.coffee.harga_produk,
@@ -170,9 +180,11 @@ export default function CartPage() {
 
       const { token } = await response.json();
 
+      // Tutup SweetAlert loading setelah token diterima
+      Swal.close();
+
       window.snap.pay(token, {
         onSuccess: async () => {
-          // Tambahkan data ke tabel history
           const { error: historyError } = await supabase.from("history").insert(
             cart.map((item) => ({
               profile_id: user.user.id,
@@ -193,12 +205,11 @@ export default function CartPage() {
             return;
           }
 
-          // Kurangi stok pada tabel produk
           for (const item of cart) {
             const { error: stockError } = await supabase
               .from("coffee")
               .update({
-                stok: item.coffee.stok - item.quantity, // Kurangi stok sesuai jumlah pembelian
+                stok: item.coffee.stok - item.quantity,
               })
               .eq("id", item.coffee_id);
 
@@ -213,7 +224,6 @@ export default function CartPage() {
             }
           }
 
-          // Hapus data dari tabel cart
           const { error: cartError } = await supabase
             .from("cart")
             .delete()
@@ -229,7 +239,6 @@ export default function CartPage() {
             return;
           }
 
-          // Notifikasi sukses dan navigasi ke halaman HistoryPage
           Swal.fire(
             "Pembayaran Berhasil",
             "Pesanan Anda sedang diproses.",
@@ -254,6 +263,7 @@ export default function CartPage() {
       });
     } catch (error) {
       console.error(error);
+      Swal.close();
       Swal.fire("Terjadi kesalahan saat memproses pembayaran", "", "error");
     }
   };
