@@ -139,7 +139,6 @@ export default function CartPage() {
     }
 
     try {
-      // Tampilkan SweetAlert loading
       Swal.fire({
         title: "Memproses Pembayaran",
         text: "Mohon tunggu, pembayaran sedang diproses...",

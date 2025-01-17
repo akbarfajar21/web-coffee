@@ -3,9 +3,9 @@ import Header from "../components/Header";
 import Hero from "../components/Home/Hero";
 import TentangKami from "../components/Home/TentangKami";
 import Testimoni from "../components/Home/Testimoni";
-import Footer from "../components/Footer";
 import LiveChat from "../components/LiveChat";
 import FAQ from "../components/FAQ/Faq";
+import Footer from "../components/Footer";
 
 const HomePage = () => {
   return (

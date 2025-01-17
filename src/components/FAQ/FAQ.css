@@ -1,6 +1,5 @@
 .faq-container {
-    background-color: #f7fafc; 
-    padding: 40px 0;
+    padding: 10px 0;
     font-family: 'Inter', sans-serif;
   }
   
@@ -13,7 +12,7 @@
   }
   
   .faq-item {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     border-radius: 12px; 
     background-color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
@@ -40,11 +39,7 @@
     cursor: pointer;
     transition: color 0.3s ease, transform 0.3s ease;
   }
-  
-  .faq-button:hover {
-    color: #4c51bf; 
-  }
-  
+   
   .faq-answer {
     margin-top: 12px;
     font-size: 1rem;
@@ -59,10 +54,4 @@
   
   .faq-answer-closed {
     opacity: 0;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .faq-button:hover {
-      color: #e2c7b7;
-    }
   }

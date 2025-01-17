@@ -3,33 +3,45 @@ import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-b from-[#3e2723] to-[#4e342e] text-white py-6 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#333333] dark:text-gray-100">
+    <footer className="bg-gradient-to-b from-[#2d3748] to-[#4a5568] text-white py-8 dark:text-gray-100">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Tentang Kami */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-[#ff6632] dark:text-[#ff6632]">Tentang Kami</h3>
+            <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
+              Tentang Kami
+            </h3>
             <p className="text-gray-300 text-sm dark:text-gray-400">
-              Kami menyediakan kopi premium dari seluruh dunia. Bergabunglah dengan kami dalam perjalanan rasa yang luar biasa.
+              Kami menyediakan kopi premium dari seluruh dunia. Bergabunglah
+              dengan kami dalam perjalanan rasa yang luar biasa.
             </p>
           </div>
 
-          {/* Tautan Cepat */}
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-[#ff6632] dark:text-[#ff6632]">Tautan Cepat</h3>
+            <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
+              Tautan Cepat
+            </h3>
             <ul className="space-y-3">
               <li>
-                <a href="/" className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white">
+                <a
+                  href="/"
+                  className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white"
+                >
                   <i className="fas fa-chevron-right mr-2"></i> Home
                 </a>
               </li>
               <li>
-                <a href="/product" className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white">
+                <a
+                  href="/product"
+                  className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white"
+                >
                   <i className="fas fa-chevron-right mr-2"></i> Product
                 </a>
               </li>
               <li>
-                <a href="/about" className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white">
+                <a
+                  href="/about"
+                  className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white"
+                >
                   <i className="fas fa-chevron-right mr-2"></i> About
                 </a>
               </li>
@@ -38,11 +50,16 @@ const Footer = () => {
 
           {/* Kontak */}
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-[#ff6632] dark:text-[#ff6632]">Kontak</h3>
+            <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
+              Kontak
+            </h3>
             <ul className="space-y-3 text-gray-300 text-sm dark:text-gray-400">
               <li>
                 <i className="fas fa-envelope mr-3"></i>
-                <a href="mailto:akbarfajar2112@gmail.com" className="hover:text-white dark:hover:text-white">
+                <a
+                  href="mailto:akbarfajar2112@gmail.com"
+                  className="hover:text-white dark:hover:text-white"
+                >
                   akbarfajar2112@gmail.com
                 </a>
               </li>
@@ -59,8 +76,10 @@ const Footer = () => {
 
           {/* Ikuti Kami */}
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-[#ff6632] dark:text-[#ff6632]">Ikuti Kami</h3>
-            <div className="flex space-x-5 text-gray-300 text-xl dark:text-gray-400">
+            <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
+              Ikuti Kami
+            </h3>
+            <div className="flex space-x-5 text-gray-300 text-2xl dark:text-gray-400">
               <a
                 href="https://wa.me/62895335545919"
                 target="_blank"
@@ -90,9 +109,11 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-8 border-t border-[#ff6632] pt-4 text-center dark:border-[#ff6632]">
+        <div className="mt-8 border-t border-[#fbbf24] pt-4 text-center dark:border-[#fbbf24]">
           <p className="text-gray-300 text-sm dark:text-gray-400">
-            &copy; {new Date().getFullYear()} <span className="font-semibold">MyCoffee</span>. All Rights Reserved.
+            &copy; {new Date().getFullYear()}{" "}
+            <span className="font-semibold">MyCoffee</span>. All Rights
+            Reserved.
           </p>
         </div>
       </div>

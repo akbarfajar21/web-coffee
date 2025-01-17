@@ -1,93 +1,76 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { FaCheckCircle, FaGlobe, FaUsers } from "react-icons/fa";
 
-const AboutPage = () => {
+function AboutPage() {
   return (
-    <>
+    <div className="flex flex-col min-h-screen  dark:bg-gray-900">
       <Header />
-
-      <section className="py-20 bg-gray-50 dark:bg-gray-800 dark:text-gray-100">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div data-aos="fade-right">
-            <h2 className="text-4xl font-extrabold text-amber-500 mb-6 dark:text-amber-400">
-              Siapa Kami
-            </h2>
-            <p className="text-gray-600 leading-relaxed mb-6 text-lg md:text-xl dark:text-gray-400">
-              Website kami berkomitmen untuk memberikan pengalaman kopi terbaik.
-              Mulai dari pemilihan biji kopi berkualitas hingga menciptakan
-              campuran yang sempurna, kami bersemangat untuk memberikan
-              kebahagiaan di setiap cangkir.
+      <main className="flex-grow mt-10 px-6 md:px-20">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mt-10  mb-8 text-center">
+          About Us
+        </h1>
+        <section className="about py-16 rounded-lg  dark:bg-gray-800">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+            <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl">
+              Di Coffee Shop Me, kami percaya bahwa kopi lebih dari sekadar
+              minuman—ini adalah cara hidup. Sejak didirikan pada tahun 2022,
+              kami berkomitmen untuk menyajikan secangkir kopi terbaik dengan
+              cita rasa yang otentik dan mengesankan. Tempat ini adalah ruang
+              untuk bersantai, menikmati kopi sambil menciptakan kenangan
+              bersama teman-teman, atau bekerja dengan suasana yang mendukung
+              produktivitas.
             </p>
-            <p className="text-gray-600 leading-relaxed text-lg md:text-xl dark:text-gray-400">
-              Perjalanan kami dimulai dengan visi untuk berbagi cinta terhadap
-              kopi dengan dunia, menciptakan ruang di mana para pecinta kopi
-              bisa terhubung, belajar, dan menikmati momen bersama.
-            </p>
-          </div>
-          <div data-aos="fade-left">
             <img
-              src="https://www.impulsecoffees.com/cdn/shop/articles/health_benefits_of_drinking_coffee_on_a_empty_stomach.jpg?crop=center&height=1200&v=1720594811&width=1200"
-              alt="Kopi"
-              className="rounded-lg shadow-lg w-full h-auto object-cover"
+              src="/coffeeabout.png"
+              alt="Cerita Kami"
+              className="w-full md:w-1/2"
             />
           </div>
-        </div>
-      </section>
+        </section>
 
-      <div className="relative w-full bg-gradient-to-r from-gray-100 via-white to-gray-100 h-16 -skew-y-2 dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"></div>
+        <section className="gallery ">
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 dark:text-gray-100 mb-6 text-center">
+            Galeri Kami
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <img
+              src="gallery1.webp"
+              alt="Interior"
+              className="rounded-lg shadow-md"
+            />
+            <img
+              src="gallery2.jpg"
+              alt="Acara Kopi"
+              className="rounded-lg shadow-md"
+            />
+            <img
+              src="gallery3.jpg"
+              alt="Menu Kopi"
+              className="rounded-lg shadow-md"
+            />
+            <img
+              src="gallery4.jpg"
+              alt="Barista"
+              className="rounded-lg shadow-md"
+            />
+          </div>
+        </section>
 
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:bg-gradient-to-b dark:from-gray-800 dark:to-gray-900">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-extrabold mb-6 text-amber-500 dark:text-amber-400">Misi Kami</h2>
-          <p className="text-gray-600 leading-relaxed max-w-3xl mx-auto text-lg md:text-xl dark:text-gray-400">
-            Untuk menginspirasi dan menghubungkan orang-orang melalui cinta
-            terhadap kopi. Kami berusaha memberikan kualitas terbaik dan
-            pengalaman yang unik, sambil membangun komunitas pecinta kopi yang
-            berbagi semangat kami untuk kesempurnaan.
+        <section className="cta text-center mt-20">
+          <h2 className="text-3xl md:text-4xl font-extrabold dark:text-white mb-6">
+            Bergabunglah dengan Komunitas Kopi Kami
+          </h2>
+          <p className="text-base md:text-lg mb-8 max-w-2xl dark:text-white mx-auto">
+            Ikuti kami di media sosial dan jadilah bagian dari perjalanan kami.
+            Bagikan momen kopi Anda dengan menggunakan #CoffeeShopMe dan temui
+            teman-teman baru yang memiliki kecintaan yang sama terhadap kopi.
           </p>
-        </div>
-      </section>
-
-      <div className="relative w-full bg-gradient-to-r from-white to-gray-50 h-16 skew-y-2 dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-800"></div>
-
-      <section className="py-20 bg-white dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-center">
-          <div data-aos="zoom-in" className="group">
-            <FaCheckCircle className="w-16 h-16 mx-auto text-amber-500 mb-6 group-hover:scale-110 transition-transform duration-300 dark:text-amber-400" />
-            <h3 className="text-2xl font-bold text-gray-800 mb-4 dark:text-gray-100">
-              Kualitas Tinggi
-            </h3>
-            <p className="text-gray-600 leading-relaxed text-sm sm:text-base md:text-lg dark:text-gray-400">
-              Kami hanya menggunakan bahan terbaik untuk memastikan setiap
-              cangkir sempurna.
-            </p>
-          </div>
-          <div data-aos="zoom-in" data-aos-delay="100" className="group">
-            <FaGlobe className="w-16 h-16 mx-auto text-amber-500 mb-6 group-hover:scale-110 transition-transform duration-300 dark:text-amber-400" />
-            <h3 className="text-2xl font-bold text-gray-800 mb-4 dark:text-gray-100">
-              Keberlanjutan
-            </h3>
-            <p className="text-gray-600 leading-relaxed text-sm sm:text-base md:text-lg dark:text-gray-400">
-              Komitmen kami terhadap lingkungan mendorong kami untuk memilih
-              sumber yang bertanggung jawab.
-            </p>
-          </div>
-          <div data-aos="zoom-in" data-aos-delay="200" className="group">
-            <FaUsers className="w-16 h-16 mx-auto text-amber-500 mb-6 group-hover:scale-110 transition-transform duration-300 dark:text-amber-400" />
-            <h3 className="text-2xl font-bold text-gray-800 mb-4 dark:text-gray-100">Komunitas</h3>
-            <p className="text-gray-600 leading-relaxed text-sm sm:text-base md:text-lg dark:text-gray-400">
-              Membangun komunitas pecinta kopi adalah inti dari apa yang kami
-              lakukan.
-            </p>
-          </div>
-        </div>
-      </section>
-
+        </section>
+      </main>
       <Footer />
-    </>
+    </div>
   );
-};
+}
 
 export default AboutPage;

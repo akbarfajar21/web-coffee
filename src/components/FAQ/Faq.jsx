@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
+import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid"; // Menggunakan format import Heroicons v2
 import "./FAQ.css"; // Import CSS file
 
 const FAQ = () => {
@@ -44,17 +45,21 @@ const FAQ = () => {
           });
 
           return (
-            <div key={index} className="faq-item bg-gray-200 dark:bg-gray-700 rounded-lg mb-4">
+            <div key={index} className="faq-item bg-white dark:bg-gray-700 rounded-lg mb-4">
               <button
                 onClick={() => toggleFAQ(index)}
-                className="faq-button w-full text-left flex justify-between items-center py-4 px-6 text-lg font-semibold dark:bg-gray-600 dark:text-white dark:border-gray-600 rounded-lg"
+                className="faq-button w-full text-left flex justify-between items-center py-4 px-6 text-lg font-semibold  dark:text-white rounded-lg"
               >
                 <span>{faq.question}</span>
-                <span>{activeIndex === index ? "x" : "+"}</span>
+                {activeIndex === index ? (
+                  <XMarkIcon className="w-6 h-6 dark:text-white" />
+                ) : (
+                  <PlusIcon className="w-6 h-6 dark:text-white" />
+                )}
               </button>
               <animated.div style={props}>
                 <p
-                  className={`faq-answer p-4 rounded-lg text-sm dark:bg-gray-600 dark:text-white ${
+                  className={`faq-answer p-4 rounded-lg text-sm  dark:text-white ${
                     activeIndex === index ? "faq-answer-open" : "faq-answer-closed"
                   }`}
                 >

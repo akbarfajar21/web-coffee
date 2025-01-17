@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MaintenancePage from "./pages/MaintenancePage"; // Import halaman maintenance
+import MaintenancePage from "./pages/MaintenancePage";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProductPage from "./pages/ProductPage";
@@ -12,14 +12,15 @@ import DetailProduct from "./pages/DetailProduct";
 import NotFoundPage from "./pages/NotFoundPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import HistoryPage from "./pages/HistoryPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
-  const isMaintenance = true; // Ubah menjadi `false` saat pemeliharaan selesai
+  const isMaintenance = false;
 
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
-        {/* Jika maintenance aktif, arahkan ke halaman MaintenancePage */}
         {isMaintenance ? (
           <Route path="*" element={<MaintenancePage />} />
         ) : (

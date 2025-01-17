@@ -2,7 +2,7 @@ import React from "react";
 
 const TentangKami = () => {
   return (
-    <div className="p-6 bg-gray-100 dark:bg-gray-800">
+    <div className="p-6  dark:bg-gray-800">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between">
         <div className="w-full lg:w-1/2 lg:pr-8 mb-8 lg:mb-0">
           <img

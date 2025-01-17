@@ -33,7 +33,14 @@ const Testimoni = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center text-gray-500 dark:text-gray-300">Memuat testimoni...</p>;
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-800">
+        <div className="spinner-border animate-spin inline-block w-16 h-16 border-4 rounded-full border-t-4 border-gray-300 dark:border-t-gray-700"></div>
+        <p className="text-center text-gray-500 dark:text-white dark:bg-gray-800 ml-4">
+          Memuat testimoni...
+        </p>
+      </div>
+    );
   }
 
   if (error) {
@@ -45,7 +52,7 @@ const Testimoni = () => {
   }
 
   return (
-    <div className="py-8 px-4 w-full mx-auto dark:bg-gray-800">
+    <div className="py-8 px-4 w-full mx-auto dark:bg-gray-800 ">
       <h2 className="text-3xl font-bold text-center mb-6 dark:text-white">
         Testimoni Pengguna
       </h2>
@@ -55,7 +62,7 @@ const Testimoni = () => {
           <img
             src="/testimoni.gif"
             alt="Testimoni GIF"
-            className="w-80 h-80 object-cover mb-4"
+            className="w-80 h-80 object-cover mb-4 rounded-xl"
           />
           <h2 className="text-3xl font-semibold text-gray-600 dark:text-gray-300">
             Belum ada testimoni

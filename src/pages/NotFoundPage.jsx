@@ -16,7 +16,7 @@ const NotFoundPage = () => {
           halaman utama.
         </p>
         <a
-          href="/cart"
+          href="/"
           className="bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition-all duration-300"
         >
           Kembali
