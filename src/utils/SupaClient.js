@@ -5,6 +5,7 @@ const supabase_key = import.meta.env.VITE_SUPABASE_KEY;
 
 export const supabase = createClient(supabase_url, supabase_key, {
   auth: {
-    redirectTo: "https://mycoffee-web.vercel.app/auth/v1/callback", // Ganti dengan URL aplikasi Anda
+    redirectTo: "https://coffeeshopme.vercel.app/auth/v1/callback", // Ganti dengan URL aplikasi Anda
   },
 });
+

@@ -4,8 +4,11 @@ const HeroSection = () => {
   return (
     <section className="relative text-gray-700 dark:text-white">
       <div
-        className="absolute inset-0 bg-cover bg-bottom opacity-50 bg-fixed dark:brightness-50"
-        style={{ backgroundImage: "url('/coffee-background.jpg')" }}
+        className="absolute inset-0 bg-cover bg-center opacity-50 dark:brightness-50"
+        style={{ 
+          backgroundImage: "url('/coffee-background.jpg')", 
+          backgroundAttachment: "fixed" 
+        }}
       ></div>
       <div className="relative container mx-auto px-4 py-32 sm:py-48">
         <div className="text-center">
@@ -26,6 +29,13 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+      <style jsx>{`
+        @media (max-width: 640px) {
+          .bg-cover {
+            background-attachment: scroll;
+          }
+        }
+      `}</style>
     </section>
   );
 };

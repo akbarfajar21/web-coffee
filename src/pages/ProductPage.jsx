@@ -259,80 +259,53 @@ export default function ProductPage() {
             <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
               Filter Produk
             </h2>
-            {/* Filter form */}
+
+            {/* Filter Harga */}
             <div className="pt-4">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
                 Harga
               </h3>
-              <div className="space-y-3">
-                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
-                  <Checkbox
-                    defaultSelected
-                    isSelected={priceSortOrder === "asc"}
-                    onChange={() => setPriceSortOrder("asc")}
-                    color="success"
-                  />
-                  <span>Harga Termurah</span>
-                </label>
-                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
-                  <Checkbox
-                    defaultSelected
-                    isSelected={priceSortOrder === "desc"}
-                    onChange={() => setPriceSortOrder("desc")}
-                    color="success"
-                  />
-                  <span>Harga Termahal</span>
-                </label>
-              </div>
+              <select
+                value={priceSortOrder}
+                onChange={(e) => setPriceSortOrder(e.target.value)}
+                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-3"
+              >
+                <option value="">Pilih Harga</option>
+                <option value="asc">Harga Termurah</option>
+                <option value="desc">Harga Termahal</option>
+              </select>
             </div>
 
+            {/* Filter Stok */}
             <div className="pt-4">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
                 Stok
               </h3>
-              <div className="space-y-3">
-                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
-                  <Checkbox
-                    defaultSelected
-                    isSelected={stockSortOrder === "asc"}
-                    onChange={() => setStockSortOrder("asc")}
-                    color="success"
-                  />
-                  <span>Stok Terdikit</span>
-                </label>
-                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
-                  <Checkbox
-                    isSelected={stockSortOrder === "desc"}
-                    onChange={() => setStockSortOrder("desc")}
-                    color="success"
-                  />
-                  <span>Stok Terbanyak</span>
-                </label>
-              </div>
+              <select
+                value={stockSortOrder}
+                onChange={(e) => setStockSortOrder(e.target.value)}
+                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-3"
+              >
+                <option value="">Pilih Stok</option>
+                <option value="asc">Stok Terdikit</option>
+                <option value="desc">Stok Terbanyak</option>
+              </select>
             </div>
 
+            {/* Filter Nama */}
             <div className="pt-4">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
                 Nama
               </h3>
-              <div className="space-y-3">
-                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
-                  <Checkbox
-                    isSelected={nameSortOrder === "asc"}
-                    onChange={() => setNameSortOrder("asc")}
-                    color="success"
-                  />
-                  <span>A - Z</span>
-                </label>
-                <label className="flex items-center space-x-3 text-base text-gray-600 dark:text-white">
-                  <Checkbox
-                    isSelected={nameSortOrder === "desc"}
-                    onChange={() => setNameSortOrder("desc")}
-                    color="success"
-                  />
-                  <span>Z - A</span>
-                </label>
-              </div>
+              <select
+                value={nameSortOrder}
+                onChange={(e) => setNameSortOrder(e.target.value)}
+                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-3"
+              >
+                <option value="">Pilih Nama</option>
+                <option value="asc">A - Z</option>
+                <option value="desc">Z - A</option>
+              </select>
             </div>
 
             <button

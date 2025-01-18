@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid"; // Menggunakan format import Heroicons v2
-import "./FAQ.css"; // Import CSS file
+import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -34,35 +33,39 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="faq-container dark:bg-gray-800 dark:text-gray-100">
-      <h2 className="faq-title text-white dark:text-white">FAQ</h2>
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="faq-container  dark:bg-gray-800 dark:text-gray-100 py-10">
+      <h2 className="faq-title text-2xl font-bold text-center text-black dark:text-white mb-8">
+        FAQ
+      </h2>
+      <div className="max-w-6xl mx-auto px-4">
         {faqs.map((faq, index) => {
           const props = useSpring({
             opacity: activeIndex === index ? 1 : 0,
             maxHeight: activeIndex === index ? "200px" : "0px",
             overflow: "hidden",
+            config: { tension: 300, friction: 30 },
           });
 
           return (
-            <div key={index} className="faq-item bg-white dark:bg-gray-700 rounded-lg mb-4">
+            <div
+              key={index}
+              className="faq-item bg-white dark:bg-gray-700 rounded-lg shadow-md mb-4"
+            >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="faq-button w-full text-left flex justify-between items-center py-4 px-6 text-lg font-semibold  dark:text-white rounded-lg"
+                className="faq-button w-full flex justify-between items-center py-5 px-6 text-lg font-semibold text-gray-800 dark:text-white focus:outline-none"
               >
                 <span>{faq.question}</span>
-                {activeIndex === index ? (
-                  <XMarkIcon className="w-6 h-6 dark:text-white" />
-                ) : (
-                  <PlusIcon className="w-6 h-6 dark:text-white" />
-                )}
+                <div className="flex items-center justify-center w-8 h-8">
+                  {activeIndex === index ? (
+                    <XMarkIcon className="w-6 h-6 text-gray-500 dark:text-gray-300" />
+                  ) : (
+                    <PlusIcon className="w-6 h-6 text-gray-500 dark:text-gray-300" />
+                  )}
+                </div>
               </button>
               <animated.div style={props}>
-                <p
-                  className={`faq-answer p-4 rounded-lg text-sm  dark:text-white ${
-                    activeIndex === index ? "faq-answer-open" : "faq-answer-closed"
-                  }`}
-                >
+                <p className="faq-answer px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                   {faq.answer}
                 </p>
               </animated.div>

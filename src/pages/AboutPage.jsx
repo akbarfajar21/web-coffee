@@ -7,10 +7,10 @@ function AboutPage() {
     <div className="flex flex-col min-h-screen  dark:bg-gray-900">
       <Header />
       <main className="flex-grow mt-10 px-6 md:px-20">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mt-10  mb-8 text-center">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mt-10 dark:text-white text-center">
           About Us
         </h1>
-        <section className="about py-16 rounded-lg  dark:bg-gray-800">
+        <section className="about py-12 rounded-lg  ">
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl">
               Di Coffee Shop Me, kami percaya bahwa kopi lebih dari sekadar
@@ -21,11 +21,6 @@ function AboutPage() {
               bersama teman-teman, atau bekerja dengan suasana yang mendukung
               produktivitas.
             </p>
-            <img
-              src="/coffeeabout.png"
-              alt="Cerita Kami"
-              className="w-full md:w-1/2"
-            />
           </div>
         </section>
 
