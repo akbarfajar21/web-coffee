@@ -224,7 +224,7 @@ export default function ProductPage() {
         onLoaderFinished={() => setProgress(0)}
       />
       <Header />
-      <div className="min-h-screen py-8 px-4 lg:px-12 dark:bg-gray-800">
+      <div className="min-h-screen py-6 px-4 lg:px-12 dark:bg-gray-800">
         <div className="mb-8">
           <h1 className="mt-14 text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
             Produk Kami
@@ -255,20 +255,20 @@ export default function ProductPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-          <aside className="bg-white rounded-lg shadow-lg p-6 space-y-6 divide-y divide-gray-200 dark:bg-gray-700 dark:text-white">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+          <aside className="bg-white rounded-lg shadow-lg p-3 space-y-4 divide-y divide-gray-200 dark:bg-gray-700 dark:text-white text-sm">
+            <h2 className="text-lg font-bold mb-3 text-gray-800 dark:text-white">
               Filter Produk
             </h2>
 
             {/* Filter Harga */}
-            <div className="pt-4">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
+            <div className="pt-3">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-white mb-2">
                 Harga
               </h3>
               <select
                 value={priceSortOrder}
                 onChange={(e) => setPriceSortOrder(e.target.value)}
-                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-3"
+                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-1 text-sm"
               >
                 <option value="">Pilih Harga</option>
                 <option value="asc">Harga Termurah</option>
@@ -277,14 +277,14 @@ export default function ProductPage() {
             </div>
 
             {/* Filter Stok */}
-            <div className="pt-4">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
+            <div className="pt-3">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-white mb-2">
                 Stok
               </h3>
               <select
                 value={stockSortOrder}
                 onChange={(e) => setStockSortOrder(e.target.value)}
-                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-3"
+                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-1 text-sm"
               >
                 <option value="">Pilih Stok</option>
                 <option value="asc">Stok Terdikit</option>
@@ -293,14 +293,14 @@ export default function ProductPage() {
             </div>
 
             {/* Filter Nama */}
-            <div className="pt-4">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-3">
+            <div className="pt-3">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-white mb-2">
                 Nama
               </h3>
               <select
                 value={nameSortOrder}
                 onChange={(e) => setNameSortOrder(e.target.value)}
-                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-3"
+                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-1 text-sm"
               >
                 <option value="">Pilih Nama</option>
                 <option value="asc">A - Z</option>
@@ -310,167 +310,84 @@ export default function ProductPage() {
 
             <button
               onClick={resetFilters}
-              className="w-full bg-orange-500 text-white font-semibold px-4 py-3 rounded-lg shadow-md hover:bg-orange-600 transition-all mt-6"
+              className="w-full bg-orange-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-orange-600 transition-all mt-3 text-sm"
             >
               Reset Filter
             </button>
           </aside>
 
           <div className="lg:col-span-3">
-            {loading ? (
-              // Tampilkan skeleton saat loading
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {Array.from({ length: 8 }).map((_, index) => (
-                  <Card
-                    key={index}
-                    className="w-[200px] space-y-5 p-4"
-                    radius="lg"
-                  >
-                    <Skeleton className="rounded-lg">
-                      <div className="h-24 rounded-lg bg-default-300" />
-                    </Skeleton>
-                    <div className="space-y-3">
-                      <Skeleton className="w-3/5 rounded-lg">
-                        <div className="h-3 w-3/5 rounded-lg bg-default-200" />
-                      </Skeleton>
-                      <Skeleton className="w-4/5 rounded-lg">
-                        <div className="h-3 w-4/5 rounded-lg bg-default-200" />
-                      </Skeleton>
-                      <Skeleton className="w-2/5 rounded-lg">
-                        <div className="h-3 w-2/5 rounded-lg bg-default-300" />
-                      </Skeleton>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            ) : filteredProducts.length === 0 ? (
+            {filteredProducts.length === 0 ? (
               <div className="flex justify-center items-center h-full text-center text-gray-600 dark:text-white">
                 <p>Produk tidak tersedia</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {/* Tampilkan Skeleton selama loading */}
-                {loading
-                  ? Array.from({ length: 8 }).map((_, index) => (
-                      <Card
-                        key={index}
-                        className="w-[200px] space-y-5 p-4"
-                        radius="lg"
-                      >
-                        {/* Skeleton untuk gambar */}
-                        <Skeleton className="rounded-lg">
-                          <div className="h-24 rounded-lg bg-default-300" />
-                        </Skeleton>
-                        <div className="space-y-3">
-                          {/* Skeleton untuk nama produk */}
-                          <Skeleton className="w-3/5 rounded-lg">
-                            <div className="h-3 w-3/5 rounded-lg bg-default-200" />
-                          </Skeleton>
-                          {/* Skeleton untuk deskripsi produk */}
-                          <Skeleton className="w-4/5 rounded-lg">
-                            <div className="h-3 w-4/5 rounded-lg bg-default-200" />
-                          </Skeleton>
-                          {/* Skeleton untuk stok */}
-                          <Skeleton className="w-2/5 rounded-lg">
-                            <div className="h-3 w-2/5 rounded-lg bg-default-300" />
-                          </Skeleton>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden dark:bg-gray-800"
+                    onClick={() => handleProductClick(product.id)}
+                  >
+                    <div className="relative group">
+                      {/* Gambar produk */}
+                      <img
+                        src={product.foto_barang}
+                        alt={product.nama_produk}
+                        className="w-full h-64 object-cover rounded-t-2xl"
+                      />
+                      {product.stok === 0 && (
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded-t-2xl">
+                          <span className="text-white font-semibold text-lg">
+                            Stok Habis
+                          </span>
                         </div>
-                      </Card>
-                    ))
-                  : filteredProducts.map((product) => (
-                      <div
-                        key={product.id}
-                        className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 dark:bg-gray-700"
-                        onClick={() => handleProductClick(product.id)}
-                      >
-                        <div className="relative group">
-                          {/* Gambar produk */}
-                          {loading ? (
-                            <Skeleton className="rounded-lg">
-                              <div className="h-48 w-full rounded-lg bg-default-300" />
-                            </Skeleton>
-                          ) : (
-                            <img
-                              src={product.foto_barang}
-                              alt={product.nama_produk}
-                              className="w-full h-48 object-cover"
-                            />
-                          )}
-                          {product.stok === 0 && (
-                            <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                              <span className="text-white font-semibold text-xl">
-                                Stok Habis
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="p-6 flex flex-col">
-                          {/* Nama produk */}
-                          {loading ? (
-                            <Skeleton className="w-3/5 rounded-lg">
-                              <div className="h-4 w-3/5 bg-default-200" />
-                            </Skeleton>
-                          ) : (
-                            <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-2">
-                              {product.nama_produk}
-                            </h2>
-                          )}
-                          {/* Deskripsi produk */}
-                          {loading ? (
-                            <Skeleton className="w-4/5 rounded-lg">
-                              <div className="h-3 w-4/5 bg-default-200" />
-                            </Skeleton>
-                          ) : (
-                            <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-white flex-grow mb-4 line-clamp-3">
-                              {product.deskripsi}
-                            </p>
-                          )}
-                          {/* Stok produk */}
-                          {loading ? (
-                            <Skeleton className="w-2/5 rounded-lg">
-                              <div className="h-3 w-2/5 bg-default-300" />
-                            </Skeleton>
-                          ) : (
-                            <div className="text-sm text-gray-600 dark:text-white mb-4">
-                              <strong>Stok: </strong>
-                              {product.stok}
-                            </div>
-                          )}
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                            <div className="text-sm text-gray-600 dark:text-white">
-                              {product.rating_produk ? (
-                                <span>{product.rating_produk} ⭐</span>
-                              ) : (
-                                <span>No Rating</span>
-                              )}
-                            </div>
-                            <p className="text-base font-bold text-orange-600 dark:text-white mt-2 sm:mt-0">
-                              {formatRupiah(product.harga_produk)}
-                            </p>
-                          </div>
-                          <div className="flex justify-between items-center mt-auto">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleAddToCart(product.id);
-                              }}
-                              disabled={product.stok === 0}
-                              className={`px-4 py-2 text-white rounded-lg text-sm transition-colors ${
-                                product.stok === 0
-                                  ? "bg-gray-400 cursor-not-allowed"
-                                  : "bg-orange-500 hover:bg-orange-600"
-                              }`}
-                            >
-                              {product.stok === 0 ? (
-                                "Stok Habis"
-                              ) : (
-                                <i className="fas fa-cart-plus text-lg sm:text-base md:text-lg"></i>
-                              )}
-                            </button>
-                          </div>
-                        </div>
+                      )}
+                    </div>
+                    <div className="p-6 flex flex-col space-y-4">
+                      {/* Nama produk */}
+                      <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                        {product.nama_produk}
+                      </h2>
+                      {/* Deskripsi produk */}
+                      <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                        {product.deskripsi}
+                      </p>
+                      {/* Stok dan Rating */}
+                      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                        <span>
+                          <strong>Stok:</strong> {product.stok}
+                        </span>
+                        <span>
+                          {product.rating_produk
+                            ? `${product.rating_produk} ⭐`
+                            : "No Rating"}
+                        </span>
                       </div>
-                    ))}
+                      {/* Harga produk */}
+                      <p className="text-lg font-bold text-orange-600 dark:text-orange-500">
+                        {formatRupiah(product.harga_produk)}
+                      </p>
+                      {/* Tombol Tambah ke Keranjang */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product.id);
+                        }}
+                        disabled={product.stok === 0}
+                        className={`mt-3 w-full py-3 rounded-lg text-sm font-medium text-white transition-colors ${
+                          product.stok === 0
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
+                        }`}
+                      >
+                        {product.stok === 0
+                          ? "Stok Habis"
+                          : "Tambah ke Keranjang"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
