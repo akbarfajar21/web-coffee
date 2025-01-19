@@ -13,9 +13,10 @@ import NotFoundPage from "./pages/NotFoundPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import HistoryPage from "./pages/HistoryPage";
 import ScrollToTop from "./components/ScrollToTop";
+import Register from "./Auth/RegisterPage";
 
 const App = () => {
-  const isMaintenance = false;
+  const isMaintenance = true;
 
   return (
     <Router>
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/product" element={<ProductPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/settings" element={<SettingPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/cart" element={<CartPage />} />
