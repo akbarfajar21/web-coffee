@@ -31,9 +31,27 @@ const Register = () => {
         email: formData.email,
         password: formData.password,
       });
+
       if (error) {
         throw new Error(error.message);
       }
+
+      const user = data.user;
+
+      const defaultAvatarUrl =
+        "https://static.vecteezy.com/system/resources/previews/011/490/381/non_2x/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg"; // URL gambar default
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: user.id,
+        username: formData.username,
+        full_name: formData.fullName,
+        email: formData.email,
+        avatar_url: defaultAvatarUrl,
+      });
+
+      if (profileError) {
+        throw new Error("Error saving user profile.");
+      }
+
       setSuccessMessage(
         "Registration successful! Redirecting to login page..."
       );
