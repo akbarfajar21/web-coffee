@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { FaPlus, FaTimes } from "react-icons/fa"; // Menggunakan react-icons
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -58,9 +58,9 @@ const FAQ = () => {
                 <span>{faq.question}</span>
                 <div className="flex items-center justify-center w-8 h-8">
                   {activeIndex === index ? (
-                    <XMarkIcon className="w-6 h-6 text-gray-500 dark:text-gray-300" />
+                    <FaTimes className="w-6 h-6 text-gray-500 dark:text-gray-300" /> // Menggunakan FaTimes
                   ) : (
-                    <PlusIcon className="w-6 h-6 text-gray-500 dark:text-gray-300" />
+                    <FaPlus className="w-6 h-6 text-gray-500 dark:text-gray-300" /> // Menggunakan FaPlus
                   )}
                 </div>
               </button>
