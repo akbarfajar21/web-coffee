@@ -13,18 +13,18 @@ const HeroSection = () => {
       <div className="relative container mx-auto px-4 py-32 sm:py-48">
         <div className="text-center">
           <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight mb-6 typewriter-text">
-            Selamat Datang di CoffeeShopMe
+            Welcome to CoffeeShopMe
           </h1>
           <p className="text-xl sm:text-2xl mb-6 typewriter-text">
-            Nikmati kopi terbaik yang disiapkan khusus untuk Anda. Bergabunglah
-            dengan kami untuk pengalaman kopi yang tak terlupakan.
+            Enjoy the finest coffee crafted just for you. Join us for an
+            unforgettable coffee experience.
           </p>
           <div className="flex justify-center">
             <a
               href="/product"
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:scale-105"
             >
-              Jelajahi Produk Kami
+              Explore Our Products
             </a>
           </div>
         </div>

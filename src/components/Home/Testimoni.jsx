@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../utils/SupaClient";
 
-const Testimoni = () => {
+const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,11 +12,11 @@ const Testimoni = () => {
         setLoading(true);
         setError(null);
 
-        // Mengambil semua data testimoni yang statusnya true
+        // Fetch all testimonials with a status of true
         const { data, error: fetchError } = await supabase
           .from("testimoni")
           .select("message, rating, profiles(full_name, avatar_url)")
-          .eq("status", true); // Filter status = true
+          .eq("status", true); // Filter by status = true
 
         if (fetchError) throw fetchError;
 
@@ -37,7 +37,7 @@ const Testimoni = () => {
       <div className="flex justify-center items-center min-h-screen bg-gray-800">
         <div className="spinner-border animate-spin inline-block w-16 h-16 border-4 rounded-full border-t-4 border-gray-300 dark:border-t-gray-700"></div>
         <p className="text-center text-gray-500 dark:text-white dark:bg-gray-800 ml-4">
-          Memuat testimoni...
+          Loading testimonials...
         </p>
       </div>
     );
@@ -46,26 +46,26 @@ const Testimoni = () => {
   if (error) {
     return (
       <p className="text-center text-red-500 dark:text-red-400">
-        Terjadi kesalahan: {error}
+        An error occurred: {error}
       </p>
     );
   }
 
   return (
-    <div className="py-8 px-4 w-full mx-auto dark:bg-gray-800 ">
+    <div className="py-8 px-4 w-full mx-auto dark:bg-gray-800">
       <h2 className="text-3xl font-bold text-center mb-6 dark:text-white">
-        Testimoni Pengguna
+        User Testimonials
       </h2>
 
       {testimonials.length === 0 ? (
         <div className="flex flex-col justify-center items-center text-center">
           <img
             src="/testimoni.gif"
-            alt="Testimoni GIF"
+            alt="Testimonial GIF"
             className="w-80 h-80 object-cover mb-4 rounded-xl"
           />
           <h2 className="text-3xl font-semibold text-gray-600 dark:text-gray-300">
-            Belum ada testimoni
+            No testimonials yet
           </h2>
         </div>
       ) : (
@@ -108,4 +108,4 @@ const Testimoni = () => {
   );
 };
 
-export default Testimoni;
+export default Testimonials;

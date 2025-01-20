@@ -8,17 +8,16 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
-              Tentang Kami
+              About Us
             </h3>
             <p className="text-gray-300 text-sm dark:text-gray-400">
-              Kami menyediakan kopi premium dari seluruh dunia. Bergabunglah
-              dengan kami dalam perjalanan rasa yang luar biasa.
+              We offer premium coffee from all over the world. Join us on an extraordinary taste journey.
             </p>
           </div>
 
           <div>
             <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
-              Tautan Cepat
+              Quick Links
             </h3>
             <ul className="space-y-3">
               <li>
@@ -48,10 +47,10 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Kontak */}
+          {/* Contact */}
           <div>
             <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
-              Kontak
+              Contact
             </h3>
             <ul className="space-y-3 text-gray-300 text-sm dark:text-gray-400">
               <li>
@@ -74,10 +73,10 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Ikuti Kami */}
+          {/* Follow Us */}
           <div>
             <h3 className="text-xl font-semibold mb-4 text-[#fbbf24] dark:text-[#fbbf24]">
-              Ikuti Kami
+              Follow Us
             </h3>
             <div className="flex space-x-5 text-gray-300 text-2xl dark:text-gray-400">
               <a

@@ -90,7 +90,6 @@ export default function DetailProduct() {
         return;
       }
 
-      // Cek apakah pengguna sudah memberikan rating
       if (userRating === 0) {
         Swal.fire({
           title: "Pilih Rating!",
@@ -109,7 +108,6 @@ export default function DetailProduct() {
         return;
       }
 
-      // Kirim rating dan komentar
       const { data, error } = await supabase.from("rating").insert([
         {
           coffee_id: id,
@@ -126,12 +124,10 @@ export default function DetailProduct() {
         text: `Anda memberikan rating ${userRating} / 5 dengan komentar: "${comment}".`,
         icon: "success",
         willClose: () => {
-          // Refresh halaman setelah SweetAlert ditutup
           window.location.reload();
         },
       });
 
-      // Update rating produk
       const { data: ratingsData, error: ratingsError } = await supabase
         .from("rating")
         .select("rating")
@@ -200,13 +196,10 @@ export default function DetailProduct() {
           .select("rating")
           .eq("coffee_id", id);
 
-        if (ratingsError) {
-          console.error("Error saat menghitung rating produk:", ratingsError);
-          throw ratingsError;
-        }
+        if (ratingsError) throw ratingsError;
 
         const avgRating = ratingsData.length
-          ? ratingsData.reduce((sum, rating) => sum + rating.rating, null) /
+          ? ratingsData.reduce((sum, rating) => sum + rating.rating, 0) /
             ratingsData.length
           : null;
 
@@ -258,37 +251,35 @@ export default function DetailProduct() {
         </div>
 
         <div className="flex flex-col items-start gap-8">
-          <div className="flex justify-center w-full">
-            <img
-              src={product.foto_barang}
-              alt={product.nama_produk}
-              className="w-80 h-auto rounded-lg shadow-md transform transition duration-300 hover:scale-105"
-            />
-          </div>
+          <img
+            src={product.foto_barang}
+            alt={product.nama_produk}
+            className="w-96 h-96 object-cover rounded-lg"
+          />
 
           <div className="w-full">
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
+            <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-6">
               {product.nama_produk}
             </h1>
-            <p className="text-md text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
               {product.deskripsi}
             </p>
-            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-4">
+            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-6">
               Rp {product.harga_produk.toLocaleString("id-ID")}
             </p>
-            <p className="text-md text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
               <strong>Stok:</strong> {product.stok}
             </p>
 
             <div className="flex items-center mb-6">
-              <FaStar className="text-yellow-500 text-xl" />
-              <p className="text-md font-medium text-gray-800 dark:text-white ml-2">
+              <FaStar className="text-yellow-500 text-2xl" />
+              <p className="text-lg font-medium text-gray-800 dark:text-white ml-2">
                 {rating ? Number(rating).toFixed(1) : "N/A"} / 5
               </p>
             </div>
 
-            <div className="mt-4">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">
+            <div className="mt-6">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
                 Berikan Rating dan Komentar:
               </h2>
               <div className="flex items-center space-x-4 mb-4">
@@ -296,7 +287,7 @@ export default function DetailProduct() {
                   <button
                     key={star}
                     onClick={() => setUserRating(star)}
-                    className={`text-2xl transition-transform duration-300 ${
+                    className={`text-3xl transition-transform duration-300 ${
                       star <= userRating
                         ? "text-yellow-500"
                         : "text-gray-400 dark:text-gray-500"
@@ -310,12 +301,12 @@ export default function DetailProduct() {
                 placeholder="Tambahkan komentar Anda..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white"
-                rows={3}
+                className="w-full p-3 border-2 border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mb-6"
+                rows={4}
               ></textarea>
               <button
                 onClick={handleRating}
-                className="mt-3 px-5 py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700"
+                className="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-all"
               >
                 Kirim
               </button>
@@ -324,22 +315,22 @@ export default function DetailProduct() {
             <div className="border-t border-gray-300 dark:border-gray-700 my-6"></div>
 
             <div className="mt-6">
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">
+              <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
                 Rating Pengguna Lain:
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {userRatings.length > 0 ? (
                   userRatings.map((ratingItem, index) => (
                     <div
                       key={ratingItem.profile_id}
-                      className="flex items-start space-x-3 p-3 border rounded-lg shadow-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                      className="flex items-start space-x-3 p-4 border-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
                     >
                       <img
                         src={
                           ratingItem.profile.avatar_url || "/default-avatar.png"
                         }
                         alt={ratingItem.profile.full_name}
-                        className="w-10 h-10 rounded-full object-cover"
+                        className="w-12 h-12 rounded-full object-cover"
                       />
                       <div className="flex-grow">
                         <p className="font-semibold text-gray-800 dark:text-white">
@@ -369,7 +360,7 @@ export default function DetailProduct() {
                                 onClick={() =>
                                   handleDeleteRating(ratingItem.profile_id)
                                 }
-                                className="block px-3 py-2 text-sm text-red-600 hover:bg-red-200 dark:text-red-400 dark:hover:bg-red-600"
+                                className="block px-4 py-2 text-sm text-red-600 hover:bg-red-200 dark:text-red-400 dark:hover:bg-red-600"
                               >
                                 Hapus Rating
                               </button>

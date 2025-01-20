@@ -168,6 +168,7 @@ const Header = () => {
                         <span className="relative z-10">{labels[index]}</span>
                       </Link>
                     </li>
+                    
                   );
                 })}
               </ul>

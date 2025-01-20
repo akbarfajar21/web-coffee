@@ -4,10 +4,9 @@ import Footer from "../components/Footer";
 import { supabase } from "../utils/SupaClient";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import { Checkbox } from "@nextui-org/react";
-import { Card, Skeleton } from "@nextui-org/react";
 import Swal from "sweetalert2";
-import LoadingBar from "react-top-loading-bar"; // Import LoadingBar
+import LoadingBar from "react-top-loading-bar";
+import Pagination from "../components/Pagination";
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -20,11 +19,12 @@ export default function ProductPage() {
   const [cart, setCart] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartAnimation, setCartAnimation] = useState(false);
-  const [progress, setProgress] = useState(0); // State for loading bar
+  const [progress, setProgress] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 10;
 
   const navigate = useNavigate();
 
-  // Fetch products from Supabase
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -49,6 +49,60 @@ export default function ProductPage() {
 
     fetchProducts();
   }, []);
+
+  // Handle search
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const searchedProducts = products.filter((product) =>
+      product.nama_produk.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredProducts(searchedProducts);
+    setCurrentPage(1); // Reset ke halaman pertama setelah pencarian
+  };
+
+  // Handle sort
+  useEffect(() => {
+    let sortedProducts = [...products];
+    if (priceSortOrder) {
+      sortedProducts.sort((a, b) =>
+        priceSortOrder === "asc"
+          ? a.harga_produk - b.harga_produk
+          : b.harga_produk - a.harga_produk
+      );
+    }
+
+    if (stockSortOrder) {
+      sortedProducts.sort((a, b) =>
+        stockSortOrder === "asc" ? a.stok - b.stok : b.stok - a.stok
+      );
+    }
+
+    if (nameSortOrder) {
+      sortedProducts.sort((a, b) =>
+        nameSortOrder === "asc"
+          ? a.nama_produk.localeCompare(b.nama_produk)
+          : b.nama_produk.localeCompare(a.nama_produk)
+      );
+    }
+
+    setFilteredProducts(sortedProducts);
+    setCurrentPage(1); // Reset ke halaman pertama setelah sorting
+  }, [priceSortOrder, stockSortOrder, nameSortOrder, products]);
+
+  // Pagination calculation
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   // Fetch cart from Supabase
   useEffect(() => {
@@ -76,46 +130,6 @@ export default function ProductPage() {
     fetchCart();
   }, [cart]);
 
-  useEffect(() => {
-    const handleSort = () => {
-      let sortedProducts = [...products];
-      if (priceSortOrder) {
-        sortedProducts.sort((a, b) =>
-          priceSortOrder === "asc"
-            ? a.harga_produk - b.harga_produk
-            : b.harga_produk - a.harga_produk
-        );
-      }
-
-      if (stockSortOrder) {
-        sortedProducts.sort((a, b) =>
-          stockSortOrder === "asc" ? a.stok - b.stok : b.stok - a.stok
-        );
-      }
-
-      if (nameSortOrder) {
-        sortedProducts.sort((a, b) =>
-          nameSortOrder === "asc"
-            ? a.nama_produk.localeCompare(b.nama_produk)
-            : b.nama_produk.localeCompare(a.nama_produk)
-        );
-      }
-
-      setFilteredProducts(sortedProducts);
-    };
-
-    handleSort();
-  }, [priceSortOrder, stockSortOrder, nameSortOrder, products]);
-
-  // Handle search
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    const searchedProducts = products.filter((product) =>
-      product.nama_produk.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredProducts(searchedProducts);
-  };
-
   // Reset filters
   const resetFilters = () => {
     setPriceSortOrder("");
@@ -123,6 +137,7 @@ export default function ProductPage() {
     setNameSortOrder("");
     setSearchQuery("");
     setFilteredProducts(products);
+    setCurrentPage(1); // Reset ke halaman pertama setelah reset filter
   };
 
   // Format currency
@@ -224,173 +239,191 @@ export default function ProductPage() {
         onLoaderFinished={() => setProgress(0)}
       />
       <Header />
-      <div className="min-h-screen py-6 px-4 lg:px-12 dark:bg-gray-800">
+      <div className="min-h-screen py-6 dark:bg-gray-800">
         <div className="mb-8">
           <h1 className="mt-14 text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
-            Produk Kami
+            Our Products
           </h1>
         </div>
 
-        <div className="flex justify-end mb-8 space-x-4">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            placeholder="Cari produk..."
-            className="w-full max-w-md px-4 py-3 border justify-center border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white"
-          />
-          <button
-            onClick={() => navigate("/cart")}
-            className={`relative text-2xl text-[#ff6632] ${
-              cartAnimation ? "animate-bounce" : ""
-            }`}
-          >
-            <FaShoppingCart />
-            {cartCount > 0 && (
-              <span className="absolute top-0 right-0 text-xs font-bold text-white bg-red-600 rounded-full px-2">
-                {cartCount}
-              </span>
-            )}
-          </button>
-        </div>
+        <div className="bg-white dark:bg-gray-900 py-6 px-4 lg:px-16">
+          {/* Product Filter */}
+          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Product Filter
+              </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-          <aside className="bg-white rounded-lg shadow-lg p-3 space-y-4 divide-y divide-gray-200 dark:bg-gray-700 dark:text-white text-sm">
-            <h2 className="text-lg font-bold mb-3 text-gray-800 dark:text-white">
-              Filter Produk
-            </h2>
-
-            {/* Filter Harga */}
-            <div className="pt-3">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-white mb-2">
-                Harga
-              </h3>
-              <select
-                value={priceSortOrder}
-                onChange={(e) => setPriceSortOrder(e.target.value)}
-                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-1 text-sm"
+              <button
+                onClick={() => navigate("/cart")}
+                className="relative text-3xl text-[#ff6632] hover:text-[#ff5500] transition-all transform hover:scale-105 focus:outline-none"
               >
-                <option value="">Pilih Harga</option>
-                <option value="asc">Harga Termurah</option>
-                <option value="desc">Harga Termahal</option>
-              </select>
+                <FaShoppingCart />
+                {cartCount > 0 && (
+                  <span className="absolute top-0 right-0 text-xs font-bold text-white bg-red-600 rounded-full px-2 py-0.5">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
             </div>
 
-            {/* Filter Stok */}
-            <div className="pt-3">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-white mb-2">
-                Stok
-              </h3>
-              <select
-                value={stockSortOrder}
-                onChange={(e) => setStockSortOrder(e.target.value)}
-                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-1 text-sm"
-              >
-                <option value="">Pilih Stok</option>
-                <option value="asc">Stok Terdikit</option>
-                <option value="desc">Stok Terbanyak</option>
-              </select>
-            </div>
-
-            {/* Filter Nama */}
-            <div className="pt-3">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-white mb-2">
-                Nama
-              </h3>
-              <select
-                value={nameSortOrder}
-                onChange={(e) => setNameSortOrder(e.target.value)}
-                className="w-full border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] p-1 text-sm"
-              >
-                <option value="">Pilih Nama</option>
-                <option value="asc">A - Z</option>
-                <option value="desc">Z - A</option>
-              </select>
-            </div>
-
-            <button
-              onClick={resetFilters}
-              className="w-full bg-orange-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-orange-600 transition-all mt-3 text-sm"
-            >
-              Reset Filter
-            </button>
-          </aside>
-
-          <div className="lg:col-span-3">
-            {filteredProducts.length === 0 ? (
-              <div className="flex justify-center items-center h-full text-center text-gray-600 dark:text-white">
-                <p>Produk tidak tersedia</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {/* Search Product Filter */}
+              <div className="md:col-span-2 lg:col-span-2">
+                <label
+                  htmlFor="search-bar"
+                  className="block text-sm font-semibold text-gray-700 dark:text-white mb-2"
+                >
+                  Search Product
+                </label>
+                <input
+                  id="search-bar"
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder="Search products..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm"
+                />
               </div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden dark:bg-gray-800"
-                    onClick={() => handleProductClick(product.id)}
-                  >
-                    <div className="relative group">
-                      {/* Gambar produk */}
-                      <img
-                        src={product.foto_barang}
-                        alt={product.nama_produk}
-                        className="w-full h-64 object-cover rounded-t-2xl"
-                      />
-                      {product.stok === 0 && (
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded-t-2xl">
-                          <span className="text-white font-semibold text-lg">
-                            Stok Habis
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-6 flex flex-col space-y-4">
-                      {/* Nama produk */}
-                      <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                        {product.nama_produk}
-                      </h2>
-                      {/* Deskripsi produk */}
-                      <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
-                        {product.deskripsi}
-                      </p>
-                      {/* Stok dan Rating */}
-                      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                        <span>
-                          <strong>Stok:</strong> {product.stok}
-                        </span>
-                        <span>
-                          {product.rating_produk
-                            ? `${product.rating_produk} ⭐`
-                            : "No Rating"}
-                        </span>
-                      </div>
-                      {/* Harga produk */}
-                      <p className="text-lg font-bold text-orange-600 dark:text-orange-500">
-                        {formatRupiah(product.harga_produk)}
-                      </p>
-                      {/* Tombol Tambah ke Keranjang */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddToCart(product.id);
-                        }}
-                        disabled={product.stok === 0}
-                        className={`mt-3 w-full py-3 rounded-lg text-sm font-medium text-white transition-colors ${
-                          product.stok === 0
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
-                        }`}
-                      >
-                        {product.stok === 0
-                          ? "Stok Habis"
-                          : "Tambah ke Keranjang"}
-                      </button>
-                    </div>
-                  </div>
-                ))}
+
+              {/* Price Filter */}
+              <div>
+                <label
+                  htmlFor="filter-harga"
+                  className="block text-sm font-semibold text-gray-700 dark:text-white mb-2"
+                >
+                  Price
+                </label>
+                <select
+                  id="filter-harga"
+                  value={priceSortOrder}
+                  onChange={(e) => setPriceSortOrder(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white text-sm"
+                >
+                  <option value="">Select Price</option>
+                  <option value="asc">Lowest Price</option>
+                  <option value="desc">Highest Price</option>
+                </select>
               </div>
-            )}
+
+              {/* Stock Filter */}
+              <div>
+                <label
+                  htmlFor="filter-stok"
+                  className="block text-sm font-semibold text-gray-700 dark:text-white mb-2"
+                >
+                  Stock
+                </label>
+                <select
+                  id="filter-stok"
+                  value={stockSortOrder}
+                  onChange={(e) => setStockSortOrder(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white text-sm"
+                >
+                  <option value="">Select Stock</option>
+                  <option value="asc">Most Stock</option>
+                  <option value="desc">Least Stock</option>
+                </select>
+              </div>
+
+              {/* Product Name Filter */}
+              <div>
+                <label
+                  htmlFor="filter-nama"
+                  className="block text-sm font-semibold text-gray-700 dark:text-white mb-2"
+                >
+                  Product Name
+                </label>
+                <select
+                  id="filter-nama"
+                  value={nameSortOrder}
+                  onChange={(e) => setNameSortOrder(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white text-sm"
+                >
+                  <option value="">Select Name</option>
+                  <option value="asc">A-Z</option>
+                  <option value="desc">Z-A</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Reset Button */}
+            <div className="mt-4">
+              <button
+                onClick={resetFilters}
+                className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+              >
+                Reset Filters
+              </button>
+            </div>
           </div>
+
+          {/* Products */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {currentProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-xl shadow-lg hover:shadow-2xl overflow-hidden dark:bg-gray-800"
+                onClick={() => handleProductClick(product.id)}
+              >
+                <div className="relative group">
+                  <img
+                    src={product.foto_barang}
+                    alt={product.nama_produk}
+                    className="w-full h-64 object-cover rounded-t-xl"
+                  />
+                  {product.stok === 0 && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded-t-xl">
+                      <span className="text-white font-semibold text-lg">
+                        Out of Stock
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4 sm:p-6 flex flex-col space-y-4">
+                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white truncate">
+                    {product.nama_produk}
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                    {product.deskripsi}
+                  </p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <span>
+                      <strong>Stock:</strong> {product.stok}
+                    </span>
+                    <span>
+                      {product.rating_produk
+                        ? `${product.rating_produk} ⭐`
+                        : "No Rating"}
+                    </span>
+                  </div>
+                  <p className="text-lg font-bold text-orange-600 dark:text-orange-500">
+                    {formatRupiah(product.harga_produk)}
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product.id);
+                    }}
+                    disabled={product.stok === 0}
+                    className={`mt-3 w-full py-3 rounded-lg text-sm font-medium text-white transition-all ${
+                      product.stok === 0
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
+                    }`}
+                  >
+                    {product.stok === 0 ? "Out of Stock" : "Add To Cart"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Pagination */}
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
       <Footer />

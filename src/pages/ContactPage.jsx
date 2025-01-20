@@ -32,8 +32,8 @@ const ContactPage = () => {
 
     if (userError) {
       Swal.fire({
-        title: "Tidak Terautentikasi",
-        text: "Anda perlu login untuk mengirim testimoni.",
+        title: "Not Authenticated",
+        text: "You need to log in to submit a testimonial.",
         imageUrl: "/login.gif",
         imageWidth: 300,
         imageHeight: 300,
@@ -52,14 +52,14 @@ const ContactPage = () => {
       if (error) {
         Swal.fire({
           icon: "error",
-          title: "Terjadi kesalahan",
-          text: "Terjadi kesalahan saat mengirim pesan.",
+          title: "An Error Occurred",
+          text: "There was an error while submitting the message.",
         });
       } else {
         Swal.fire({
           icon: "success",
-          title: "Pesan Terkirim!",
-          text: "Pesan Anda telah berhasil dikirim.",
+          title: "Message Sent!",
+          text: "Your message has been successfully submitted.",
         });
 
         setFormData({ message: "", rating: 0 });
@@ -73,11 +73,11 @@ const ContactPage = () => {
       <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
         <div className="py-8 px-6 max-w-4xl mx-auto flex-grow">
           <h1 className="text-5xl font-bold text-center mb-8 text-gray-800 mt-14 dark:text-gray-100">
-            Hubungi Kami
+            Contact Us
           </h1>
           <p className="text-center text-lg text-gray-600 mb-12 dark:text-gray-300">
-            Kami sangat menghargai umpan balik Anda. Silakan kirimkan pesan atau
-            testimoni Anda di bawah ini.
+            We greatly value your feedback. Please send your message or
+            testimonial below.
           </p>
 
           <form
@@ -89,7 +89,7 @@ const ContactPage = () => {
                 htmlFor="message"
                 className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300"
               >
-                Pesan
+                Message
               </label>
               <textarea
                 id="message"
@@ -99,7 +99,7 @@ const ContactPage = () => {
                 required
                 className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-blue-500"
                 rows="6"
-                placeholder="Tulis pesan Anda di sini"
+                placeholder="Write your message here"
               />
             </div>
             <div>
@@ -131,7 +131,7 @@ const ContactPage = () => {
                 type="submit"
                 className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition-transform transform hover:scale-105 dark:bg-blue-500 dark:hover:bg-blue-600"
               >
-                Kirim Pesan
+                Submit Message
               </button>
             </div>
           </form>
@@ -141,7 +141,7 @@ const ContactPage = () => {
         <div className="py-12 bg-white dark:bg-gray-800">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-gray-100">
-              Lokasi Kami
+              Our Location
             </h2>
             <div className="relative pb-[56.25%] rounded-xl overflow-hidden shadow-lg dark:shadow-2xl">
               <iframe

@@ -11,29 +11,29 @@ const FAQ = () => {
 
   const faqs = [
     {
-      question: "Apa itu CoffeeShopMe?",
+      question: "What is CoffeeShopMe?",
       answer:
-        "CoffeeShopMe adalah platform yang menyediakan berbagai pilihan kopi terbaik dari seluruh negeri dengan kualitas premium.",
+        "CoffeeShopMe is a platform that offers a wide variety of the best coffee from all over the country with premium quality.",
     },
     {
-      question: "Bagaimana cara memesan kopi di CoffeeShopMe?",
+      question: "How can I order coffee on CoffeeShopMe?",
       answer:
-        "Anda dapat memesan kopi langsung melalui website kami dengan memilih produk yang diinginkan dan mengikuti langkah checkout.",
+        "You can order coffee directly through our website by selecting the desired product and following the checkout steps.",
     },
     {
-      question: "Apakah ada layanan pengiriman?",
+      question: "Do you offer delivery services?",
       answer:
-        "Ya, kami menyediakan layanan pengiriman ke seluruh wilayah dengan waktu pengiriman yang cepat dan aman.",
+        "Yes, we provide delivery services to all areas with fast and secure delivery times.",
     },
     {
-      question: "Metode pembayaran apa saja yang diterima?",
+      question: "What payment methods are accepted?",
       answer:
-        "Kami menerima berbagai metode pembayaran, termasuk kartu kredit, transfer bank, dan dompet digital seperti OVO dan GoPay.",
+        "We accept various payment methods, including credit cards, bank transfers, and digital wallets like OVO and GoPay.",
     },
   ];
 
   return (
-    <div className="faq-container  dark:bg-gray-800 dark:text-gray-100 py-10">
+    <div className="faq-container dark:bg-gray-800 dark:text-gray-100 py-10">
       <h2 className="faq-title text-2xl font-bold text-center text-black dark:text-white mb-8">
         FAQ
       </h2>

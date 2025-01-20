@@ -32,7 +32,7 @@ const SettingPage = () => {
         if (error) {
           Swal.fire({
             title: "Error",
-            text: "Gagal memuat data profil.",
+            text: "Failed to load profile data.",
             icon: "error",
             confirmButtonText: "OK",
           });
@@ -47,11 +47,10 @@ const SettingPage = () => {
     fetchProfile();
   }, []);
 
-  // Fungsi untuk mengunggah avatar
   const uploadAvatarToStorage = async (file) => {
     try {
       if (!file) {
-        throw new Error("File avatar tidak ditemukan.");
+        throw new Error("Avatar file not found.");
       }
 
       const fileName = `${profile.id}-${Date.now()}-${file.name}`;
@@ -60,14 +59,14 @@ const SettingPage = () => {
         .upload(`public/avatars/${fileName}`, file);
 
       if (error) {
-        throw new Error("Gagal mengunggah file avatar ke storage.");
+        throw new Error("Failed to upload avatar to storage.");
       }
 
       const { data: urlData } = supabase.storage
         .from("avatars")
         .getPublicUrl(`public/avatars/${fileName}`);
 
-      return urlData.publicUrl; // URL file yang diunggah
+      return urlData.publicUrl;
     } catch (error) {
       console.error(error);
       throw error;
@@ -79,13 +78,12 @@ const SettingPage = () => {
     setUploading(true);
     setProgress(0);
 
-    // Progress bar interval
     interval = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress >= 100) {
           clearInterval(interval);
           setUploading(false);
-          setIsProcessing(true); // Tampilkan spinner setelah progress bar selesai
+          setIsProcessing(true);
           return 100;
         }
         return prevProgress + 5;
@@ -96,7 +94,7 @@ const SettingPage = () => {
 
     try {
       if (!profile.id) {
-        throw new Error("ID profil tidak ditemukan.");
+        throw new Error("Profile ID not found.");
       }
 
       const { error } = await supabase
@@ -114,12 +112,11 @@ const SettingPage = () => {
         throw new Error(error.message);
       }
 
-      // Beri jeda untuk spinner sebelum SweetAlert muncul
       setTimeout(() => {
         setIsProcessing(false);
         Swal.fire({
-          title: "Berhasil!",
-          text: "Profil berhasil diperbarui.",
+          title: "Success!",
+          text: "Profile updated successfully.",
           icon: "success",
           showConfirmButton: false,
           timer: 1200,
@@ -137,7 +134,7 @@ const SettingPage = () => {
       document.body.classList.remove("overflow-hidden");
       Swal.fire({
         title: "Error",
-        text: error.message || "Gagal memperbarui profil.",
+        text: error.message || "Failed to update profile.",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -168,10 +165,9 @@ const SettingPage = () => {
     try {
       const file = event.target.files[0];
       if (!file) {
-        throw new Error("Tidak ada file yang dipilih.");
+        throw new Error("No file selected.");
       }
 
-      // Mulai progress bar sebelum upload
       setUploading(true);
       setProgress(0);
 
@@ -182,14 +178,12 @@ const SettingPage = () => {
             setUploading(false);
             return 100;
           }
-          return prevProgress + 10; // Update progress setiap 100ms
+          return prevProgress + 10;
         });
       }, 100);
 
-      // Unggah file ke storage dan dapatkan URL-nya
       const avatarUrl = await uploadAvatarToStorage(file);
 
-      // Perbarui avatar_url di state lokal
       setEditData((prevData) => ({
         ...prevData,
         avatar_url: avatarUrl,
@@ -199,20 +193,19 @@ const SettingPage = () => {
         avatar_url: avatarUrl,
       }));
 
-      // Perbarui ke database Supabase
       const { error } = await supabase
         .from("profiles")
         .update({ avatar_url: avatarUrl })
         .eq("id", profile.id);
 
       if (error) {
-        throw new Error("Gagal memperbarui avatar di database.");
+        throw new Error("Failed to update avatar in database.");
       }
 
       setIsAvatarModalOpen(false);
 
       Swal.fire({
-        title: "Foto profil berhasil diubah...",
+        title: "Profile picture updated successfully...",
         timer: 2000,
         allowOutsideClick: false,
         didOpen: () => {
@@ -225,7 +218,7 @@ const SettingPage = () => {
       setUploading(false);
       Swal.fire({
         title: "Error",
-        text: error.message || "Terjadi kesalahan saat memperbarui avatar.",
+        text: error.message || "An error occurred while updating avatar.",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -266,7 +259,7 @@ const SettingPage = () => {
           </button>
 
           <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">
-            Pengaturan Profil
+            Profile Settings
           </h1>
           <div className="flex flex-col items-center space-y-6">
             <div className="relative">
@@ -322,7 +315,7 @@ const SettingPage = () => {
               </div>
               <div>
                 <label className="text-gray-700 font-semibold dark:text-gray-300">
-                  No Telepon
+                  Phone Number
                 </label>
                 <div className="text-gray-500 dark:text-gray-400">
                   {profile.no_telepon}
@@ -333,7 +326,7 @@ const SettingPage = () => {
               onClick={toggleModal}
               className="w-full mt-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
-              Edit Profil
+              Edit Profile
             </button>
           </div>
         </div>
@@ -343,7 +336,7 @@ const SettingPage = () => {
         <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
             <h2 className="text-xl font-semibold dark:text-white text-center mb-6">
-              Edit Profil
+              Edit Profile
             </h2>
             <div className="space-y-4">
               <div>
@@ -384,7 +377,7 @@ const SettingPage = () => {
               </div>
               <div>
                 <label className="text-gray-700 dark:text-gray-300">
-                  No Telepon
+                  Phone Number
                 </label>
                 <input
                   type="text"
@@ -400,13 +393,13 @@ const SettingPage = () => {
                 onClick={handleUpdate}
                 className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
               >
-                Simpan
+                Save
               </button>
               <button
                 onClick={toggleModal}
                 className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
               >
-                Batal
+                Cancel
               </button>
             </div>
           </div>
@@ -417,7 +410,7 @@ const SettingPage = () => {
         <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
             <h2 className="text-xl font-semibold text-center mb-6 dark:text-white">
-              Memperbarui Profil...
+              Updating Profile...
             </h2>
             <div className="w-full bg-gray-200 h-2 rounded-full">
               <div
@@ -433,7 +426,7 @@ const SettingPage = () => {
         <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
             <h2 className="text-xl font-semibold text-center dark:text-white mb-6">
-              Pilih Foto Avatar
+              Select Avatar Photo
             </h2>
             <input
               type="file"
@@ -459,7 +452,7 @@ const SettingPage = () => {
                 onClick={toggleAvatarModal}
                 className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
               >
-                Batal
+                Cancel
               </button>
             </div>
           </div>

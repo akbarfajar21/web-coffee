@@ -1,6 +1,6 @@
 import React from "react";
 
-const TentangKami = () => {
+const AboutUs = () => {
   return (
     <div className="p-6  dark:bg-gray-800">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between">
@@ -13,23 +13,21 @@ const TentangKami = () => {
         </div>
         <div className="w-full lg:w-1/2">
           <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-4 text-center lg:text-left">
-            Tentang Kami
+            About Us
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-300 text-center lg:text-left">
-            Kami adalah perusahaan yang berfokus pada penyediaan kopi
-            berkualitas tinggi dari seluruh dunia. Misi kami adalah memberikan
-            pengalaman kopi terbaik untuk setiap pelanggan, dengan berbagai
-            pilihan kopi yang dapat dinikmati kapan saja. Kami percaya bahwa
-            setiap cangkir kopi adalah kisah yang menghubungkan orang, dan kami
-            berkomitmen untuk memberikan rasa yang memanjakan indera setiap
-            tegukan.
+            We are a company focused on providing high-quality coffee from
+            around the world. Our mission is to deliver the best coffee
+            experience for every customer, with a variety of coffee options that
+            can be enjoyed at any time. We believe that every cup of coffee
+            tells a story that connects people, and we are committed to
+            providing flavors that pamper the senses with every sip.
           </p>
           <p className="text-lg text-gray-600 dark:text-gray-300 mt-4 text-center lg:text-left">
-            Kami juga berkomitmen untuk keberlanjutan dan berusaha untuk
-            mendukung petani kopi lokal di berbagai belahan dunia. Setiap produk
-            kopi yang kami tawarkan dipilih dengan cermat untuk memastikan
-            kualitas dan cita rasa yang luar biasa. Terima kasih telah menjadi
-            bagian dari perjalanan kopi kami!
+            We are also committed to sustainability and strive to support local
+            coffee farmers in different parts of the world. Every coffee product
+            we offer is carefully selected to ensure exceptional quality and
+            taste. Thank you for being a part of our coffee journey!
           </p>
         </div>
       </div>
@@ -37,4 +35,4 @@ const TentangKami = () => {
   );
 };
 
-export default TentangKami;
+export default AboutUs;

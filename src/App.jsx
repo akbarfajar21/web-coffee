@@ -7,16 +7,15 @@ import ProductPage from "./pages/ProductPage";
 import LoginPage from "./Auth/LoginPage";
 import SettingPage from "./pages/SettingPage";
 import ContactPage from "./pages/ContactPage";
-import CartPage from "./components/CartPage";
+import CartPage from "./pages/CartPage";
 import DetailProduct from "./pages/DetailProduct";
 import NotFoundPage from "./pages/NotFoundPage";
-import PaymentSuccess from "./pages/PaymentSuccess";
 import HistoryPage from "./pages/HistoryPage";
 import ScrollToTop from "./components/ScrollToTop";
 import Register from "./Auth/RegisterPage";
 
 const App = () => {
-  const isMaintenance = true;
+  const isMaintenance = false;
 
   return (
     <Router>
@@ -35,7 +34,6 @@ const App = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/product-detail/:id" element={<DetailProduct />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </>
