@@ -13,7 +13,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange }) {
     // Scroll ke atas halaman
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Agar scroll terasa halus
+      behavior: "smooth", 
     });
   };
 

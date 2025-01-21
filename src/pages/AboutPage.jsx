@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 function AboutPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulasi loading selesai setelah beberapa waktu
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); // Durasi 1 detik
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="loader animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-70"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen dark:bg-gray-900">
       <Header />

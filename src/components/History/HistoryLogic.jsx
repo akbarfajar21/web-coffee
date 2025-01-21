@@ -5,7 +5,7 @@ import { supabase } from "../../utils/SupaClient";
 
 export default function HistoryLogic({ setHistory, setShowNotification }) {
   const [history, setLocalHistory] = useState([]);
-  
+
   // Fetch history
   useEffect(() => {
     const fetchHistory = async () => {
@@ -15,7 +15,7 @@ export default function HistoryLogic({ setHistory, setShowNotification }) {
       const { data, error } = await supabase
         .from("history")
         .select(
-          "id, quantity, status, created_at, harga_saat_transaksi, coffee(nama_produk, foto_barang, harga_produk)"
+          "id, quantity, status, created_at,order_id, harga_saat_transaksi, coffee(nama_produk, foto_barang, harga_produk)"
         )
         .eq("profile_id", user.user.id);
 

@@ -254,10 +254,10 @@ export default function DetailProduct() {
           <img
             src={product.foto_barang}
             alt={product.nama_produk}
-            className="w-96 h-96 object-cover rounded-lg"
+            className="w-96 h-96 object-cover rounded-lg shadow-lg  mx-auto"
           />
 
-          <div className="w-full">
+          <div className="w-full max-w-2xl mx-auto">
             <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-6">
               {product.nama_produk}
             </h1>
@@ -287,7 +287,7 @@ export default function DetailProduct() {
                   <button
                     key={star}
                     onClick={() => setUserRating(star)}
-                    className={`text-3xl transition-transform duration-300 ${
+                    className={`text-3xl transition-all duration-300 ${
                       star <= userRating
                         ? "text-yellow-500"
                         : "text-gray-400 dark:text-gray-500"
@@ -323,7 +323,7 @@ export default function DetailProduct() {
                   userRatings.map((ratingItem, index) => (
                     <div
                       key={ratingItem.profile_id}
-                      className="flex items-start space-x-3 p-4 border-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                      className="flex items-start space-x-3 p-4 border-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
                     >
                       <img
                         src={

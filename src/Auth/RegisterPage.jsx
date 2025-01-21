@@ -27,6 +27,7 @@ const Register = () => {
 
     setIsLoading(true);
     try {
+      // Step 1: Sign up user
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -35,15 +36,13 @@ const Register = () => {
       if (error) {
         throw new Error(error.message);
       }
-
       const user = data.user;
 
       const defaultAvatarUrl =
-        "https://static.vecteezy.com/system/resources/previews/011/490/381/non_2x/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg"; // URL gambar default
+        "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
       const { error: profileError } = await supabase.from("profiles").upsert({
         id: user.id,
         username: formData.username,
-        full_name: formData.fullName,
         email: formData.email,
         avatar_url: defaultAvatarUrl,
       });
@@ -86,21 +85,21 @@ const Register = () => {
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label
-              htmlFor="fullName"
+              htmlFor="username"
               className="block text-sm font-semibold text-gray-700"
             >
-              Full Name
+              Username
             </label>
             <input
               type="text"
-              id="fullName"
-              value={formData.fullName}
+              id="username"
+              value={formData.username}
               onChange={(e) =>
-                setFormData({ ...formData, fullName: e.target.value })
+                setFormData({ ...formData, username: e.target.value })
               }
               required
               className="w-full mt-2 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your full name"
+              placeholder="Enter your username"
             />
           </div>
 

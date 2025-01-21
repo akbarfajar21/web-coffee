@@ -61,6 +61,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
               quantity: item.quantity,
               status: "Pending",
               harga_saat_transaksi: item.coffee.harga_produk,
+              order_id: transactionDetails.order_id
             }))
           );
 

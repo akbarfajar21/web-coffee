@@ -21,14 +21,14 @@ export default function ProductPage() {
   const [cartAnimation, setCartAnimation] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 10;
+  const productsPerPage = 18;
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      setProgress(30); // Set progress on fetch start
+      setProgress(30);
       try {
         const { data, error } = await supabase
           .from("coffee")
@@ -43,7 +43,7 @@ export default function ProductPage() {
         console.error("Error fetching products:", error.message);
       } finally {
         setLoading(false);
-        setProgress(100); // Set progress to 100% when fetch is done
+        setProgress(100);
       }
     };
 
@@ -57,10 +57,9 @@ export default function ProductPage() {
       product.nama_produk.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredProducts(searchedProducts);
-    setCurrentPage(1); // Reset ke halaman pertama setelah pencarian
+    setCurrentPage(1);
   };
 
-  // Handle sort
   useEffect(() => {
     let sortedProducts = [...products];
     if (priceSortOrder) {
@@ -268,7 +267,6 @@ export default function ProductPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {/* Search Product Filter */}
               <div className="md:col-span-2 lg:col-span-2">
                 <label
                   htmlFor="search-bar"
@@ -286,7 +284,6 @@ export default function ProductPage() {
                 />
               </div>
 
-              {/* Price Filter */}
               <div>
                 <label
                   htmlFor="filter-harga"
@@ -306,7 +303,6 @@ export default function ProductPage() {
                 </select>
               </div>
 
-              {/* Stock Filter */}
               <div>
                 <label
                   htmlFor="filter-stok"
@@ -326,7 +322,6 @@ export default function ProductPage() {
                 </select>
               </div>
 
-              {/* Product Name Filter */}
               <div>
                 <label
                   htmlFor="filter-nama"
@@ -347,7 +342,6 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Reset Button */}
             <div className="mt-4">
               <button
                 onClick={resetFilters}
@@ -358,33 +352,32 @@ export default function ProductPage() {
             </div>
           </div>
 
-          {/* Products */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {currentProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-xl shadow-lg hover:shadow-2xl overflow-hidden dark:bg-gray-800"
+                className="bg-white rounded-3xl shadow-lg overflow-hidden dark:bg-gray-900 dark:shadow-xl relative flex flex-col h-full"
                 onClick={() => handleProductClick(product.id)}
               >
                 <div className="relative group">
                   <img
                     src={product.foto_barang}
                     alt={product.nama_produk}
-                    className="w-full h-64 object-cover rounded-t-xl"
+                    className="w-full h-72 object-cover rounded-t-3xl"
                   />
                   {product.stok === 0 && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded-t-xl">
-                      <span className="text-white font-semibold text-lg">
+                    <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center rounded-t-3xl">
+                      <span className="text-white font-bold text-xl">
                         Out of Stock
                       </span>
                     </div>
                   )}
                 </div>
-                <div className="p-4 sm:p-6 flex flex-col space-y-4">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white truncate">
+                <div className="p-6 flex flex-col space-y-5 flex-grow">
+                  <h2 className="text-2xl font-bold text-gray-800 dark:text-white truncate">
                     {product.nama_produk}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
                     {product.deskripsi}
                   </p>
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
@@ -392,21 +385,30 @@ export default function ProductPage() {
                       <strong>Stock:</strong> {product.stok}
                     </span>
                     <span>
-                      {product.rating_produk
-                        ? `${product.rating_produk} ⭐`
+                      {product.rating_produk &&
+                      !isNaN(Number(product.rating_produk))
+                        ? `${parseFloat(
+                            Number(product.rating_produk).toFixed(1)
+                          )} ⭐`
                         : "No Rating"}
                     </span>
                   </div>
-                  <p className="text-lg font-bold text-orange-600 dark:text-orange-500">
-                    {formatRupiah(product.harga_produk)}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-lg font-semibold text-orange-600 dark:text-orange-500">
+                      {formatRupiah(product.harga_produk)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Kontainer untuk tombol yang selalu berada di bawah */}
+                <div className="p-6 pt-0">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart(product.id);
                     }}
                     disabled={product.stok === 0}
-                    className={`mt-3 w-full py-3 rounded-lg text-sm font-medium text-white transition-all ${
+                    className={`w-full py-2 px-5 rounded-full text-sm font-medium text-white transition-all duration-300 ease-in-out ${
                       product.stok === 0
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
@@ -418,7 +420,6 @@ export default function ProductPage() {
               </div>
             ))}
           </div>
-          {/* Pagination */}
           <Pagination
             totalPages={totalPages}
             currentPage={currentPage}

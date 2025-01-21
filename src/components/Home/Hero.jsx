@@ -5,9 +5,11 @@ const HeroSection = () => {
     <section className="relative text-gray-700 dark:text-white">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-50 dark:brightness-50"
-        style={{ 
-          backgroundImage: "url('/coffee-background.jpg')", 
-          backgroundAttachment: "fixed" 
+        style={{
+          backgroundImage: "url('/coffee-background.jpg')",
+          backgroundAttachment: "fixed",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
         }}
       ></div>
       <div className="relative container mx-auto px-4 py-32 sm:py-48">
@@ -33,6 +35,14 @@ const HeroSection = () => {
         @media (max-width: 640px) {
           .bg-cover {
             background-attachment: scroll;
+          }
+        }
+
+        /* Add responsiveness for background */
+        @media (max-width: 1024px) {
+          .bg-cover {
+            background-size: auto 100%; /* Adjust size on smaller screens */
+            background-position: center top;
           }
         }
       `}</style>
