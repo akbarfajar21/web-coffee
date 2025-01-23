@@ -1,25 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { supabase } from "../../utils/SupaClient";
 
 const CheckoutButton = ({ cart, totalHarga, navigate }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleCheckout = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+
     const { data: user } = await supabase.auth.getUser();
     if (!user) {
       Swal.fire("Silakan login terlebih dahulu", "", "info");
+      setIsProcessing(false);
       return;
     }
 
     try {
-      Swal.fire({
-        title: "Memproses Pembayaran",
-        text: "Mohon tunggu, pembayaran sedang diproses...",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-
       const itemDetails = cart.map((item) => ({
         id: item.coffee_id,
         price: item.coffee.harga_produk,
@@ -50,7 +47,6 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
       );
 
       const { token } = await response.json();
-      Swal.close();
 
       window.snap.pay(token, {
         onSuccess: async () => {
@@ -61,7 +57,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
               quantity: item.quantity,
               status: "Pending",
               harga_saat_transaksi: item.coffee.harga_produk,
-              order_id: transactionDetails.order_id
+              order_id: transactionDetails.order_id,
             }))
           );
 
@@ -72,6 +68,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
               historyError.message,
               "error"
             );
+            setIsProcessing(false);
             return;
           }
 
@@ -90,6 +87,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
                 stockError.message,
                 "error"
               );
+              setIsProcessing(false);
               return;
             }
           }
@@ -106,6 +104,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
               cartError.message,
               "error"
             );
+            setIsProcessing(false);
             return;
           }
 
@@ -133,17 +132,21 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
       });
     } catch (error) {
       console.error(error);
-      Swal.close();
       Swal.fire("Terjadi kesalahan saat memproses pembayaran", "", "error");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   return (
     <button
       onClick={handleCheckout}
-      className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-full shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all w-full sm:w-auto text-lg"
+      className={`bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all w-full sm:w-auto text-base ${
+        isProcessing ? "opacity-50 cursor-not-allowed" : ""
+      }`}
+      disabled={isProcessing}
     >
-      Lanjutkan Pembayaran
+      {isProcessing ? "Memproses..." : "Lanjutkan Pembayaran"}
     </button>
   );
 };
