@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { supabase } from "../utils/SupaClient";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleGoogleLogin = async () => {
     try {
@@ -74,7 +76,6 @@ const Login = () => {
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
-    console.log("Proses login dimulai");
 
     if (!email || !password) {
       Swal.fire({
@@ -124,12 +125,20 @@ const Login = () => {
   };
 
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-indigo-700 via-blue-500 to-blue-600 p-6">
-      <div className="max-w-md w-full bg-white shadow-xl rounded-2xl overflow-hidden p-8">
-        <h2 className="text-4xl font-extrabold text-gray-800 text-center mb-6">
+    <section
+      className="relative flex items-center justify-center min-h-screen bg-cover bg-center p-6"
+      style={{
+        backgroundImage:
+          "url('https://texascoffeeschool.com/wp-content/uploads/2021/10/DSC_0052-scaled.jpg')",
+      }}
+    >
+      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+
+      <div className="relative max-w-md w-full bg-black bg-opacity-70 backdrop-filter backdrop-blur-md rounded-2xl overflow-hidden p-8">
+        <h2 className="text-4xl font-extrabold text-white text-center mb-6">
           Selamat Datang
         </h2>
-        <p className="text-gray-600 text-center mb-6">
+        <p className="text-gray-300 text-center mb-6">
           Masuk untuk melanjutkan ke akun Anda!
         </p>
         <form onSubmit={handleEmailLogin} className="space-y-6">
@@ -139,16 +148,25 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full px-4 py-2 border rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-2 border rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2/4 transform -translate-y-2/4 text-gray-400 hover:text-white"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           <button
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-all"
@@ -157,22 +175,22 @@ const Login = () => {
           </button>
         </form>
         <div className="flex items-center justify-between my-6">
-          <hr className="w-full border-gray-300" />
-          <span className="text-gray-500 px-4">atau</span>
-          <hr className="w-full border-gray-300" />
+          <hr className="w-full border-gray-500" />
+          <span className="text-gray-300 px-4">atau</span>
+          <hr className="w-full border-gray-500" />
         </div>
         <button
           onClick={handleGoogleLogin}
-          className="w-full bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-all flex items-center justify-center space-x-3"
+          className="w-full bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-800 transition-all flex items-center justify-center space-x-3"
         >
           <img src="/logo-google.png" alt="Google" className="w-6 h-6" />
           <span>Login dengan Google</span>
         </button>
-        <p className="text-gray-500 mt-4 text-center">
+        <p className="text-gray-400 mt-4 text-center">
           Belum mempunyai akun?{" "}
           <span
             onClick={() => navigate("/register")}
-            className="text-blue-600 cursor-pointer hover:underline"
+            className="text-blue-400 cursor-pointer hover:underline"
           >
             Register
           </span>

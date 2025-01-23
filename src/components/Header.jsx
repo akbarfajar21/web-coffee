@@ -168,7 +168,6 @@ const Header = () => {
                         <span className="relative z-10">{labels[index]}</span>
                       </Link>
                     </li>
-                    
                   );
                 })}
               </ul>
@@ -188,12 +187,15 @@ const Header = () => {
                       onClick={() => setDropdownVisible(!dropdownVisible)}
                     >
                       <img
-                        src={profile.avatar_url || "default-avatar-url"}
-                        alt={profile.username || profile.email}
+                        src={
+                          profile?.avatar_url ||
+                          "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+                        } // Pastikan avatar_url sudah terisi
+                        alt={profile?.username || profile?.email}
                         className="w-9 h-9 rounded-full object-cover transition-transform duration-300 transform hover:scale-105"
                       />
                       <span className="text-sm font-medium text-[#6d4c41] dark:text-[#ffffff] truncate">
-                        {profile.full_name || profile.username}
+                        {profile?.full_name || profile?.username}
                       </span>
                     </div>
 

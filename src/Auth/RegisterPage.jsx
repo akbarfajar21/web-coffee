@@ -5,7 +5,9 @@ import { supabase } from "../utils/SupaClient";
 const Register = () => {
   const [formData, setFormData] = useState({
     fullName: "",
+    username: "",
     email: "",
+    noTelepon: "",
     password: "",
     confirmPassword: "",
   });
@@ -43,7 +45,9 @@ const Register = () => {
       const { error: profileError } = await supabase.from("profiles").upsert({
         id: user.id,
         username: formData.username,
+        full_name: formData.fullName,
         email: formData.email,
+        no_telepon: formData.noTelepon,
         avatar_url: defaultAvatarUrl,
       });
 
@@ -52,8 +56,9 @@ const Register = () => {
       }
 
       setSuccessMessage(
-        "Registration successful! Redirecting to login page..."
+        "Success! Your account has been successfully registered. We'll redirect you to the login page shortly."
       );
+
       setTimeout(() => {
         navigate("/login");
       }, 2000);
@@ -65,8 +70,8 @@ const Register = () => {
   };
 
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600">
-      <div className="max-w-md w-full bg-white shadow-xl rounded-lg p-8 space-y-6">
+    <section className="flex items-center justify-center min-h-screen bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white shadow-xl rounded-lg p-8 space-y-6 sm:p-10">
         <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-6">
           Create Your Account
         </h2>
@@ -83,6 +88,26 @@ const Register = () => {
         )}
 
         <form className="space-y-5" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="fullName"
+              className="block text-sm font-semibold text-gray-700"
+            >
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              value={formData.fullName}
+              onChange={(e) =>
+                setFormData({ ...formData, fullName: e.target.value })
+              }
+              required
+              className="w-full mt-2 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your full name"
+            />
+          </div>
+
           <div>
             <label
               htmlFor="username"
@@ -120,6 +145,26 @@ const Register = () => {
               required
               className="w-full mt-2 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your email"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="noTelepon"
+              className="block text-sm font-semibold text-gray-700"
+            >
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              id="noTelepon"
+              value={formData.noTelepon}
+              onChange={(e) =>
+                setFormData({ ...formData, noTelepon: e.target.value })
+              }
+              required
+              className="w-full mt-2 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your phone number"
             />
           </div>
 

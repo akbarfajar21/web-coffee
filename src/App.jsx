@@ -13,6 +13,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import HistoryPage from "./pages/HistoryPage";
 import ScrollToTop from "./components/ScrollToTop";
 import Register from "./Auth/RegisterPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const App = () => {
   const isMaintenance = false;
@@ -35,6 +37,8 @@ const App = () => {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/product-detail/:id" element={<DetailProduct />} />
             <Route path="/history" element={<HistoryPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="*" element={<NotFoundPage />} />
           </>
         )}

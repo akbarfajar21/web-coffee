@@ -44,6 +44,22 @@ const Footer = () => {
                   <i className="fas fa-chevron-right mr-2"></i> About
                 </a>
               </li>
+              <li>
+                <a
+                  href="/privacy-policy"
+                  className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white"
+                >
+                  <i className="fas fa-chevron-right mr-2"></i> Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/terms-of-service"
+                  className="text-gray-300 hover:text-white text-sm dark:text-gray-400 dark:hover:text-white"
+                >
+                  <i className="fas fa-chevron-right mr-2"></i> Terms of Service
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -110,7 +126,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="mt-8 border-t border-[#fbbf24] pt-4 text-center dark:border-[#fbbf24]">
           <p className="text-gray-300 text-sm dark:text-gray-400">
-            &copy; {new Date().getFullYear()}{" "}
+            &copy; {new Date().getFullYear()} {" "}
             <span className="font-semibold">MyCoffee</span>. All Rights
             Reserved.
           </p>

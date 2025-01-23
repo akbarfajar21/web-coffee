@@ -14,7 +14,7 @@ export default function HistoryUI({ history, showNotification }) {
           Belum ada riwayat pembayaran.
         </p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-2 m-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-7 gap-1 m-5">
           {history.map((item) => {
             const hargaTerbaru = item.coffee.harga_produk;
             const hargaTransaksi = item.harga_saat_transaksi || hargaTerbaru;

@@ -21,7 +21,7 @@ export default function ProductPage() {
   const [cartAnimation, setCartAnimation] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 18;
+  const productsPerPage = 30;
 
   const navigate = useNavigate();
 
@@ -62,6 +62,8 @@ export default function ProductPage() {
 
   useEffect(() => {
     let sortedProducts = [...products];
+
+    // Urutkan berdasarkan harga
     if (priceSortOrder) {
       sortedProducts.sort((a, b) =>
         priceSortOrder === "asc"
@@ -70,12 +72,14 @@ export default function ProductPage() {
       );
     }
 
+    // Urutkan berdasarkan stok
     if (stockSortOrder) {
       sortedProducts.sort((a, b) =>
         stockSortOrder === "asc" ? a.stok - b.stok : b.stok - a.stok
       );
     }
 
+    // Urutkan berdasarkan nama produk
     if (nameSortOrder) {
       sortedProducts.sort((a, b) =>
         nameSortOrder === "asc"
@@ -83,6 +87,13 @@ export default function ProductPage() {
           : b.nama_produk.localeCompare(a.nama_produk)
       );
     }
+
+    // Pindahkan produk dengan stok habis ke bawah
+    sortedProducts = sortedProducts.sort((a, b) => {
+      if (a.stok === 0 && b.stok !== 0) return 1; // Produk A habis, B ada stok
+      if (b.stok === 0 && a.stok !== 0) return -1; // Produk B habis, A ada stok
+      return 0; // Jika keduanya stoknya sama, urutkan berdasarkan kriteria lain
+    });
 
     setFilteredProducts(sortedProducts);
     setCurrentPage(1); // Reset ke halaman pertama setelah sorting
@@ -103,7 +114,6 @@ export default function ProductPage() {
     }
   };
 
-  // Fetch cart from Supabase
   useEffect(() => {
     const fetchCart = async () => {
       const { data: user } = await supabase.auth.getUser();
