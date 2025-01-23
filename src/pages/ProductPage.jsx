@@ -274,31 +274,30 @@ export default function ProductPage() {
 
         <div className="bg-white dark:bg-gray-900 py-6 px-4 lg:px-16">
           {/* Product Filter */}
-          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-8 mb-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 mb-8">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                 Product Filter
               </h2>
-
               <button
                 onClick={() => navigate("/cart")}
                 className="relative text-3xl text-[#ff6632] hover:text-[#ff5500] transition-all transform hover:scale-105 focus:outline-none"
               >
                 <FaShoppingCart />
                 {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 text-xs font-bold text-white bg-red-600 rounded-full px-2 py-0.5">
+                  <span className="absolute -top-1 -right-1 text-xs font-bold text-white bg-red-600 rounded-full px-2 py-0.5">
                     {cartCount}
                   </span>
                 )}
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {/* Search Bar (Moved to the top) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {/* Search Bar */}
               <div className="flex flex-col col-span-full">
                 <label
                   htmlFor="search-bar"
-                  className="text-sm font-semibold text-gray-700 dark:text-white mb-2"
+                  className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Search Product
                 </label>
@@ -307,104 +306,93 @@ export default function ProductPage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
-                  placeholder="Search products..."
-                  className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm"
+                  placeholder="Type to search..."
+                  className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
                 />
               </div>
 
-              {/* Price Filter */}
-              <div className="flex flex-col">
-                <label
-                  htmlFor="filter-harga"
-                  className="text-sm font-semibold text-gray-700 dark:text-white mb-2"
-                >
-                  Price
-                </label>
-                <select
-                  id="filter-harga"
-                  value={priceSortOrder}
-                  onChange={(e) => setPriceSortOrder(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm"
-                >
-                  <option value="">Select Price</option>
-                  <option value="asc">Lowest Price</option>
-                  <option value="desc">Highest Price</option>
-                </select>
-              </div>
-
-              {/* Stock Filter */}
-              <div className="flex flex-col">
-                <label
-                  htmlFor="filter-stok"
-                  className="text-sm font-semibold text-gray-700 dark:text-white mb-2"
-                >
-                  Stock
-                </label>
-                <select
-                  id="filter-stok"
-                  value={stockSortOrder}
-                  onChange={(e) => setStockSortOrder(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm"
-                >
-                  <option value="">Select Stock</option>
-                  <option value="asc">Most Stock</option>
-                  <option value="desc">Least Stock</option>
-                </select>
-              </div>
-
-              {/* Name Filter */}
-              <div className="flex flex-col">
-                <label
-                  htmlFor="filter-nama"
-                  className="text-sm font-semibold text-gray-700 dark:text-white mb-2"
-                >
-                  Product Name
-                </label>
-                <select
-                  id="filter-nama"
-                  value={nameSortOrder}
-                  onChange={(e) => setNameSortOrder(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm"
-                >
-                  <option value="">Select Name</option>
-                  <option value="asc">A-Z</option>
-                  <option value="desc">Z-A</option>
-                </select>
-              </div>
-
-              {/* Rating Filter (Sejajar dengan filter lain) */}
-              <div className="flex flex-col">
-                <label
-                  htmlFor="filter-rating"
-                  className="text-sm font-semibold text-gray-700 dark:text-white mb-2"
-                >
-                  Rating
-                </label>
-                <select
-                  id="filter-rating"
-                  value={ratingSortOrder}
-                  onChange={(e) => setRatingSortOrder(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm"
-                >
-                  <option value="">Select Rating</option>
-                  <option value="asc">Lowest Rating</option>
-                  <option value="desc">Highest Rating</option>
-                </select>
-              </div>
+              {/* Filters */}
+              {[
+                {
+                  id: "filter-harga",
+                  label: "Price",
+                  value: priceSortOrder,
+                  onChange: setPriceSortOrder,
+                  options: [
+                    { value: "", label: "Select Price" },
+                    { value: "asc", label: "Lowest Price" },
+                    { value: "desc", label: "Highest Price" },
+                  ],
+                },
+                {
+                  id: "filter-stok",
+                  label: "Stock",
+                  value: stockSortOrder,
+                  onChange: setStockSortOrder,
+                  options: [
+                    { value: "", label: "Select Stock" },
+                    { value: "asc", label: "Most Stock" },
+                    { value: "desc", label: "Least Stock" },
+                  ],
+                },
+                {
+                  id: "filter-nama",
+                  label: "Product Name",
+                  value: nameSortOrder,
+                  onChange: setNameSortOrder,
+                  options: [
+                    { value: "", label: "Select Name" },
+                    { value: "asc", label: "A-Z" },
+                    { value: "desc", label: "Z-A" },
+                  ],
+                },
+                {
+                  id: "filter-rating",
+                  label: "Rating",
+                  value: ratingSortOrder,
+                  onChange: setRatingSortOrder,
+                  options: [
+                    { value: "", label: "Select Rating" },
+                    { value: "asc", label: "Lowest Rating" },
+                    { value: "desc", label: "Highest Rating" },
+                  ],
+                },
+              ].map(({ id, label, value, onChange, options }) => (
+                <div key={id} className="flex flex-col">
+                  <label
+                    htmlFor={id}
+                    className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    {label}
+                  </label>
+                  <select
+                    id={id}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
+                  >
+                    {options.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
             </div>
 
             {/* Reset Button */}
-            <div className="mt-6 flex justify-end">
+            <div className="mt-8 flex justify-end">
               <button
                 onClick={resetFilters}
-                className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none transition-all"
+                className="px-6 py-3 bg-[#ff6632] text-white font-semibold rounded-lg shadow-md hover:bg-[#ff5500] transition-all focus:outline-none"
               >
                 Reset Filters
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
             {currentProducts.map((product) => (
               <div
                 key={product.id}

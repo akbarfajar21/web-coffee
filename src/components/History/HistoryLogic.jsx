@@ -1,10 +1,8 @@
-// src/components/HistoryLogic.js
-
 import { useEffect, useState } from "react";
 import { supabase } from "../../utils/SupaClient";
 
 export default function HistoryLogic({ setHistory, setShowNotification }) {
-  const [history, setLocalHistory] = useState([]);
+  const [localHistory, setLocalHistory] = useState([]);
 
   // Fetch history
   useEffect(() => {
@@ -15,12 +13,19 @@ export default function HistoryLogic({ setHistory, setShowNotification }) {
       const { data, error } = await supabase
         .from("history")
         .select(
-          "id, quantity, status, created_at,order_id, harga_saat_transaksi, coffee(nama_produk, foto_barang, harga_produk)"
+          "id, quantity, status, created_at, order_id, harga_saat_transaksi, coffee(nama_produk, foto_barang, harga_produk)"
         )
         .eq("profile_id", user.user.id);
 
-      if (error) console.error(error);
-      else setLocalHistory(data);
+      if (error) {
+        console.error(error);
+      } else {
+        // Sort history by date (ascending)
+        const sortedData = data.sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        );
+        setLocalHistory(sortedData);
+      }
     };
 
     fetchHistory();
@@ -31,7 +36,7 @@ export default function HistoryLogic({ setHistory, setShowNotification }) {
     const notifiedItems =
       JSON.parse(localStorage.getItem("notifiedItems")) || [];
 
-    history.forEach((item) => {
+    localHistory.forEach((item) => {
       if (item.status === "Approved" && !notifiedItems.includes(item.id)) {
         setShowNotification(true);
 
@@ -45,8 +50,9 @@ export default function HistoryLogic({ setHistory, setShowNotification }) {
       }
     });
 
-    setHistory(history); // Send history data to parent
-  }, [history, setHistory, setShowNotification]);
+    // Update parent state with sorted history
+    setHistory(localHistory);
+  }, [localHistory, setHistory, setShowNotification]);
 
   return null; // This component does not render anything itself
 }
