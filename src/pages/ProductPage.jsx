@@ -23,7 +23,6 @@ export default function ProductPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ratingSortOrder, setRatingSortOrder] = useState("");
   const productsPerPage = 30;
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -153,7 +152,7 @@ export default function ProductPage() {
     };
 
     fetchCart();
-  }, [cart]);
+  }, []); // Kosongkan array dependensi
 
   // Reset filters
   const resetFilters = () => {
@@ -396,59 +395,73 @@ export default function ProductPage() {
             {currentProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-3xl shadow-lg overflow-hidden dark:bg-gray-900 dark:shadow-xl relative flex flex-col h-full"
+                className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-800 dark:shadow-lg flex flex-col h-full hover:shadow-xl transition-shadow duration-300 ease-in-out"
                 onClick={() => handleProductClick(product.id)}
               >
+                {/* Image Section */}
                 <div className="relative group">
                   <img
                     src={product.foto_barang}
                     alt={product.nama_produk}
-                    className="w-full h-72 object-cover rounded-t-3xl"
+                    className="w-full h-56 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
                   />
                   {product.stok === 0 && (
-                    <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center rounded-t-3xl">
-                      <span className="text-white font-bold text-xl">
+                    <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center rounded-t-lg">
+                      <span className="text-white font-semibold text-lg">
                         Out of Stock
                       </span>
                     </div>
                   )}
                 </div>
-                <div className="p-6 flex flex-col space-y-5 flex-grow">
-                  <h2 className="text-2xl font-bold text-gray-800 dark:text-white truncate">
+
+                {/* Content Section */}
+                <div className="p-4 flex flex-col justify-between flex-grow">
+                  {/* Product Name */}
+                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white truncate">
                     {product.nama_produk}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-3">
                     {product.deskripsi}
                   </p>
-                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <span>
-                      <strong>Stock:</strong> {product.stok}
+
+                  {/* Stock and Rating */}
+                  <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mt-3">
+                    <span className="flex items-center space-x-1">
+                      <i className="fas fa-box"></i>
+                      <span>
+                        <strong>Stock:</strong> {product.stok}
+                      </span>
                     </span>
-                    <span>
-                      {product.rating_produk &&
-                      !isNaN(Number(product.rating_produk))
-                        ? `${parseFloat(
-                            Number(product.rating_produk).toFixed(1)
-                          )} ⭐`
-                        : "No Rating"}
+                    <span className="flex items-center space-x-1">
+                      <i className=" text-yellow-400"></i>
+                      <span>
+                        {product.rating_produk &&
+                        !isNaN(Number(product.rating_produk))
+                          ? `${parseFloat(
+                              Number(product.rating_produk).toFixed(1)
+                            )} ⭐`
+                          : "No Rating"}
+                      </span>
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-lg font-semibold text-orange-600 dark:text-orange-500">
-                      {formatRupiah(product.harga_produk)}
-                    </p>
-                  </div>
+
+                  {/* Price */}
+                  <p className="text-xl font-bold text-orange-500 dark:text-orange-400 mt-4">
+                    {formatRupiah(product.harga_produk)}
+                  </p>
                 </div>
 
-                {/* Kontainer untuk tombol yang selalu berada di bawah */}
-                <div className="p-6 pt-0">
+                {/* Add to Cart Button */}
+                <div className="p-4 pt-0">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart(product.id);
                     }}
                     disabled={product.stok === 0}
-                    className={`w-full py-2 px-5 rounded-full text-sm font-medium text-white transition-all duration-300 ease-in-out ${
+                    className={`w-full py-3 rounded-lg text-sm font-medium text-white transition-all duration-300 ease-in-out ${
                       product.stok === 0
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
