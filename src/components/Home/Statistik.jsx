@@ -60,10 +60,7 @@ const Statistik = ({ isDarkMode }) => {
         isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      <div
-        data-aos="fade-right"
-        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
           className={`p-6 rounded-lg shadow-md text-center flex flex-col items-center transition-all duration-300 ${
             isDarkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"
@@ -81,7 +78,6 @@ const Statistik = ({ isDarkMode }) => {
         </div>
 
         <div
-          data-aos="fade-left"
           className={`p-6 rounded-lg shadow-md text-center flex flex-col items-center transition-all duration-300 ${
             isDarkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"
           }`}
