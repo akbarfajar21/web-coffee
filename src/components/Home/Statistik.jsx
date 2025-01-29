@@ -14,14 +14,18 @@ const Statistik = ({ isDarkMode }) => {
       try {
         const { data: usersData, error: usersError } = await supabase
           .from("profiles")
-          .select("*");
+          .select("role");
+
         if (usersError) throw new Error(usersError.message);
+        console.log("Users Data:", usersData); // Debugging
         setActiveUsers(usersData.length);
 
         const { data: historyData, error: historyError } = await supabase
           .from("history")
           .select("quantity");
+
         if (historyError) throw new Error(historyError.message);
+        console.log("History Data:", historyData); // Debugging
 
         const totalQuantity = historyData.reduce(
           (total, item) => total + item.quantity,
@@ -37,9 +41,10 @@ const Statistik = ({ isDarkMode }) => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        console.log("InView Status:", entry.isIntersecting); // Debugging
         setInView(entry.isIntersecting);
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 } // Dikurangi agar lebih responsif
     );
 
     if (sectionRef.current) {
@@ -53,6 +58,12 @@ const Statistik = ({ isDarkMode }) => {
     };
   }, []);
 
+  // Debugging untuk memastikan state berubah
+  useEffect(() => {
+    console.log("Updated activeUsers:", activeUsers);
+    console.log("Updated totalSoldProducts:", totalSoldProducts);
+  }, [activeUsers, totalSoldProducts]);
+
   return (
     <section
       ref={sectionRef}
@@ -61,6 +72,7 @@ const Statistik = ({ isDarkMode }) => {
       }`}
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Kartu Pengguna Aktif */}
         <div
           className={`p-6 rounded-lg shadow-md text-center flex flex-col items-center transition-all duration-300 ${
             isDarkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"
@@ -69,14 +81,18 @@ const Statistik = ({ isDarkMode }) => {
           <Users size={40} className="mb-3 text-blue-500" />
           <h3 className="text-lg font-semibold mb-3">Pengguna Aktif</h3>
           {inView && (
-            <CountUp start={0} end={activeUsers} duration={2.5} separator=",">
-              {({ countUpRef }) => (
-                <p ref={countUpRef} className="text-4xl font-bold" />
-              )}
-            </CountUp>
+            <p className="text-4xl font-bold">
+              <CountUp
+                start={0}
+                end={activeUsers}
+                duration={2.5}
+                separator=","
+              />
+            </p>
           )}
         </div>
 
+        {/* Kartu Produk Terjual */}
         <div
           className={`p-6 rounded-lg shadow-md text-center flex flex-col items-center transition-all duration-300 ${
             isDarkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"
@@ -85,16 +101,14 @@ const Statistik = ({ isDarkMode }) => {
           <ShoppingCart size={40} className="mb-3 text-green-500" />
           <h3 className="text-lg font-semibold mb-3">Produk Terjual</h3>
           {inView && (
-            <CountUp
-              start={0}
-              end={totalSoldProducts}
-              duration={2.5}
-              separator=","
-            >
-              {({ countUpRef }) => (
-                <p ref={countUpRef} className="text-4xl font-bold" />
-              )}
-            </CountUp>
+            <p className="text-4xl font-bold">
+              <CountUp
+                start={0}
+                end={totalSoldProducts}
+                duration={2.5}
+                separator=","
+              />
+            </p>
           )}
         </div>
       </div>
