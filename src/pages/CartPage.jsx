@@ -125,10 +125,10 @@ export default function CartPage() {
                   className="w-24 sm:w-32 h-24 sm:h-32 object-cover rounded-lg shadow-sm transition-transform duration-300 ease-in-out transform hover:scale-105"
                 />
                 <div className="flex-grow ml-4 sm:ml-6">
-                  <h2 className="text-sm sm:text-lg font-semibold text-gray-800 dark:text-gray-200">
+                  <h2 className="text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-200">
                     {item.coffee.nama_produk}
                   </h2>
-                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-300">
+                  <p className="text-xs sm:text-xs text-gray-500 dark:text-gray-300">
                     {formatHarga(item.coffee.harga_produk)}
                   </p>
                 </div>
@@ -141,7 +141,7 @@ export default function CartPage() {
                   />
                   <button
                     onClick={() => handleDelete(item.coffee_id)}
-                    className="text-red-600 dark:text-red-400 text-xl sm:text-2xl hover:text-red-800 dark:hover:text-red-500 transition-all"
+                    className="text-red-600 dark:text-red-400 text-lg sm:text-xl hover:text-red-800 dark:hover:text-red-500 transition-all"
                   >
                     <FaTrashAlt />
                   </button>

@@ -38,34 +38,61 @@ function AboutPage() {
               coffee while creating memories with friends, or work in an
               environment that supports productivity.
             </p>
+            <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl">
+              Our story began with a passion for great coffee and the desire to
+              create a community hub where people can come together, relax, and
+              experience quality coffee. From the moment you step inside, our
+              cozy ambiance and friendly staff will make you feel right at home.
+            </p>
           </div>
         </section>
 
-        <section className="gallery">
+        <section className="mission py-12  dark:bg-gray-800 rounded-lg">
           <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 dark:text-gray-100 mb-6 text-center">
+            Our Mission
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl mx-auto text-center">
+            Our mission is to provide every customer with a unique and
+            unforgettable coffee experience. We focus on using ethically sourced
+            beans, providing excellent service, and maintaining a welcoming
+            environment. We strive to inspire a passion for coffee and create a
+            community where everyone feels welcome.
+          </p>
+        </section>
+
+        <section className="gallery">
+          <h2 className="text-3xl md:text-4xl mt-6 font-semibold text-gray-800 dark:text-gray-100 mb-6 text-center">
             Our Gallery
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <img
-              src="gallery1.webp"
-              alt="Interior"
-              className="rounded-lg shadow-md"
-            />
-            <img
-              src="gallery2.jpg"
-              alt="Coffee Event"
-              className="rounded-lg shadow-md"
-            />
-            <img
-              src="gallery3.jpg"
-              alt="Coffee Menu"
-              className="rounded-lg shadow-md"
-            />
-            <img
-              src="gallery4.jpg"
-              alt="Barista"
-              className="rounded-lg shadow-md"
-            />
+            <div data-aos="fade-right">
+              <img
+                src="gallery1.webp"
+                alt="Interior"
+                className="rounded-lg shadow-md"
+              />
+            </div>
+            <div data-aos="fade-down-right">
+              <img
+                src="gallery2.jpg"
+                alt="Coffee Event"
+                className="rounded-lg shadow-md"
+              />
+            </div>
+            <div data-aos="fade-down-left">
+              <img
+                src="gallery3.jpg"
+                alt="Coffee Menu"
+                className="rounded-lg shadow-md"
+              />
+            </div>
+            <div data-aos="fade-left">
+              <img
+                src="gallery4.jpg"
+                alt="Barista"
+                className="rounded-lg shadow-md"
+              />
+            </div>
           </div>
         </section>
 

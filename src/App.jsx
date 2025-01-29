@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MaintenancePage from "./pages/MaintenancePage";
 import HomePage from "./pages/HomePage";
@@ -15,9 +15,18 @@ import ScrollToTop from "./components/ScrollToTop";
 import Register from "./Auth/RegisterPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Pastikan ini diimpor
 
 const App = () => {
   const isMaintenance = false;
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Durasi animasi
+      easing: "ease-in-out", // Efek easing
+    });
+  }, []);
 
   return (
     <Router>

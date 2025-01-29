@@ -254,14 +254,14 @@ export default function DetailProduct() {
           <img
             src={product.foto_barang}
             alt={product.nama_produk}
-            className="w-96 h-96 object-cover rounded-lg shadow-lg  mx-auto"
+            className="w-96 h-96 object-cover rounded-xl shadow-2xl mx-auto"
           />
 
           <div className="w-full max-w-2xl mx-auto">
-            <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-6">
+            <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">
               {product.nama_produk}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
               {product.deskripsi}
             </p>
             <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-6">
@@ -301,7 +301,7 @@ export default function DetailProduct() {
                 placeholder="Tambahkan komentar Anda..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full p-3 border-2 border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mb-6"
+                className="w-full p-4 border-2 border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mb-6"
                 rows={4}
               ></textarea>
               <button
@@ -349,18 +349,18 @@ export default function DetailProduct() {
                         <div className="relative">
                           <button
                             onClick={() => toggleDropdown(index)}
-                            className="text-gray-600 dark:text-gray-400 hover:text-gray-900"
+                            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-110"
                           >
                             <FaEllipsisV className="text-lg" />
                           </button>
 
                           {showDropdown === index && (
-                            <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-700 border rounded-lg shadow-lg">
+                            <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl transition-all duration-200 ease-in-out transform opacity-100">
                               <button
                                 onClick={() =>
                                   handleDeleteRating(ratingItem.profile_id)
                                 }
-                                className="block px-4 py-2 text-sm text-red-600 hover:bg-red-200 dark:text-red-400 dark:hover:bg-red-600"
+                                className="block w-full px-4 py-2 text-sm text-red-600 hover:bg-red-200 dark:text-red-400 dark:hover:bg-red-600 focus:outline-none transition-all duration-200 ease-in-out rounded-lg"
                               >
                                 Hapus Rating
                               </button>

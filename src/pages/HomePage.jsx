@@ -6,6 +6,7 @@ import Testimoni from "../components/Home/Testimoni";
 import LiveChat from "../components/LiveChat";
 import FAQ from "../components/Home/Faq";
 import Footer from "../components/Footer";
+import Statistik from "../components/Home/Statistik"; // Import komponen Statistik
 
 const HomePage = () => {
   return (
@@ -14,6 +15,7 @@ const HomePage = () => {
       <Hero />
       <TentangKami />
       <Testimoni />
+      <Statistik />
       <FAQ />
       <LiveChat />
       <Footer />

@@ -63,10 +63,10 @@ export default function HistoryUI({
                   {item.coffee.nama_produk}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  Jumlah: {item.quantity} produk
+                  Harga Satuan: Rp {hargaTransaksi.toLocaleString("id-ID")}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  Harga Transaksi: Rp {hargaTransaksi.toLocaleString("id-ID")}
+                  Jumlah: {item.quantity} produk
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                   Total: Rp{" "}

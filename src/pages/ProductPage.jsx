@@ -3,10 +3,10 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { supabase } from "../utils/SupaClient";
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
 import Swal from "sweetalert2";
 import LoadingBar from "react-top-loading-bar";
 import Pagination from "../components/Pagination";
+import { BsCart4 } from "react-icons/bs";
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -182,72 +182,74 @@ export default function ProductPage() {
         confirmButtonColor: "#ff6632",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate("/login"); // Arahkan ke halaman login
+          navigate("/login");
         }
       });
       return;
     }
 
-    // Menampilkan SweetAlert loading
+    // Menampilkan loading SweetAlert
     const swalLoading = Swal.fire({
       title: "Menambahkan ke Keranjang...",
       text: "Tunggu sebentar.",
-      didOpen: () => {
-        Swal.showLoading(); // Menampilkan loading spinner
-      },
+      didOpen: () => Swal.showLoading(),
       allowOutsideClick: false,
-      showConfirmButton: false, // Tidak menampilkan tombol konfirmasi
+      showConfirmButton: false,
     });
 
-    // Cek apakah produk sudah ada di keranjang
-    const { data: cartData, error: cartError } = await supabase
-      .from("cart")
-      .select("*")
-      .eq("profile_id", user.user.id)
-      .eq("coffee_id", product)
-      .single();
-
-    if (cartData) {
-      // Jika produk sudah ada, update quantity
-      const updatedQuantity = cartData.quantity + 1;
-      const { error: updateError } = await supabase
+    try {
+      const { data: cartData, error: cartError } = await supabase
         .from("cart")
-        .update({ quantity: updatedQuantity })
+        .select("*")
         .eq("profile_id", user.user.id)
-        .eq("coffee_id", product);
+        .eq("coffee_id", product)
+        .single();
 
-      if (updateError) {
-        console.error("Error updating cart:", updateError.message);
+      if (cartData) {
+        // Update quantity jika produk sudah ada di keranjang
+        const updatedQuantity = cartData.quantity + 1;
+        const { error: updateError } = await supabase
+          .from("cart")
+          .update({ quantity: updatedQuantity })
+          .eq("profile_id", user.user.id)
+          .eq("coffee_id", product);
+
+        if (updateError) throw updateError;
+
+        // Update jumlah di cartCount
+        setCartCount((prevCount) => prevCount + 1);
+      } else {
+        // Insert produk baru ke keranjang
+        const { error: insertError } = await supabase.from("cart").insert([
+          {
+            profile_id: user.user.id,
+            coffee_id: product,
+            quantity: 1,
+          },
+        ]);
+
+        if (insertError) throw insertError;
+
+        // Update jumlah di cartCount
+        setCartCount((prevCount) => prevCount + 1);
+      }
+
+      // Animasi keranjang
+      setCartAnimation(true);
+      setTimeout(() => setCartAnimation(false), 1000);
+    } catch (error) {
+      console.error("Error handling cart:", error.message);
+      Swal.fire({
+        title: "Gagal!",
+        text: "Terjadi kesalahan saat menambahkan ke keranjang.",
+        icon: "error",
+        confirmButtonText: "Tutup",
+        confirmButtonColor: "#ff6632",
+      });
+    } finally {
+      setTimeout(() => {
         swalLoading.close();
-      } else {
-        setCartAnimation(true);
-        setTimeout(() => setCartAnimation(false), 1000);
-
-        // Tampilkan SweetAlert loading lebih lama sebelum menutup
-        setTimeout(() => {
-          swalLoading.close(); // Menutup loading setelah 2 detik
-        }, 2000); // Atur delay 2 detik (atau 3000 untuk 3 detik)
-      }
-    } else {
-      const { error: insertError } = await supabase.from("cart").insert([
-        {
-          profile_id: user.user.id,
-          coffee_id: product,
-          quantity: 1,
-        },
-      ]);
-
-      if (insertError) {
-        console.error("Error inserting to cart:", insertError.message);
-        swalLoading.close(); // Menutup loading jika ada error
-      } else {
-        setCartAnimation(true);
-        setTimeout(() => setCartAnimation(false), 1000);
-
-        setTimeout(() => {
-          swalLoading.close();
-        }, 2000);
-      }
+      }, 2000);
     }
   };
 
@@ -273,16 +275,16 @@ export default function ProductPage() {
 
         <div className="bg-white dark:bg-gray-900 py-6 px-4 lg:px-16">
           {/* Product Filter */}
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 mb-8">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 mb-10 transition-all duration-300 ease-in-out">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl lg:text-2xl font-extrabold text-gray-800 dark:text-white">
                 Product Filter
               </h2>
               <button
                 onClick={() => navigate("/cart")}
-                className="relative text-3xl text-[#ff6632] hover:text-[#ff5500] transition-all transform hover:scale-105 focus:outline-none"
+                className="relative text-3xl text-[#ff6632] hover:text-[#ff5500] transition-transform duration-300 hover:scale-110 focus:outline-none"
               >
-                <FaShoppingCart />
+                <BsCart4 />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 text-xs font-bold text-white bg-red-600 rounded-full px-2 py-0.5">
                     {cartCount}
@@ -291,26 +293,26 @@ export default function ProductPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {/* Search Bar */}
-              <div className="flex flex-col col-span-full">
-                <label
-                  htmlFor="search-bar"
-                  className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
-                >
-                  Search Product
-                </label>
-                <input
-                  id="search-bar"
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  placeholder="Type to search..."
-                  className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
-                />
-              </div>
+            {/* Search Bar */}
+            <div className="mb-6">
+              <label
+                htmlFor="search-bar"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Search Product
+              </label>
+              <input
+                id="search-bar"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Type to search..."
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
+              />
+            </div>
 
-              {/* Filters */}
+            {/* Filter Options */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[
                 {
                   id: "filter-harga",
@@ -360,7 +362,7 @@ export default function ProductPage() {
                 <div key={id} className="flex flex-col">
                   <label
                     htmlFor={id}
-                    className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                   >
                     {label}
                   </label>
@@ -368,7 +370,7 @@ export default function ProductPage() {
                     id={id}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
                   >
                     {options.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -381,10 +383,10 @@ export default function ProductPage() {
             </div>
 
             {/* Reset Button */}
-            <div className="mt-8 flex justify-end">
+            <div className="mt-6 flex justify-end">
               <button
                 onClick={resetFilters}
-                className="px-6 py-3 bg-[#ff6632] text-white font-semibold rounded-lg shadow-md hover:bg-[#ff5500] transition-all focus:outline-none"
+                className="px-6 py-3 bg-[#ff6632] text-white font-semibold rounded-lg shadow-md hover:bg-[#ff5500] transition-transform duration-300 ease-in-out focus:outline-none"
               >
                 Reset Filters
               </button>
@@ -395,19 +397,18 @@ export default function ProductPage() {
             {currentProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-800 dark:shadow-lg flex flex-col h-full hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-800 dark:shadow-lg flex flex-col h-full hover:shadow-xl transition-shadow duration-300 ease-in-out max-w-sm mx-auto sm:max-w-xs"
                 onClick={() => handleProductClick(product.id)}
               >
-                {/* Image Section */}
                 <div className="relative group">
                   <img
                     src={product.foto_barang}
                     alt={product.nama_produk}
-                    className="w-full h-56 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-48 object-cover rounded-t-lg"
                   />
                   {product.stok === 0 && (
-                    <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center rounded-t-lg">
-                      <span className="text-white font-semibold text-lg">
+                    <div className="absolute inset-0 bg-black bg-opacity-60 flex justify-center items-center rounded-t-lg">
+                      <span className="text-white font-semibold text-sm">
                         Out of Stock
                       </span>
                     </div>
@@ -417,17 +418,17 @@ export default function ProductPage() {
                 {/* Content Section */}
                 <div className="p-4 flex flex-col justify-between flex-grow">
                   {/* Product Name */}
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white truncate">
+                  <h2 className="text-sm font-semibold text-gray-800 dark:text-white truncate mb-2">
                     {product.nama_produk}
                   </h2>
 
                   {/* Description */}
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-3">
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-2 line-clamp-3 mb-4">
                     {product.deskripsi}
                   </p>
 
                   {/* Stock and Rating */}
-                  <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mt-3">
+                  <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mt-2">
                     <span className="flex items-center space-x-1">
                       <i className="fas fa-box"></i>
                       <span>
@@ -435,7 +436,7 @@ export default function ProductPage() {
                       </span>
                     </span>
                     <span className="flex items-center space-x-1">
-                      <i className=" text-yellow-400"></i>
+                      <i className="fas  text-yellow-400"></i>
                       <span>
                         {product.rating_produk &&
                         !isNaN(Number(product.rating_produk))
@@ -448,7 +449,7 @@ export default function ProductPage() {
                   </div>
 
                   {/* Price */}
-                  <p className="text-xl font-bold text-orange-500 dark:text-orange-400 mt-4">
+                  <p className="text-lg font-semibold text-orange-500 dark:text-orange-400 mt-4">
                     {formatRupiah(product.harga_produk)}
                   </p>
                 </div>
@@ -461,7 +462,7 @@ export default function ProductPage() {
                       handleAddToCart(product.id);
                     }}
                     disabled={product.stok === 0}
-                    className={`w-full py-3 rounded-lg text-sm font-medium text-white transition-all duration-300 ease-in-out ${
+                    className={`w-full py-2 rounded-lg text-sm font-medium text-white transition-all duration-300 ease-in-out ${
                       product.stok === 0
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"

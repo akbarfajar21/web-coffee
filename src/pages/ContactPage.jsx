@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { supabase } from "../utils/SupaClient";
@@ -9,6 +9,15 @@ const ContactPage = () => {
     message: "",
     rating: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulasi loading selesai setelah beberapa waktu
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); // Durasi 1 detik
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,6 +75,15 @@ const ContactPage = () => {
       }
     }
   };
+
+  // Menampilkan loader selama proses pemuatan
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="loader animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-70"></div>
+      </div>
+    );
+  }
 
   return (
     <>

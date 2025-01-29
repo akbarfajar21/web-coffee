@@ -104,14 +104,7 @@ const Login = () => {
       }
 
       if (user) {
-        Swal.fire({
-          title: "Login Berhasil!",
-          text: "Selamat datang kembali!",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => {
-          navigate("/");
-        });
+        navigate("/");
       }
     } catch (err) {
       console.error("Unhandled Error:", err);

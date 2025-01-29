@@ -4,9 +4,9 @@ const HeroSection = () => {
   return (
     <section className="relative text-gray-700 dark:text-white">
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-50 dark:brightness-50"
+        className="absolute inset-0 bg-cover bg-center opacity-50 dark:brightness-50 transition-all duration-500"
         style={{
-          backgroundImage: "url('/coffee-background.jpg')",
+          backgroundImage: "url('https://cdn.pixabay.com/photo/2020/07/18/16/29/coffee-5417663_1280.png')",
           backgroundAttachment: "fixed",
           backgroundSize: "cover",
           backgroundPosition: "center center",
@@ -32,17 +32,26 @@ const HeroSection = () => {
         </div>
       </div>
       <style jsx>{`
+        /* Mobile-first approach: background attachment scroll */
         @media (max-width: 640px) {
           .bg-cover {
             background-attachment: scroll;
           }
         }
 
-        /* Add responsiveness for background */
+        /* Medium screens: adjust background size and position */
         @media (max-width: 1024px) {
           .bg-cover {
-            background-size: auto 100%; /* Adjust size on smaller screens */
+            background-size: cover;
             background-position: center top;
+          }
+        }
+
+        /* Large screens: maintain cover and center */
+        @media (min-width: 1025px) {
+          .bg-cover {
+            background-size: cover;
+            background-position: center center;
           }
         }
       `}</style>
