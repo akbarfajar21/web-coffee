@@ -10,6 +10,7 @@ const ContactPage = () => {
     rating: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [errors, setErrors] = useState({ message: "", rating: "" });
 
   // Simulasi loading selesai setelah beberapa waktu
   useEffect(() => {
@@ -32,10 +33,30 @@ const ContactPage = () => {
       ...formData,
       rating,
     });
+    setErrors({
+      ...errors,
+      rating: "",
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (formData.message.trim().length < 10) {
+      newErrors.message = "Message must be at least 10 characters long.";
+    }
+    if (formData.rating === 0) {
+      newErrors.rating = "Please select a rating.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     const { data: user, error: userError } = await supabase.auth.getUser();
 
@@ -62,13 +83,19 @@ const ContactPage = () => {
         Swal.fire({
           icon: "error",
           title: "An Error Occurred",
-          text: "There was an error while submitting the message.",
+          text:
+            error.message || "There was an error while submitting the message.",
         });
       } else {
         Swal.fire({
           icon: "success",
           title: "Message Sent!",
           text: "Your message has been successfully submitted.",
+          confirmButtonText: "Back to Home",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/"; // Redirect ke halaman utama
+          }
         });
 
         setFormData({ message: "", rating: 0 });
@@ -100,9 +127,9 @@ const ContactPage = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-8 bg-white p-12 rounded-2xl shadow-2xl border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+            className="space-y-8 bg-white p-12 rounded-2xl shadow-xl border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
           >
-            <div>
+            <div className="space-y-4">
               <label
                 htmlFor="message"
                 className="block text-lg font-medium text-gray-700 mb-2 dark:text-gray-300"
@@ -115,12 +142,16 @@ const ContactPage = () => {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                className="w-full p-5 border border-gray-300 rounded-xl shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-blue-500 transition-all"
+                className="w-full p-5 border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-blue-600 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-blue-500 transition-all ease-in-out"
                 rows="6"
                 placeholder="Write your message here"
               />
+              {errors.message && (
+                <p className="text-red-500 text-sm mt-2">{errors.message}</p>
+              )}
             </div>
-            <div>
+
+            <div className="space-y-4">
               <label
                 htmlFor="rating"
                 className="block text-lg font-medium text-gray-700 mb-2 dark:text-gray-300"
@@ -132,7 +163,7 @@ const ContactPage = () => {
                   <button
                     type="button"
                     key={star}
-                    className={`text-3xl transition-transform transform hover:scale-110 focus:outline-none ${
+                    className={`text-3xl transition-all duration-200 transform hover:scale-110 focus:outline-none ${
                       formData.rating >= star
                         ? "text-yellow-500"
                         : "text-gray-300 dark:text-gray-500"
@@ -143,11 +174,15 @@ const ContactPage = () => {
                   </button>
                 ))}
               </div>
+              {errors.rating && (
+                <p className="text-red-500 text-sm mt-2">{errors.rating}</p>
+              )}
             </div>
-            <div className="flex justify-center">
+
+            <div className="flex justify-center mt-6">
               <button
                 type="submit"
-                className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all transform hover:scale-105 dark:bg-blue-500 dark:hover:bg-blue-600"
+                className="px-8 py-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all transform hover:scale-105 dark:bg-gradient-to-br dark:from-blue-600 dark:to-indigo-700 dark:hover:from-blue-700 dark:hover:to-indigo-800"
               >
                 Submit Message
               </button>
@@ -155,7 +190,6 @@ const ContactPage = () => {
           </form>
         </div>
 
-        {/* Location Map */}
         <div className="py-16 bg-white dark:bg-gray-800">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-gray-100">

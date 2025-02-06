@@ -24,8 +24,9 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
         name: item.coffee.nama_produk,
       }));
 
+      const orderId = `ORDER-${new Date().getTime()}`;
       const transactionDetails = {
-        order_id: `ORDER-${new Date().getTime()}`,
+        order_id: orderId,
         gross_amount: totalHarga,
       };
 
@@ -57,7 +58,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
               quantity: item.quantity,
               status: "Pending",
               harga_saat_transaksi: item.coffee.harga_produk,
-              order_id: transactionDetails.order_id,
+              order_id: orderId,
             }))
           );
 
@@ -108,11 +109,27 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
             return;
           }
 
-          Swal.fire(
-            "Pembayaran Berhasil",
-            "Pesanan Anda sedang diproses.",
-            "success"
-          ).then(() => navigate("/history"));
+          Swal.fire({
+            title: "Pembayaran Berhasil!",
+            html: `<p>Pesanan Anda sedang diproses.</p>
+                   <p><strong>Order ID:</strong> ${orderId}</p>`,
+            icon: "success",
+            showCancelButton: true,
+            cancelButtonText: "Tutup",
+            confirmButtonText: "Salin Order ID",
+            confirmButtonColor: "#3085d6",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigator.clipboard.writeText(orderId);
+              Swal.fire(
+                "Tersalin!",
+                "Order ID telah disalin ke clipboard.",
+                "success"
+              ).then(() => navigate("/history"));
+            } else {
+              navigate("/history");
+            }
+          });
         },
 
         onPending: () => {

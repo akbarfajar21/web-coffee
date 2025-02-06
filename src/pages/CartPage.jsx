@@ -151,17 +151,27 @@ export default function CartPage() {
           </div>
         )}
 
-        <div className="border-t mt-8 mb-6 dark:border-gray-700"></div>
+        <div className="border-t mt-6 mb-4 dark:border-gray-700"></div>
         {cart.length > 0 && (
-          <div className="flex justify-between items-center flex-col sm:flex-row mt-6">
-            <p className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-0 text-gray-800 dark:text-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-4">
+            <p className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200">
               Total: {formatHarga(totalHarga)}
             </p>
-            <CheckoutButton
-              cart={cart}
-              totalHarga={totalHarga}
-              navigate={navigate}
-            />
+
+            <div className="flex space-x-2">
+              <button
+                onClick={() => navigate("/product")}
+                className="px-4 py-2 text-sm sm:text-base text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-200 active:scale-95"
+              >
+                Lanjutkan Belanja
+              </button>
+
+              <CheckoutButton
+                cart={cart}
+                totalHarga={totalHarga}
+                navigate={navigate}
+              />
+            </div>
           </div>
         )}
       </div>

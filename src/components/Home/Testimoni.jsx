@@ -34,7 +34,7 @@ const Testimonials = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-800">
+      <div className="flex justify-center items-center min-h-screen">
         <div className="spinner-border animate-spin inline-block w-16 h-16 border-4 rounded-full border-t-4 border-gray-300 dark:border-t-gray-700"></div>
         <p className="text-center text-gray-500 dark:text-white dark:bg-gray-800 ml-4">
           Loading testimonials...
@@ -83,7 +83,7 @@ const Testimonials = () => {
               <h3 className="text-lg font-semibold mb-2 dark:text-white">
                 {testimonial.profiles.full_name}
               </h3>
-              <p className="italic text-sm text-gray-600 dark:text-gray-300">
+              <p className="italic text-sm text-gray-600 dark:text-gray-300 break-words">
                 "{testimonial.message}"
               </p>
               <div className="mt-2">

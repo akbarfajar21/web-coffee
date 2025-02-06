@@ -9,6 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
     try {
@@ -76,8 +77,10 @@ const Login = () => {
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!email || !password) {
+      setIsLoading(false);
       Swal.fire({
         title: "Error!",
         text: "Email dan password wajib diisi.",
@@ -93,6 +96,8 @@ const Login = () => {
         password,
       });
 
+      setIsLoading(false);
+
       if (error) {
         Swal.fire({
           title: "Login Gagal!",
@@ -107,7 +112,7 @@ const Login = () => {
         navigate("/");
       }
     } catch (err) {
-      console.error("Unhandled Error:", err);
+      setIsLoading(false);
       Swal.fire({
         title: "Error!",
         text: "Terjadi masalah tak terduga.",
@@ -126,6 +131,12 @@ const Login = () => {
       }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="loader border-t-4 border-white rounded-full w-16 h-16 animate-spin"></div>
+        </div>
+      )}
 
       <div className="relative max-w-md w-full bg-black bg-opacity-70 backdrop-filter backdrop-blur-md rounded-2xl overflow-hidden p-8">
         <h2 className="text-4xl font-extrabold text-white text-center mb-6">

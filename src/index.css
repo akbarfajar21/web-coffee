@@ -192,3 +192,34 @@
   color: #555;
   font-weight: 500;
 }
+
+/* Notifikasi lebih kecil saat layar kecil */
+.swal-small {
+  width: 250px !important; /* Lebih kecil dari default */
+  padding: 8px !important;
+  font-size: 12px !important;
+}
+
+.swal-title-small {
+  font-size: 14px !important;
+}
+
+.swal-content-small {
+  font-size: 12px !important;
+}
+
+/* Media query untuk layar kecil */
+@media (max-width: 480px) {
+  .swal-small {
+    width: 220px !important;
+    font-size: 10px !important;
+  }
+
+  .swal-title-small {
+    font-size: 12px !important;
+  }
+
+  .swal-content-small {
+    font-size: 10px !important;
+  }
+}

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 import { BiSearch } from "react-icons/bi"; // Import ikon pencarian
 
 export default function HistoryUI({
@@ -6,6 +8,20 @@ export default function HistoryUI({
   searchQuery,
   setSearchQuery,
 }) {
+  useEffect(() => {
+    if (showNotification) {
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Terima kasih sudah memesan produk di website kami!",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
+  }, [showNotification]);
+
   const filteredHistory = history.filter(
     (item) =>
       item.coffee.nama_produk
@@ -32,12 +48,6 @@ export default function HistoryUI({
           <BiSearch className="absolute top-1/2 left-4 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
         </div>
       </div>
-
-      {showNotification && (
-        <div className="notification-slide-in">
-          Terima kasih sudah memesan produk di website kami!
-        </div>
-      )}
 
       {filteredHistory.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-300 text-center">

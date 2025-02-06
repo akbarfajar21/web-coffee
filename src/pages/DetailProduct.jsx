@@ -239,47 +239,53 @@ export default function DetailProduct() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-8 px-6 lg:px-12">
-        <div className="flex mt-12 items-center mb-4">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-12 px-6 lg:px-12">
+        <div className="flex mt-8 items-center mb-8">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center text-gray-700 hover:text-gray-900 dark:text-white"
+            className="flex items-center text-gray-700 hover:text-gray-900 dark:text-white transition-all duration-300"
           >
             <FaArrowLeft className="text-xl mr-2" />
-            <span className="text-md">Kembali</span>
+            <span className="text-lg font-medium">Kembali</span>
           </button>
         </div>
 
-        <div className="flex flex-col items-start gap-8">
-          <img
-            src={product.foto_barang}
-            alt={product.nama_produk}
-            className="w-96 h-96 object-cover rounded-xl shadow-2xl mx-auto"
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Gambar Produk */}
+          <div className="flex justify-center">
+            <img
+              src={product.foto_barang}
+              alt={product.nama_produk}
+              className="w-full max-w-md h-auto object-cover rounded-xl shadow-lg "
+            />
+          </div>
 
-          <div className="w-full max-w-2xl mx-auto">
-            <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">
+          {/* Info Produk */}
+          <div className="flex flex-col justify-between">
+            <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white mb-4">
               {product.nama_produk}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
               {product.deskripsi}
             </p>
-            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-6">
+            <p className="text-2xl font-semibold text-orange-600 dark:text-orange-400 mb-6">
               Rp {product.harga_produk.toLocaleString("id-ID")}
             </p>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
               <strong>Stok:</strong> {product.stok}
             </p>
 
+            {/* Rating Produk */}
             <div className="flex items-center mb-6">
-              <FaStar className="text-yellow-500 text-2xl" />
+              <FaStar className="text-yellow-500 text-xl" />
               <p className="text-lg font-medium text-gray-800 dark:text-white ml-2">
                 {rating ? Number(rating).toFixed(1) : "N/A"} / 5
               </p>
             </div>
 
-            <div className="mt-6">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+            {/* Form Rating dan Komentar */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
                 Berikan Rating dan Komentar:
               </h2>
               <div className="flex items-center space-x-4 mb-4">
@@ -303,80 +309,80 @@ export default function DetailProduct() {
                 onChange={(e) => setComment(e.target.value)}
                 className="w-full p-4 border-2 border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mb-6"
                 rows={4}
-              ></textarea>
+              />
               <button
                 onClick={handleRating}
-                className="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-all"
+                className="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-all duration-300"
               >
                 Kirim
               </button>
             </div>
+          </div>
+        </div>
 
-            <div className="border-t border-gray-300 dark:border-gray-700 my-6"></div>
+        <div className="border-t border-gray-300 dark:border-gray-700 my-12"></div>
 
-            <div className="mt-6">
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-                Rating Pengguna Lain:
-              </h3>
-              <div className="space-y-4">
-                {userRatings.length > 0 ? (
-                  userRatings.map((ratingItem, index) => (
-                    <div
-                      key={ratingItem.profile_id}
-                      className="flex items-start space-x-3 p-4 border-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
-                    >
-                      <img
-                        src={
-                          ratingItem.profile.avatar_url || "/default-avatar.png"
-                        }
-                        alt={ratingItem.profile.full_name}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                      <div className="flex-grow">
-                        <p className="font-semibold text-gray-800 dark:text-white">
-                          {ratingItem.profile.full_name}
-                        </p>
-                        <div className="flex space-x-1 text-yellow-500">
-                          {[...Array(ratingItem.rating)].map((_, index) => (
-                            <FaStar key={index} />
-                          ))}
-                        </div>
-                        <p className="text-gray-600 dark:text-gray-400 mt-2">
-                          {ratingItem.komentar}
-                        </p>
-                      </div>
-                      {user && ratingItem.profile_id === user.id && (
-                        <div className="relative">
+        <div className="mt-12">
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+            Rating Pengguna Lain:
+          </h3>
+          <div className="space-y-6">
+            {userRatings.length > 0 ? (
+              userRatings.map((ratingItem, index) => (
+                <div
+                  key={ratingItem.profile_id}
+                  className="flex items-start space-x-4 p-4 border-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
+                >
+                  <img
+                    src={ratingItem.profile.avatar_url || "/default-avatar.png"}
+                    alt={ratingItem.profile.full_name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-grow">
+                    <p className="font-semibold text-gray-800 dark:text-white">
+                      {ratingItem.profile.full_name}
+                    </p>
+                    <div className="flex space-x-1 text-yellow-500">
+                      {[...Array(ratingItem.rating)].map((_, index) => (
+                        <FaStar key={index} />
+                      ))}
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">
+                      {ratingItem.komentar}
+                    </p>
+                  </div>
+
+                  {/* Dropdown Menu untuk Pengguna yang Memberi Rating */}
+                  {user && ratingItem.profile_id === user.id && (
+                    <div className="relative">
+                      <button
+                        onClick={() => toggleDropdown(index)}
+                        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-110"
+                      >
+                        <FaEllipsisV className="text-lg" />
+                      </button>
+
+                      {showDropdown === index && (
+                        <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl transition-all duration-200 ease-in-out transform opacity-100">
                           <button
-                            onClick={() => toggleDropdown(index)}
-                            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-110"
+                            onClick={() =>
+                              handleDeleteRating(ratingItem.profile_id)
+                            }
+                            className="block w-full px-4 py-2 text-sm text-red-600 hover:bg-red-200 dark:text-red-400 dark:hover:bg-red-600 focus:outline-none transition-all duration-200 ease-in-out rounded-lg"
                           >
-                            <FaEllipsisV className="text-lg" />
+                            Hapus Rating
                           </button>
-
-                          {showDropdown === index && (
-                            <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl transition-all duration-200 ease-in-out transform opacity-100">
-                              <button
-                                onClick={() =>
-                                  handleDeleteRating(ratingItem.profile_id)
-                                }
-                                className="block w-full px-4 py-2 text-sm text-red-600 hover:bg-red-200 dark:text-red-400 dark:hover:bg-red-600 focus:outline-none transition-all duration-200 ease-in-out rounded-lg"
-                              >
-                                Hapus Rating
-                              </button>
-                            </div>
-                          )}
                         </div>
                       )}
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Belum ada rating dari pengguna lain.
-                  </p>
-                )}
-              </div>
-            </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-600 dark:text-gray-400">
+                Belum ada rating dari pengguna lain.
+              </p>
+            )}
           </div>
         </div>
       </div>

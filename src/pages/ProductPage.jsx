@@ -63,7 +63,7 @@ export default function ProductPage() {
   useEffect(() => {
     let sortedProducts = [...products];
 
-    // Urutkan berdasarkan harga
+    // Urutkan berdasarkan harga jika dipilih
     if (priceSortOrder) {
       sortedProducts.sort((a, b) =>
         priceSortOrder === "asc"
@@ -72,14 +72,14 @@ export default function ProductPage() {
       );
     }
 
-    // Urutkan berdasarkan stok
+    // Urutkan berdasarkan stok jika dipilih
     if (stockSortOrder) {
       sortedProducts.sort((a, b) =>
         stockSortOrder === "asc" ? a.stok - b.stok : b.stok - a.stok
       );
     }
 
-    // Urutkan berdasarkan nama produk
+    // Urutkan berdasarkan nama produk jika dipilih
     if (nameSortOrder) {
       sortedProducts.sort((a, b) =>
         nameSortOrder === "asc"
@@ -88,7 +88,7 @@ export default function ProductPage() {
       );
     }
 
-    // Urutkan berdasarkan rating
+    // Urutkan berdasarkan rating jika dipilih
     if (ratingSortOrder) {
       sortedProducts.sort((a, b) =>
         ratingSortOrder === "asc"
@@ -97,15 +97,15 @@ export default function ProductPage() {
       );
     }
 
-    // Pindahkan produk dengan stok habis ke bawah
+    // Pindahkan produk dengan stok habis ke bawah tanpa mengganggu sorting lainnya
     sortedProducts = sortedProducts.sort((a, b) => {
-      if (a.stok === 0 && b.stok !== 0) return 1; // Produk A habis, B ada stok
-      if (b.stok === 0 && a.stok !== 0) return -1; // Produk B habis, A ada stok
-      return 0; // Jika keduanya stoknya sama, urutkan berdasarkan kriteria lain
+      if (a.stok === 0 && b.stok !== 0) return 1;
+      if (b.stok === 0 && a.stok !== 0) return -1;
+      return 0;
     });
 
     setFilteredProducts(sortedProducts);
-    setCurrentPage(1); // Reset ke halaman pertama setelah sorting
+    setCurrentPage(1);
   }, [
     priceSortOrder,
     stockSortOrder,
@@ -173,29 +173,26 @@ export default function ProductPage() {
   // Handle Add to Cart functionality
   const handleAddToCart = async (product) => {
     const { data: user, error: userError } = await supabase.auth.getUser();
+
     if (userError || !user) {
       Swal.fire({
         title: "Oops!",
-        text: "Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.",
+        text: "Login terlebih dahulu untuk menambahkan produk ke keranjang.",
         icon: "warning",
-        confirmButtonText: "Login Sekarang",
+        confirmButtonText: "Login",
         confirmButtonColor: "#ff6632",
+        timer: 5000,
+        showConfirmButton: true,
+        customClass: {
+          popup: "swal-small",
+          title: "swal-title-small",
+          content: "swal-content-small",
+        },
       }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login");
-        }
+        if (result.isConfirmed) navigate("/login");
       });
       return;
     }
-
-    // Menampilkan loading SweetAlert
-    const swalLoading = Swal.fire({
-      title: "Menambahkan ke Keranjang...",
-      text: "Tunggu sebentar.",
-      didOpen: () => Swal.showLoading(),
-      allowOutsideClick: false,
-      showConfirmButton: false,
-    });
 
     try {
       const { data: cartData, error: cartError } = await supabase
@@ -206,7 +203,6 @@ export default function ProductPage() {
         .single();
 
       if (cartData) {
-        // Update quantity jika produk sudah ada di keranjang
         const updatedQuantity = cartData.quantity + 1;
         const { error: updateError } = await supabase
           .from("cart")
@@ -216,40 +212,53 @@ export default function ProductPage() {
 
         if (updateError) throw updateError;
 
-        // Update jumlah di cartCount
         setCartCount((prevCount) => prevCount + 1);
       } else {
-        // Insert produk baru ke keranjang
-        const { error: insertError } = await supabase.from("cart").insert([
-          {
-            profile_id: user.user.id,
-            coffee_id: product,
-            quantity: 1,
-          },
-        ]);
+        const { error: insertError } = await supabase
+          .from("cart")
+          .insert([
+            { profile_id: user.user.id, coffee_id: product, quantity: 1 },
+          ]);
 
         if (insertError) throw insertError;
 
-        // Update jumlah di cartCount
         setCartCount((prevCount) => prevCount + 1);
       }
 
-      // Animasi keranjang
-      setCartAnimation(true);
-      setTimeout(() => setCartAnimation(false), 1000);
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        title: "Produk berhasil ditambahkan ke keranjang!",
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        background: "#fff",
+        color: "#333",
+        iconColor: "#28a745",
+        customClass: {
+          popup: "swal-small",
+          title: "swal-title-small",
+          content: "swal-content-small",
+        },
+      });
     } catch (error) {
       console.error("Error handling cart:", error.message);
       Swal.fire({
         title: "Gagal!",
-        text: "Terjadi kesalahan saat menambahkan ke keranjang.",
+        text: "Terjadi kesalahan saat menambahkan produk.",
         icon: "error",
         confirmButtonText: "Tutup",
         confirmButtonColor: "#ff6632",
+        position: "top-end",
+        timer: 2000,
+        showConfirmButton: true,
+        customClass: {
+          popup: "swal-small",
+          title: "swal-title-small",
+          content: "swal-content-small",
+        },
       });
-    } finally {
-      setTimeout(() => {
-        swalLoading.close();
-      }, 2000);
     }
   };
 
@@ -393,22 +402,22 @@ export default function ProductPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2">
             {currentProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-800 dark:shadow-lg flex flex-col h-full hover:shadow-xl transition-shadow duration-300 ease-in-out max-w-sm mx-auto sm:max-w-xs"
+                className="bg-white rounded-3xl shadow-xl overflow-hidden dark:bg-gray-900 dark:shadow-2xl flex flex-col h-full max-w-sm mx-auto sm:max-w-xs"
                 onClick={() => handleProductClick(product.id)}
               >
-                <div className="relative group">
+                <div className="relative">
                   <img
                     src={product.foto_barang}
                     alt={product.nama_produk}
-                    className="w-full h-48 object-cover rounded-t-lg"
+                    className="w-full h-56 object-cover rounded-t-3xl"
                   />
                   {product.stok === 0 && (
-                    <div className="absolute inset-0 bg-black bg-opacity-60 flex justify-center items-center rounded-t-lg">
-                      <span className="text-white font-semibold text-sm">
+                    <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center rounded-t-3xl">
+                      <span className="text-white font-semibold text-lg">
                         Out of Stock
                       </span>
                     </div>
@@ -416,19 +425,19 @@ export default function ProductPage() {
                 </div>
 
                 {/* Content Section */}
-                <div className="p-4 flex flex-col justify-between flex-grow">
+                <div className="p-6 flex flex-col justify-between flex-grow">
                   {/* Product Name */}
-                  <h2 className="text-sm font-semibold text-gray-800 dark:text-white truncate mb-2">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate mb-3">
                     {product.nama_produk}
                   </h2>
 
                   {/* Description */}
-                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-2 line-clamp-3 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-3 mb-5">
                     {product.deskripsi}
                   </p>
 
                   {/* Stock and Rating */}
-                  <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
                     <span className="flex items-center space-x-1">
                       <i className="fas fa-box"></i>
                       <span>
@@ -436,7 +445,7 @@ export default function ProductPage() {
                       </span>
                     </span>
                     <span className="flex items-center space-x-1">
-                      <i className="fas  text-yellow-400"></i>
+                      <i className="fas text-yellow-400"></i>
                       <span>
                         {product.rating_produk &&
                         !isNaN(Number(product.rating_produk))
@@ -449,23 +458,23 @@ export default function ProductPage() {
                   </div>
 
                   {/* Price */}
-                  <p className="text-lg font-semibold text-orange-500 dark:text-orange-400 mt-4">
+                  <p className="text-xl font-semibold text-orange-600 dark:text-orange-400 mt-4">
                     {formatRupiah(product.harga_produk)}
                   </p>
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="p-4 pt-0">
+                <div className="p-6 pt-0">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart(product.id);
                     }}
                     disabled={product.stok === 0}
-                    className={`w-full py-2 rounded-lg text-sm font-medium text-white transition-all duration-300 ease-in-out ${
+                    className={`w-full py-3 rounded-lg text-sm font-medium text-white transition-all duration-300 ease-in-out ${
                       product.stok === 0
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-gradient-to-r from-orange-600 to-orange-700"
                     }`}
                   >
                     {product.stok === 0 ? "Out of Stock" : "Add To Cart"}
