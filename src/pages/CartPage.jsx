@@ -63,19 +63,55 @@ export default function CartPage() {
     const { data: user } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await supabase
-      .from("cart")
-      .delete()
-      .eq("profile_id", user.user.id)
-      .eq("coffee_id", coffee_id);
+    Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Produk ini akan dihapus dari keranjang Anda.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444", // Warna merah modern
+      cancelButtonColor: "#6b7280", // Warna abu-abu soft
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+      background: "#ffffff", // Warna background terang
+      color: "#333333", // Warna teks gelap agar kontras
+      customClass: {
+        popup: "rounded-xl shadow-lg", // Style lebih modern
+        title: "text-lg font-semibold",
+        confirmButton: "px-6 py-2 rounded-lg bg-red-500 hover:bg-red-600",
+        cancelButton: "px-6 py-2 rounded-lg bg-gray-400 hover:bg-gray-500",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { error } = await supabase
+          .from("cart")
+          .delete()
+          .eq("profile_id", user.user.id)
+          .eq("coffee_id", coffee_id);
 
-    if (error) {
-      Swal.fire("Terjadi kesalahan", error.message, "error");
-    } else {
-      // Menghapus item dari state lokal setelah berhasil dihapus dari database
-      setCart(cart.filter((item) => item.coffee_id !== coffee_id));
-      Swal.fire("Produk berhasil dihapus", "", "success");
-    }
+        if (error) {
+          Swal.fire({
+            title: "Terjadi Kesalahan",
+            text: error.message,
+            icon: "error",
+            background: "#ffffff",
+            color: "#333333",
+          });
+        } else {
+          // Menghapus item dari state lokal setelah berhasil dihapus dari database
+          setCart(cart.filter((item) => item.coffee_id !== coffee_id));
+          Swal.fire({
+            title: "Berhasil Dihapus!",
+            text: "Produk telah dihapus dari keranjang.",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true,
+            background: "#ffffff",
+            color: "#333333",
+            showConfirmButton: false,
+          });
+        }
+      }
+    });
   };
 
   return (

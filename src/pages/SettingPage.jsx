@@ -237,7 +237,7 @@ const SettingPage = () => {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
       <div className="mt-14 flex flex-1 items-center justify-center p-4 bg-gradient-to-r from-indigo-100 via-indigo-50 to-indigo-200 dark:from-indigo-900 dark:via-indigo-700 dark:to-indigo-800">
-        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg relative dark:bg-gray-700 dark:text-white">
+        <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg relative dark:bg-gray-800 dark:text-white">
           <button
             onClick={handleBack}
             className="absolute top-4 left-4 text-gray-700 hover:text-indigo-600 transition duration-300 dark:text-white dark:hover:text-indigo-400"
@@ -258,10 +258,10 @@ const SettingPage = () => {
             </svg>
           </button>
 
-          <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">
+          <h1 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-gray-200">
             Profile Settings
           </h1>
-          <div className="flex flex-col items-center space-y-6">
+          <div className="flex flex-col items-center space-y-8">
             <div className="relative">
               <img
                 src={profile.avatar_url || "/default-avatar.png"}
@@ -270,7 +270,7 @@ const SettingPage = () => {
               />
               <button
                 onClick={toggleAvatarModal}
-                className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition duration-300 dark:bg-indigo-500 dark:hover:bg-indigo-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -288,43 +288,43 @@ const SettingPage = () => {
                 </svg>
               </button>
             </div>
-            <div className="w-full space-y-4">
+            <div className="w-full space-y-6">
               <div>
-                <label className="text-gray-700 font-semibold dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Username
                 </label>
-                <div className="text-gray-500 dark:text-gray-400">
+                <div className="text-gray-600 dark:text-gray-400">
                   {profile.username}
                 </div>
               </div>
               <div>
-                <label className="text-gray-700 font-semibold dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Full Name
                 </label>
-                <div className="text-gray-500 dark:text-gray-400">
+                <div className="text-gray-600 dark:text-gray-400">
                   {profile.full_name}
                 </div>
               </div>
               <div>
-                <label className="text-gray-700 font-semibold dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email
                 </label>
-                <div className="text-gray-500 dark:text-gray-400">
+                <div className="text-gray-600 dark:text-gray-400">
                   {profile.email}
                 </div>
               </div>
               <div>
-                <label className="text-gray-700 font-semibold dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Phone Number
                 </label>
-                <div className="text-gray-500 dark:text-gray-400">
+                <div className="text-gray-600 dark:text-gray-400">
                   {profile.no_telepon}
                 </div>
               </div>
             </div>
             <button
               onClick={toggleModal}
-              className="w-full mt-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+              className="w-full mt-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
               Edit Profile
             </button>
@@ -334,13 +334,13 @@ const SettingPage = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
-            <h2 className="text-xl font-semibold dark:text-white text-center mb-6">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-sm w-full">
+            <h2 className="text-xl font-bold dark:text-white text-center mb-6">
               Edit Profile
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="text-gray-700 dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Username
                 </label>
                 <input
@@ -348,11 +348,11 @@ const SettingPage = () => {
                   name="username"
                   value={editData.username}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               <div>
-                <label className="text-gray-700 dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Full Name
                 </label>
                 <input
@@ -360,11 +360,11 @@ const SettingPage = () => {
                   name="full_name"
                   value={editData.full_name}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               <div>
-                <label className="text-gray-700 dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email
                 </label>
                 <input
@@ -372,11 +372,11 @@ const SettingPage = () => {
                   name="email"
                   value={editData.email}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               <div>
-                <label className="text-gray-700 dark:text-gray-300">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Phone Number
                 </label>
                 <input
@@ -384,20 +384,20 @@ const SettingPage = () => {
                   name="no_telepon"
                   value={editData.no_telepon}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
             </div>
             <div className="mt-6 flex justify-between">
               <button
                 onClick={handleUpdate}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
               >
                 Save
               </button>
               <button
                 onClick={toggleModal}
-                className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
+                className="px-6 py-2.5 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
               >
                 Cancel
               </button>
@@ -408,8 +408,8 @@ const SettingPage = () => {
 
       {uploading && (
         <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
-            <h2 className="text-xl font-semibold text-center mb-6 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-sm w-full">
+            <h2 className="text-xl font-bold text-center mb-6 dark:text-white">
               Updating Profile...
             </h2>
             <div className="w-full bg-gray-200 h-2 rounded-full">
@@ -424,15 +424,15 @@ const SettingPage = () => {
 
       {isAvatarModalOpen && (
         <div className="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-sm w-full">
-            <h2 className="text-xl font-semibold text-center dark:text-white mb-6">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-sm w-full">
+            <h2 className="text-xl font-bold text-center dark:text-white mb-6">
               Select Avatar Photo
             </h2>
             <input
               type="file"
               accept="image/*"
               onChange={handleAvatarSelect}
-              className="dark:text-white w-full p-2 border border-gray-300 rounded-lg"
+              className="dark:text-white w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600"
             />
             {uploading && (
               <div className="w-full mt-4">
@@ -447,10 +447,10 @@ const SettingPage = () => {
                 </div>
               </div>
             )}
-            <div className="mt-6 flex justify-between">
+            <div className="mt-6 flex justify-end">
               <button
                 onClick={toggleAvatarModal}
-                className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
+                className="px-6 py-2.5 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-300"
               >
                 Cancel
               </button>

@@ -45,13 +45,25 @@ const Header = () => {
           if (!localStorage.getItem("hasLoggedIn")) {
             localStorage.setItem("hasLoggedIn", "true");
             Swal.fire({
-              title: "Login Berhasil!",
-              text: `Selamat datang kembali, ${
+              title: "🚀 Selamat Datang Kembali!",
+              text: `Hai, ${
                 profileData.full_name || "Pengguna"
-              }!`,
-              icon: "success",
-              confirmButtonText: "OK",
-              confirmButtonColor: "#ff6632",
+              }! Semoga harimu menyenangkan! 🌟`,
+              iconHtml: "🎊", // Ikon party untuk sambutan hangat
+              confirmButtonText: "Siap! 🚀",
+              background: "#F9FAFB", // Soft & fresh
+              color: "#333", // Teks lebih kontras
+              confirmButtonColor: "#FF6632",
+              showClass: {
+                popup: "animate__animated animate__fadeInDown animate__faster",
+              },
+              hideClass: {
+                popup: "animate__animated animate__fadeOutUp animate__faster",
+              },
+              customClass: {
+                popup: "rounded-xl shadow-lg",
+                confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+              },
             });
           }
         }
@@ -92,13 +104,26 @@ const Header = () => {
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
+
     if (!error) {
       Swal.fire({
-        title: "Logged Out",
-        text: "You have successfully logged out.",
-        icon: "success",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#ff6632",
+        title: "🚪 Logout Berhasil!",
+        text: "Anda telah keluar. Sampai jumpa lagi! ✨",
+        iconHtml: "👋", // Ikon tangan melambai untuk efek farewell
+        background: "#F9FAFB", // Soft & fresh
+        color: "#333", // Teks lebih kontras
+        confirmButtonText: "Bye! 👋",
+        confirmButtonColor: "#FF6632",
+        showClass: {
+          popup: "animate__animated animate__fadeInDown animate__faster",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp animate__faster",
+        },
+        customClass: {
+          popup: "rounded-xl shadow-lg",
+          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+        },
       }).then(() => {
         navigate("/");
       });

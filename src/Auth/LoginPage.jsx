@@ -23,6 +23,15 @@ const Login = () => {
           text: "Terjadi masalah saat login dengan Google.",
           icon: "error",
           confirmButtonText: "OK",
+          background: "#1E1E1E",
+          color: "#FFF",
+          showClass: {
+            popup: "animate__animated animate__fadeInDown",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutUp",
+          },
+          confirmButtonColor: "#F87171",
         });
         return;
       }
@@ -53,6 +62,9 @@ const Login = () => {
               text: "Gagal menyimpan profil pengguna.",
               icon: "error",
               confirmButtonText: "OK",
+              background: "#1E1E1E",
+              color: "#FFF",
+              confirmButtonColor: "#F87171",
             });
             return;
           }
@@ -62,10 +74,23 @@ const Login = () => {
         }
 
         Swal.fire({
-          title: "Login Berhasil!",
+          title: "Login Berhasil! 🎉",
           text: `Selamat datang kembali, ${fullName}!`,
-          icon: "success",
+          iconHtml: "✅",
           confirmButtonText: "OK",
+          background: "rgba(30, 30, 30, 0.9)",
+          color: "#FFF",
+          showClass: {
+            popup: "animate__animated animate__fadeInUp animate__faster",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutDown animate__faster",
+          },
+          confirmButtonColor: "#4CAF50",
+          customClass: {
+            popup: "rounded-xl shadow-2xl backdrop-blur-md",
+            confirmButton: "px-6 py-2 rounded-lg text-lg",
+          },
         }).then(() => {
           navigate("/");
         });
@@ -82,10 +107,23 @@ const Login = () => {
     if (!email || !password) {
       setIsLoading(false);
       Swal.fire({
-        title: "Error!",
+        title: "⚠️ Oops!",
         text: "Email dan password wajib diisi.",
-        icon: "warning",
+        iconHtml: "⚠️",
         confirmButtonText: "OK",
+        background: "#FFFFFF",
+        color: "#333",
+        confirmButtonColor: "#F59E0B",
+        showClass: {
+          popup: "animate__animated animate__fadeInDown animate__faster",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp animate__faster",
+        },
+        customClass: {
+          popup: "rounded-lg shadow-xl backdrop-blur-sm border border-gray-200",
+          confirmButton: "px-6 py-2 rounded-lg text-lg",
+        },
       });
       return;
     }
@@ -100,24 +138,48 @@ const Login = () => {
 
       if (error) {
         Swal.fire({
-          title: "Login Gagal!",
+          title: "❌ Login Gagal!",
           text: "Email atau password salah.",
-          icon: "error",
-          confirmButtonText: "OK",
+          iconHtml: "❌",
+          confirmButtonText: "Coba Lagi",
+          background: "#FFFFFF",
+          color: "#333",
+          confirmButtonColor: "#EF4444",
+          showClass: {
+            popup: "animate__animated animate__shakeX",
+          },
+          customClass: {
+            popup:
+              "rounded-lg shadow-2xl backdrop-blur-sm border border-gray-200",
+            confirmButton: "px-6 py-2 rounded-lg text-lg",
+          },
         });
         return;
       }
 
       if (user) {
-        navigate("/");
+        navigate("/"); // Langsung redirect ke dashboard tanpa SweetAlert
       }
     } catch (err) {
       setIsLoading(false);
       Swal.fire({
-        title: "Error!",
-        text: "Terjadi masalah tak terduga.",
-        icon: "error",
+        title: "⚠️ Oops, Terjadi Kesalahan!",
+        text: "Terjadi masalah tak terduga. Silakan coba lagi nanti.",
+        iconHtml: "❗",
         confirmButtonText: "OK",
+        background: "#FFFFFF",
+        color: "#333",
+        confirmButtonColor: "#4F46E5",
+        showClass: {
+          popup: "animate__animated animate__fadeIn animate__faster",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOut animate__faster",
+        },
+        customClass: {
+          popup: "rounded-xl shadow-lg backdrop-blur-sm border border-gray-200",
+          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+        },
       });
     }
   };
@@ -130,30 +192,36 @@ const Login = () => {
           "url('https://texascoffeeschool.com/wp-content/uploads/2021/10/DSC_0052-scaled.jpg')",
       }}
     >
+      {/* Overlay Transparan */}
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
+      {/* Loader */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="loader border-t-4 border-white rounded-full w-16 h-16 animate-spin"></div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="loader border-t-4 border-white w-16 h-16 rounded-full animate-spin"></div>
         </div>
       )}
 
-      <div className="relative max-w-md w-full bg-black bg-opacity-70 backdrop-filter backdrop-blur-md rounded-2xl overflow-hidden p-8">
-        <h2 className="text-4xl font-extrabold text-white text-center mb-6">
-          Selamat Datang
+      {/* Card Form */}
+      <div className="relative max-w-md w-full bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl p-8">
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
+          Selamat Datang 👋
         </h2>
-        <p className="text-gray-300 text-center mb-6">
+        <p className="text-gray-600 text-center mb-6">
           Masuk untuk melanjutkan ke akun Anda!
         </p>
-        <form onSubmit={handleEmailLogin} className="space-y-6">
+
+        {/* Form Login */}
+        <form onSubmit={handleEmailLogin} className="space-y-5">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-2 border rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
           />
+
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -161,42 +229,49 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2/4 transform -translate-y-2/4 text-gray-400 hover:text-white"
+              className="absolute right-3 top-2/4 transform -translate-y-2/4 text-gray-500 hover:text-gray-700"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-all"
+            className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300"
           >
             Login dengan Email
           </button>
         </form>
+
+        {/* Divider */}
         <div className="flex items-center justify-between my-6">
-          <hr className="w-full border-gray-500" />
-          <span className="text-gray-300 px-4">atau</span>
-          <hr className="w-full border-gray-500" />
+          <hr className="w-full border-gray-300" />
+          <span className="text-gray-400 px-4">atau</span>
+          <hr className="w-full border-gray-300" />
         </div>
+
+        {/* Login Google */}
         <button
           onClick={handleGoogleLogin}
-          className="w-full bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-800 transition-all flex items-center justify-center space-x-3"
+          className="w-full bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-800 transition-all duration-300 flex items-center justify-center space-x-3"
         >
           <img src="/logo-google.png" alt="Google" className="w-6 h-6" />
           <span>Login dengan Google</span>
         </button>
-        <p className="text-gray-400 mt-4 text-center">
-          Belum mempunyai akun?{" "}
+
+        {/* Register Link */}
+        <p className="text-gray-500 mt-4 text-center">
+          Belum punya akun?{" "}
           <span
             onClick={() => navigate("/register")}
-            className="text-blue-400 cursor-pointer hover:underline"
+            className="text-blue-500 font-semibold cursor-pointer hover:underline"
           >
-            Register
+            Daftar sekarang
           </span>
         </p>
       </div>

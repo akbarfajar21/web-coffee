@@ -62,12 +62,21 @@ const ContactPage = () => {
 
     if (userError) {
       Swal.fire({
-        title: "Not Authenticated",
-        text: "You need to log in to submit a testimonial.",
-        imageUrl: "/login.gif",
-        imageWidth: 300,
-        imageHeight: 300,
+        title: "Login Diperlukan",
+        text: "Anda harus login terlebih dahulu untuk mengirim testimoni.",
+        imageUrl: "/login.gif", // Gambar ilustrasi
+        imageWidth: 250,
+        imageHeight: 250,
         imageAlt: "Login Required",
+        confirmButtonColor: "#2563eb", // Warna biru modern
+        confirmButtonText: "Login Sekarang",
+        background: "#ffffff",
+        color: "#333333",
+        customClass: {
+          popup: "rounded-xl shadow-lg",
+          title: "text-lg font-semibold",
+          confirmButton: "px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700",
+        },
       });
     } else {
       const { data, error } = await supabase.from("testimoni").insert([
@@ -82,16 +91,35 @@ const ContactPage = () => {
       if (error) {
         Swal.fire({
           icon: "error",
-          title: "An Error Occurred",
-          text:
-            error.message || "There was an error while submitting the message.",
+          title: "Terjadi Kesalahan",
+          text: error.message || "Terjadi kesalahan saat mengirim testimoni.",
+          background: "#ffffff",
+          color: "#333333",
+          confirmButtonColor: "#ef4444",
+          confirmButtonText: "Coba Lagi",
+          customClass: {
+            popup: "rounded-xl shadow-lg",
+            title: "text-lg font-semibold",
+            confirmButton: "px-6 py-2 rounded-lg bg-red-500 hover:bg-red-600",
+          },
         });
       } else {
         Swal.fire({
           icon: "success",
-          title: "Message Sent!",
-          text: "Your message has been successfully submitted.",
-          confirmButtonText: "Back to Home",
+          title: "Testimoni Terkirim!",
+          text: "Terima kasih telah memberikan testimoni.",
+          confirmButtonText: "Kembali ke Beranda",
+          confirmButtonColor: "#22c55e", // Warna hijau modern
+          background: "#ffffff",
+          color: "#333333",
+          timer: 2500,
+          timerProgressBar: true,
+          customClass: {
+            popup: "rounded-xl shadow-lg",
+            title: "text-lg font-semibold",
+            confirmButton:
+              "px-6 py-2 rounded-lg bg-green-500 hover:bg-green-600",
+          },
         }).then((result) => {
           if (result.isConfirmed) {
             window.location.href = "/"; // Redirect ke halaman utama
@@ -127,14 +155,15 @@ const ContactPage = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-8 bg-white p-12 rounded-2xl shadow-xl border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+            className="space-y-8 bg-white p-10 rounded-3xl shadow-2xl border border-gray-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 transition-all"
           >
-            <div className="space-y-4">
+            {/* Pesan */}
+            <div className="space-y-3">
               <label
                 htmlFor="message"
-                className="block text-lg font-medium text-gray-700 mb-2 dark:text-gray-300"
+                className="block text-lg font-medium text-gray-700 dark:text-gray-300"
               >
-                Message
+                Pesan Anda
               </label>
               <textarea
                 id="message"
@@ -142,31 +171,32 @@ const ContactPage = () => {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                className="w-full p-5 border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-blue-600 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-blue-500 transition-all ease-in-out"
-                rows="6"
-                placeholder="Write your message here"
+                className="w-full p-4 border-2 border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-blue-400 transition-all"
+                rows="5"
+                placeholder="Tulis pesan Anda di sini..."
               />
               {errors.message && (
-                <p className="text-red-500 text-sm mt-2">{errors.message}</p>
+                <p className="text-red-500 text-sm">{errors.message}</p>
               )}
             </div>
 
-            <div className="space-y-4">
+            {/* Rating */}
+            <div className="space-y-3">
               <label
                 htmlFor="rating"
-                className="block text-lg font-medium text-gray-700 mb-2 dark:text-gray-300"
+                className="block text-lg font-medium text-gray-700 dark:text-gray-300"
               >
-                Rating
+                Berikan Rating
               </label>
-              <div className="flex space-x-4 mt-2">
+              <div className="flex space-x-3 mt-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     type="button"
                     key={star}
-                    className={`text-3xl transition-all duration-200 transform hover:scale-110 focus:outline-none ${
+                    className={`text-3xl transition-all duration-200 transform hover:scale-125 focus:outline-none ${
                       formData.rating >= star
-                        ? "text-yellow-500"
-                        : "text-gray-300 dark:text-gray-500"
+                        ? "text-yellow-400 drop-shadow-md"
+                        : "text-gray-300 dark:text-gray-600"
                     }`}
                     onClick={() => handleRatingChange(star)}
                   >
@@ -175,16 +205,17 @@ const ContactPage = () => {
                 ))}
               </div>
               {errors.rating && (
-                <p className="text-red-500 text-sm mt-2">{errors.rating}</p>
+                <p className="text-red-500 text-sm">{errors.rating}</p>
               )}
             </div>
 
+            {/* Tombol Submit */}
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
-                className="px-8 py-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all transform hover:scale-105 dark:bg-gradient-to-br dark:from-blue-600 dark:to-indigo-700 dark:hover:from-blue-700 dark:hover:to-indigo-800"
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all transform hover:scale-105 dark:bg-gradient-to-r dark:from-blue-600 dark:to-indigo-700 dark:hover:from-blue-700 dark:hover:to-indigo-800"
               >
-                Submit Message
+                Kirim Testimoni
               </button>
             </div>
           </form>

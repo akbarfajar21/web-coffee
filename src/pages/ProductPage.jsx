@@ -176,17 +176,22 @@ export default function ProductPage() {
 
     if (userError || !user) {
       Swal.fire({
-        title: "Oops!",
-        text: "Login terlebih dahulu untuk menambahkan produk ke keranjang.",
-        icon: "warning",
-        confirmButtonText: "Login",
-        confirmButtonColor: "#ff6632",
-        timer: 5000,
-        showConfirmButton: true,
+        title: "🚀 Login Dulu Yuk!",
+        text: "Anda harus masuk untuk menambahkan produk ke keranjang.",
+        iconHtml: "🔑",
+        confirmButtonText: "Login Sekarang",
+        confirmButtonColor: "#4F46E5",
+        background: "rgba(255, 255, 255, 0.9)",
+        color: "#333",
+        showClass: {
+          popup: "animate__animated animate__fadeInDown animate__faster",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp animate__faster",
+        },
         customClass: {
-          popup: "swal-small",
-          title: "swal-title-small",
-          content: "swal-content-small",
+          popup: "rounded-xl shadow-lg backdrop-blur-md border border-gray-200",
+          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
         },
       }).then((result) => {
         if (result.isConfirmed) navigate("/login");
@@ -211,7 +216,6 @@ export default function ProductPage() {
           .eq("coffee_id", product);
 
         if (updateError) throw updateError;
-
         setCartCount((prevCount) => prevCount + 1);
       } else {
         const { error: insertError } = await supabase
@@ -221,42 +225,45 @@ export default function ProductPage() {
           ]);
 
         if (insertError) throw insertError;
-
         setCartCount((prevCount) => prevCount + 1);
       }
 
       Swal.fire({
         toast: true,
-        icon: "success",
-        title: "Produk berhasil ditambahkan ke keranjang!",
+        iconHtml: "✅",
+        title: "Produk berhasil ditambahkan! 🎉",
         position: "top-end",
         showConfirmButton: false,
         timer: 2000,
         timerProgressBar: true,
-        background: "#fff",
+        background: "rgba(255, 255, 255, 0.9)",
         color: "#333",
-        iconColor: "#28a745",
+        iconColor: "#10B981",
         customClass: {
-          popup: "swal-small",
-          title: "swal-title-small",
-          content: "swal-content-small",
+          popup: "rounded-xl shadow-lg backdrop-blur-md border border-gray-200",
+          title: "text-lg font-semibold",
         },
       });
     } catch (error) {
       console.error("Error handling cart:", error.message);
       Swal.fire({
-        title: "Gagal!",
-        text: "Terjadi kesalahan saat menambahkan produk.",
-        icon: "error",
-        confirmButtonText: "Tutup",
-        confirmButtonColor: "#ff6632",
+        title: "❌ Oops!",
+        text: "Gagal menambahkan produk ke keranjang.",
+        iconHtml: "⚠️",
+        confirmButtonText: "Coba Lagi",
+        confirmButtonColor: "#E11D48",
+        background: "rgba(255, 255, 255, 0.9)",
+        color: "#333",
         position: "top-end",
-        timer: 2000,
-        showConfirmButton: true,
+        showClass: {
+          popup: "animate__animated animate__shakeX animate__faster",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutDown animate__faster",
+        },
         customClass: {
-          popup: "swal-small",
-          title: "swal-title-small",
-          content: "swal-content-small",
+          popup: "rounded-xl shadow-lg backdrop-blur-md border border-gray-200",
+          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
         },
       });
     }
@@ -402,7 +409,7 @@ export default function ProductPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
             {currentProducts.map((product) => (
               <div
                 key={product.id}
