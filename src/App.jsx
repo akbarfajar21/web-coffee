@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MaintenancePage from "./pages/MaintenancePage";
 import HomePage from "./pages/HomePage";
@@ -15,22 +15,37 @@ import ScrollToTop from "./components/ScrollToTop";
 import Register from "./Auth/RegisterPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import WelcomeModal from "./components/WelcomeModal";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Pastikan ini diimpor
+import "aos/dist/aos.css";
 
 const App = () => {
   const isMaintenance = false;
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
+    const hasSeenAlert = sessionStorage.getItem("hasSeenWelcomeAlert");
+
+    if (!hasSeenAlert) {
+      setShowWelcomeModal(true);
+      sessionStorage.setItem("hasSeenWelcomeAlert", "true");
+    }
+
     AOS.init({
-      duration: 1000, // Durasi animasi
-      easing: "ease-in-out", // Efek easing
+      duration: 1000,
+      easing: "ease-in-out",
     });
   }, []);
 
   return (
     <Router>
       <ScrollToTop />
+
+      {/* Tampilkan modal jika state showWelcomeModal true */}
+      {showWelcomeModal && (
+        <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
+      )}
+
       <Routes>
         {isMaintenance ? (
           <Route path="*" element={<MaintenancePage />} />

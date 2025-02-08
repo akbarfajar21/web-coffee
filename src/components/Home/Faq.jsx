@@ -33,37 +33,38 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="faq-container bg-gray-100 dark:bg-gray-900 py-16">
-      <h2 className="faq-title text-4xl font-bold text-center text-gray-800 dark:text-white mb-12">
+    <div className=" dark:bg-gray-800 py-16 px-6">
+      <h2 className="text-4xl font-extrabold text-center text-gray-800 dark:text-white mb-12">
         Frequently Asked Questions
       </h2>
-      <div className="max-w-4xl mx-auto space-y-3">
+      <div className="max-w-3xl mx-auto space-y-4">
         {faqs.map((faq, index) => {
           const props = useSpring({
             opacity: activeIndex === index ? 1 : 0,
             maxHeight: activeIndex === index ? "150px" : "0px",
+            transform: activeIndex === index ? "scaleY(1)" : "scaleY(0.9)",
             overflow: "hidden",
-            config: { tension: 200, friction: 20 },
+            config: { tension: 220, friction: 25 },
           });
 
           return (
             <div
               key={index}
-              className="faq-item bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 m-4 transition-all"
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="faq-button w-full flex justify-between items-center text-lg font-medium text-gray-800 dark:text-white focus:outline-none"
+                className="w-full flex justify-between items-center text-lg font-semibold text-gray-800 dark:text-white focus:outline-none"
               >
                 <span>{faq.question}</span>
                 <FaChevronDown
-                  className={`transform transition-transform ${
+                  className={`transition-transform duration-300 ${
                     activeIndex === index ? "rotate-180 text-orange-500" : ""
                   }`}
                 />
               </button>
               <animated.div style={props}>
-                <p className="faq-answer mt-4 text-sm text-gray-600 dark:text-gray-300">
+                <p className="mt-4 text-gray-600 dark:text-gray-300">
                   {faq.answer}
                 </p>
               </animated.div>

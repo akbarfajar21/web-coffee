@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import LoadingBar from "react-top-loading-bar";
 import Pagination from "../components/Pagination";
-import { BsCart4 } from "react-icons/bs";
+import { BsCart4, BsFilter } from "react-icons/bs";
+import { IoClose } from "react-icons/io5"; // Import icon close
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -18,12 +19,12 @@ export default function ProductPage() {
   const [nameSortOrder, setNameSortOrder] = useState("");
   const [cart, setCart] = useState([]);
   const [cartCount, setCartCount] = useState(0);
-  const [cartAnimation, setCartAnimation] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [ratingSortOrder, setRatingSortOrder] = useState("");
-  const productsPerPage = 30;
+  const productsPerPage = 24;
   const navigate = useNavigate();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -230,18 +231,25 @@ export default function ProductPage() {
 
       Swal.fire({
         toast: true,
-        iconHtml: "✅",
-        title: "Produk berhasil ditambahkan! 🎉",
+        iconHtml: `
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12l4 4L19 7" />
+          </svg>
+        `,
+        title: "<b>Produk berhasil ditambahkan! 🎉</b>",
         position: "top-end",
         showConfirmButton: false,
         timer: 2000,
         timerProgressBar: true,
-        background: "rgba(255, 255, 255, 0.9)",
+        background: "rgba(255, 255, 255, 0.85)",
         color: "#333",
-        iconColor: "#10B981",
+        iconColor: "#16A34A",
         customClass: {
-          popup: "rounded-xl shadow-lg backdrop-blur-md border border-gray-200",
-          title: "text-lg font-semibold",
+          popup:
+            "rounded-xl shadow-xl backdrop-blur-lg border border-gray-300 dark:border-gray-700",
+          title:
+            "text-base font-medium tracking-wide text-gray-800 dark:text-gray-200",
+          timerProgressBar: "bg-green-500",
         },
       });
     } catch (error) {
@@ -277,8 +285,11 @@ export default function ProductPage() {
   return (
     <>
       <LoadingBar
-        color="#ff6632"
+        color="linear-gradient(to right, #ff6632, #ffb432)"
         progress={progress}
+        height={5}
+        shadow={true}
+        transitionTime={300}
         onLoaderFinished={() => setProgress(0)}
       />
       <Header />
@@ -289,20 +300,29 @@ export default function ProductPage() {
           </h1>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 py-6 px-4 lg:px-16">
-          {/* Product Filter */}
-          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 mb-10 transition-all duration-300 ease-in-out">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl lg:text-2xl font-extrabold text-gray-800 dark:text-white">
-                Product Filter
+        <button
+          onClick={() => setIsFilterOpen(true)}
+          className="lg:hidden fixed bottom-6 right-6 z-50 bg-orange-600 text-white p-3 rounded-full shadow-lg"
+        >
+          <BsFilter className="text-2xl" />
+        </button>
+
+        <div className="bg-white dark:bg-gray-900 py-6 px-4 lg:px-16 flex gap-6">
+          {/* Sidebar Filter (20%) */}
+          <aside className="w-1/5 hidden lg:block bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 sticky top-20 max-h-[80vh] min-h-fit overflow-y-auto">
+            {/* Header dengan Cart */}
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Filters
               </h2>
+
               <button
                 onClick={() => navigate("/cart")}
-                className="relative text-3xl text-[#ff6632] hover:text-[#ff5500] transition-transform duration-300 hover:scale-110 focus:outline-none"
+                className="relative flex items-center justify-center text-orange-500 border border-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 ease-in-out p-2 rounded-lg shadow-sm dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:text-white"
               >
-                <BsCart4 />
+                <BsCart4 className="w-6 h-6" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 text-xs font-bold text-white bg-red-600 rounded-full px-2 py-0.5">
+                  <span className="absolute -top-1.5 -right-1.5 text-xs font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full px-2 py-0.5 shadow-md">
                     {cartCount}
                   </span>
                 )}
@@ -311,193 +331,342 @@ export default function ProductPage() {
 
             {/* Search Bar */}
             <div className="mb-6">
-              <label
-                htmlFor="search-bar"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Search Product
               </label>
               <input
-                id="search-bar"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Type to search..."
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
+                placeholder="Search for products..."
+                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
-            {/* Filter Options */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {/* Filter Sections */}
+            <div className="space-y-4">
               {[
                 {
-                  id: "filter-harga",
-                  label: "Price",
+                  id: "price",
+                  label: "Sort by Price",
                   value: priceSortOrder,
                   onChange: setPriceSortOrder,
                   options: [
-                    { value: "", label: "Select Price" },
-                    { value: "asc", label: "Lowest Price" },
-                    { value: "desc", label: "Highest Price" },
+                    { value: "asc", label: "Lowest to Highest" },
+                    { value: "desc", label: "Highest to Lowest" },
                   ],
                 },
                 {
-                  id: "filter-stok",
-                  label: "Stock",
+                  id: "stock",
+                  label: "Stock Availability",
                   value: stockSortOrder,
                   onChange: setStockSortOrder,
                   options: [
-                    { value: "", label: "Select Stock" },
                     { value: "asc", label: "Most Stock" },
                     { value: "desc", label: "Least Stock" },
                   ],
                 },
                 {
-                  id: "filter-nama",
-                  label: "Product Name",
+                  id: "name",
+                  label: "Sort by Name",
                   value: nameSortOrder,
                   onChange: setNameSortOrder,
                   options: [
-                    { value: "", label: "Select Name" },
-                    { value: "asc", label: "A-Z" },
-                    { value: "desc", label: "Z-A" },
+                    { value: "asc", label: "A - Z" },
+                    { value: "desc", label: "Z - A" },
                   ],
                 },
                 {
-                  id: "filter-rating",
-                  label: "Rating",
+                  id: "rating",
+                  label: "Sort by Rating",
                   value: ratingSortOrder,
                   onChange: setRatingSortOrder,
                   options: [
-                    { value: "", label: "Select Rating" },
-                    { value: "asc", label: "Lowest Rating" },
-                    { value: "desc", label: "Highest Rating" },
+                    { value: "asc", label: "Lowest to Highest" },
+                    { value: "desc", label: "Highest to Lowest" },
                   ],
                 },
               ].map(({ id, label, value, onChange, options }) => (
-                <div key={id} className="flex flex-col">
-                  <label
-                    htmlFor={id}
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >
+                <div key={id} className="space-y-1">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                     {label}
-                  </label>
-                  <select
-                    id={id}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-[#ff6632] dark:bg-gray-700 dark:text-white text-sm transition-all"
-                  >
+                  </h3>
+                  <div className="flex flex-col space-y-1">
                     {options.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
+                      <label
+                        key={option.value}
+                        className="flex items-center justify-between p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm"
+                      >
+                        <span className="text-gray-800 dark:text-gray-300 text-xs font-medium">
+                          {option.label}
+                        </span>
+                        <input
+                          type="radio"
+                          name={id}
+                          value={option.value}
+                          checked={value === option.value}
+                          onChange={() => onChange(option.value)}
+                          className="hidden"
+                        />
+                        <span
+                          className={`relative w-8 h-4 flex items-center bg-gray-300 dark:bg-gray-600 rounded-full p-0.5 transition-all duration-200 ${
+                            value === option.value ? "bg-orange-500" : ""
+                          }`}
+                        >
+                          <span
+                            className={`w-3 h-3 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-all duration-200 ${
+                              value === option.value ? "translate-x-4" : ""
+                            }`}
+                          />
+                        </span>
+                      </label>
                     ))}
-                  </select>
+                  </div>
                 </div>
               ))}
             </div>
 
             {/* Reset Button */}
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={resetFilters}
-                className="px-6 py-3 bg-[#ff6632] text-white font-semibold rounded-lg shadow-md hover:bg-[#ff5500] transition-transform duration-300 ease-in-out focus:outline-none"
-              >
-                Reset Filters
-              </button>
-            </div>
-          </div>
+            <button
+              onClick={resetFilters}
+              className="w-full py-3 rounded-lg shadow-md border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 ease-in-out mt-6"
+            >
+              Reset Filters
+            </button>
+          </aside>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
-            {currentProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-3xl shadow-xl overflow-hidden dark:bg-gray-900 dark:shadow-2xl flex flex-col h-full max-w-sm mx-auto sm:max-w-xs"
-                onClick={() => handleProductClick(product.id)}
-              >
-                <div className="relative">
-                  <img
-                    src={product.foto_barang}
-                    alt={product.nama_produk}
-                    className="w-full h-56 object-cover rounded-t-3xl"
-                  />
-                  {product.stok === 0 && (
-                    <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center rounded-t-3xl">
-                      <span className="text-white font-semibold text-lg">
-                        Out of Stock
-                      </span>
-                    </div>
-                  )}
+          {isFilterOpen && (
+            <div className="fixed inset-0 z-50 bg-black/50 flex">
+              <div className="bg-white dark:bg-gray-800 w-4/5 sm:w-1/2 h-full p-4 sm:p-6 shadow-lg overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                    Product Filter
+                  </h2>
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => navigate("/cart")}
+                      className="relative text-xl text-orange-500 hover:text-orange-600 transition-all p-2 rounded-full bg-gray-100 dark:bg-gray-700 shadow-md"
+                    >
+                      <BsCart4 className="w-6 h-6" />
+                      {cartCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 text-xs font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full px-2">
+                          {cartCount}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setIsFilterOpen(false)}
+                      className="text-2xl text-gray-600 hover:text-gray-800 transition-all"
+                    >
+                      <IoClose />
+                    </button>
+                  </div>
                 </div>
 
-                {/* Content Section */}
-                <div className="p-6 flex flex-col justify-between flex-grow">
-                  {/* Product Name */}
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate mb-3">
-                    {product.nama_produk}
-                  </h2>
+                {/* Search Bar */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Search Product
+                  </label>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    placeholder="Search for products..."
+                    className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
 
-                  {/* Description */}
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-3 mb-5">
-                    {product.deskripsi}
-                  </p>
+                <div className="space-y-4">
+                  {[
+                    {
+                      id: "price",
+                      label: "Sort by Price",
+                      value: priceSortOrder,
+                      onChange: setPriceSortOrder,
+                      options: [
+                        { value: "asc", label: "Lowest to Highest" },
+                        { value: "desc", label: "Highest to Lowest" },
+                      ],
+                    },
+                    {
+                      id: "stock",
+                      label: "Stock Availability",
+                      value: stockSortOrder,
+                      onChange: setStockSortOrder,
+                      options: [
+                        { value: "asc", label: "Most Stock" },
+                        { value: "desc", label: "Least Stock" },
+                      ],
+                    },
+                    {
+                      id: "name",
+                      label: "Sort by Name",
+                      value: nameSortOrder,
+                      onChange: setNameSortOrder,
+                      options: [
+                        { value: "asc", label: "A - Z" },
+                        { value: "desc", label: "Z - A" },
+                      ],
+                    },
+                    {
+                      id: "rating",
+                      label: "Sort by Rating",
+                      value: ratingSortOrder,
+                      onChange: setRatingSortOrder,
+                      options: [
+                        { value: "asc", label: "Lowest to Highest" },
+                        { value: "desc", label: "Highest to Lowest" },
+                      ],
+                    },
+                  ].map(({ id, label, value, onChange, options }) => (
+                    <div key={id} className="space-y-1">
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                        {label}
+                      </h3>
+                      <div className="flex flex-col space-y-1">
+                        {options.map((option) => (
+                          <label
+                            key={option.value}
+                            className="flex items-center justify-between p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm"
+                          >
+                            <span className="text-gray-800 dark:text-gray-300 text-xs font-medium">
+                              {option.label}
+                            </span>
+                            <input
+                              type="radio"
+                              name={id}
+                              value={option.value}
+                              checked={value === option.value}
+                              onChange={() => onChange(option.value)}
+                              className="hidden"
+                            />
+                            <span
+                              className={`relative w-8 h-4 flex items-center bg-gray-300 dark:bg-gray-600 rounded-full p-0.5 transition-all duration-200 ${
+                                value === option.value ? "bg-orange-500" : ""
+                              }`}
+                            >
+                              <span
+                                className={`w-3 h-3 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-all duration-200 ${
+                                  value === option.value ? "translate-x-4" : ""
+                                }`}
+                              />
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-                  {/* Stock and Rating */}
-                  <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
-                    <span className="flex items-center space-x-1">
-                      <i className="fas fa-box"></i>
-                      <span>
-                        <strong>Stock:</strong> {product.stok}
-                      </span>
-                    </span>
-                    <span className="flex items-center space-x-1">
-                      <i className="fas text-yellow-400"></i>
-                      <span>
-                        {product.rating_produk &&
-                        !isNaN(Number(product.rating_produk))
-                          ? `${parseFloat(
-                              Number(product.rating_produk).toFixed(1)
-                            )} ⭐`
-                          : "No Rating"}
-                      </span>
-                    </span>
+                {/* Reset Button */}
+                <button
+                  onClick={() => {
+                    resetFilters();
+                    setIsFilterOpen(false);
+                  }}
+                  className="w-full py-2 bg-orange-500 text-white font-semibold rounded-lg mt-4"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            </div>
+          )}
+
+          <section className="w-full lg:w-4/5 h-screen max-h-screen flex flex-col overflow-y-auto pb-52">
+            <div
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 p-2 gap-2 flex-grow place-items-start"
+              style={{ gridAutoRows: "minmax(280px, auto)" }} // Biarkan tinggi kartu fleksibel
+            >
+              {currentProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden flex flex-col cursor-pointer min-h-[280px]"
+                  onClick={() => handleProductClick(product.id)}
+                >
+                  {/* Product Image */}
+                  <div className="relative">
+                    <img
+                      src={product.foto_barang}
+                      alt={product.nama_produk}
+                      className="w-full h-40 object-cover rounded-t-2xl"
+                    />
+                    {product.stok === 0 && (
+                      <div className="absolute inset-0 bg-black/70 flex justify-center items-center rounded-t-2xl">
+                        <span className="text-white font-semibold text-xs bg-red-600 rounded-md px-2 py-1">
+                          Out of Stock
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Price */}
-                  <p className="text-xl font-semibold text-orange-600 dark:text-orange-400 mt-4">
-                    {formatRupiah(product.harga_produk)}
-                  </p>
-                </div>
+                  {/* Product Info */}
+                  <div className="p-4 flex flex-col flex-grow">
+                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                      {product.nama_produk}
+                    </h2>
 
-                {/* Add to Cart Button */}
-                <div className="p-6 pt-0">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product.id);
-                    }}
-                    disabled={product.stok === 0}
-                    className={`w-full py-3 rounded-lg text-sm font-medium text-white transition-all duration-300 ease-in-out ${
-                      product.stok === 0
-                        ? "bg-gray-500 cursor-not-allowed"
-                        : "bg-gradient-to-r from-orange-600 to-orange-700"
-                    }`}
-                  >
-                    {product.stok === 0 ? "Out of Stock" : "Add To Cart"}
-                  </button>
+                    <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 mt-1 min-h-[32px]">
+                      {product.deskripsi}
+                    </p>
+
+                    <div className="flex justify-between items-center text-xs text-gray-600 dark:text-gray-400 mt-2 min-h-[24px]">
+                      <span className="flex items-center space-x-1">
+                        <i className="fas fa-box"></i>
+                        <span className="font-medium">
+                          Stock: {product.stok}
+                        </span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <i className="fas fa-star text-yellow-400"></i>
+                        <span className="font-medium">
+                          {product.rating_produk &&
+                          !isNaN(Number(product.rating_produk))
+                            ? `${parseFloat(
+                                Number(product.rating_produk).toFixed(1)
+                              )} `
+                            : "No Rating"}
+                        </span>
+                      </span>
+                    </div>
+
+                    <p className="text-lg font-bold text-orange-600 dark:text-orange-400 mt-3 min-h-[28px]">
+                      {formatRupiah(product.harga_produk)}
+                    </p>
+                  </div>
+
+                  {/* Add to Cart Button */}
+                  <div className="p-4 pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product.id);
+                      }}
+                      disabled={product.stok === 0}
+                      className={`w-full py-2 rounded-md text-xs font-medium text-white transition-all ${
+                        product.stok === 0
+                          ? "bg-gray-500 cursor-not-allowed"
+                          : "bg-orange-600 dark:bg-orange-700"
+                      }`}
+                    >
+                      {product.stok === 0 ? "Out of Stock" : "Add To Cart"}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <Pagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            <div className="mt-auto">
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </section>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

@@ -58,48 +58,44 @@ const Statistik = ({ isDarkMode }) => {
   return (
     <section
       ref={sectionRef}
-      className={`p-8 dark:bg-gray-700 shadow-xl transition-all duration-300 ${
-        isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      className={`p-10 transition-all duration-300 flex items-center justify-center ${
+        isDarkMode ? "bg-gray-900 text-white" : "dark:bg-gray-800 text-gray-900"
       }`}
     >
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-          className={`p-6 rounded-lg dark:bg-gray-800 dark:text-white shadow-md text-center flex flex-col items-center transition-all duration-300 ${
-            isDarkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"
-          }`}
-        >
-          <Users size={40} className="mb-3 text-blue-500" />
-          <h3 className="text-lg font-semibold mb-3">Pengguna Aktif</h3>
-          {inView && (
-            <p className="text-4xl font-bold">
-              <CountUp
-                start={0}
-                end={activeUsers}
-                duration={2.5}
-                separator=","
-              />
-            </p>
-          )}
-        </div>
-
-        <div
-          className={`p-6 rounded-lg shadow-md text-center dark:bg-gray-800 dark:text-white flex flex-col items-center transition-all duration-300 ${
-            isDarkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"
-          }`}
-        >
-          <ShoppingCart size={40} className="mb-3 text-green-500" />
-          <h3 className="text-lg font-semibold mb-3">Produk Terjual</h3>
-          {inView && (
-            <p className="text-4xl font-bold">
-              <CountUp
-                start={0}
-                end={totalSoldProducts}
-                duration={2.5}
-                separator=","
-              />
-            </p>
-          )}
-        </div>
+      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          {
+            icon: <Users size={40} className="mb-3" />,
+            title: "Pengguna Aktif",
+            count: activeUsers,
+            color: "from-blue-400 to-blue-600",
+          },
+          {
+            icon: <ShoppingCart size={40} className="mb-3" />,
+            title: "Produk Terjual",
+            count: totalSoldProducts,
+            color: "from-green-400 to-green-600",
+          },
+        ].map((stat, index) => (
+          <div
+            key={index}
+            className={`p-6 rounded-2xl shadow-lg bg-gradient-to-br ${stat.color} text-white text-center flex flex-col items-center
+            transition-all duration-300 transform hover:scale-[1.05] hover:shadow-2xl`}
+          >
+            {stat.icon}
+            <h3 className="text-lg font-semibold mb-2">{stat.title}</h3>
+            {inView && (
+              <p className="text-4xl font-bold">
+                <CountUp
+                  start={0}
+                  end={stat.count}
+                  duration={2.5}
+                  separator=","
+                />
+              </p>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -120,12 +120,28 @@ export default function DetailProduct() {
       if (error) throw error;
 
       Swal.fire({
-        title: "Terima Kasih!",
-        text: `Anda memberikan rating ${userRating} / 5 dengan komentar: "${comment}".`,
+        title: "🎉 Terima Kasih!",
+        html: `
+          <div class="text-gray-700 dark:text-gray-200">
+            <p class="text-lg font-medium">
+              Anda memberikan rating <strong class="text-orange-500">${userRating} / 5</strong>
+            </p>
+            <p class="italic text-sm mt-2">"${comment}"</p>
+          </div>
+        `,
         icon: "success",
-        willClose: () => {
-          window.location.reload();
+        background: "#ffffff",
+        color: "#333",
+        confirmButtonColor: "#ff7b00",
+        confirmButtonText: "🎯 Oke",
+        customClass: {
+          popup: "rounded-xl shadow-lg p-6",
+          title: "text-2xl font-bold text-gray-900",
+          confirmButton:
+            "py-2 px-4 rounded-lg text-white bg-orange-500 hover:bg-orange-600 transition-all",
         },
+      }).then(() => {
+        window.location.reload();
       });
 
       const { data: ratingsData, error: ratingsError } = await supabase
@@ -190,6 +206,18 @@ export default function DetailProduct() {
         title: "Rating Dihapus!",
         text: "Rating Anda telah dihapus.",
         icon: "success",
+        iconColor: "#4CAF50",
+        background: "#f8f9fa",
+        color: "#333",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        position: "top-end",
+        customClass: {
+          popup: "rounded-xl shadow-lg border border-gray-200",
+          title: "text-lg font-semibold",
+          content: "text-gray-600",
+        },
       }).then(async () => {
         const { data: ratingsData, error: ratingsError } = await supabase
           .from("rating")
@@ -226,8 +254,50 @@ export default function DetailProduct() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="loader"></div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        {/* Cangkir Kopi */}
+        <div className="relative flex items-center justify-center">
+          {/* Uap Kopi */}
+          <div className="absolute -top-6 flex space-x-2">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`w-2 h-${
+                  6 + i
+                } bg-gray-400 opacity-50 rounded-full animate-steam`}
+                style={{ animationDelay: `${i * 0.2}s` }}
+              ></div>
+            ))}
+          </div>
+
+          {/* Cangkir */}
+          <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400 w-16 h-12 rounded-t-full flex items-end justify-center shadow-lg">
+            <div className="absolute bottom-0 w-14 h-10 bg-white dark:bg-gray-800 rounded-t-full"></div>
+          </div>
+
+          {/* Pegangan Cangkir */}
+          <div className="absolute right-[-12px] top-[6px] w-6 h-6 border-4 border-orange-500 rounded-full"></div>
+        </div>
+
+        {/* Teks Loading */}
+        <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">
+          Brewing your coffee...
+        </p>
+
+        {/* Animasi CSS */}
+        <style>
+          {`
+            @keyframes steam {
+              0% { transform: translateY(0) scale(1); opacity: 1; }
+              50% { opacity: 0.7; }
+              100% { transform: translateY(-20px) scale(1.2); opacity: 0; }
+            }
+  
+            .animate-steam {
+              animation: steam 2s infinite ease-in-out;
+            }
+          `}
+        </style>
       </div>
     );
   }

@@ -52,9 +52,9 @@ const Testimonials = () => {
   }
 
   return (
-    <div className="py-8 px-4 w-full mx-auto dark:bg-gray-800">
-      <h2 className="text-3xl font-bold text-center mb-6 dark:text-white">
-        User Testimonials
+    <div className="py-12 px-6 w-full mx-auto bg-gray-50 dark:bg-gray-900">
+      <h2 className="text-4xl font-extrabold text-center mb-10 text-gray-800 dark:text-white">
+        What Our Customers Say
       </h2>
 
       {testimonials.length === 0 ? (
@@ -62,43 +62,54 @@ const Testimonials = () => {
           <img
             src="/testimoni.gif"
             alt="Testimonial GIF"
-            className="w-80 h-80 object-cover mb-4 rounded-xl"
+            className="w-72 h-72 object-cover mb-6 rounded-xl shadow-lg"
           />
-          <h2 className="text-3xl font-semibold text-gray-600 dark:text-gray-300">
+          <h2 className="text-2xl font-semibold text-gray-600 dark:text-gray-300">
             No testimonials yet
           </h2>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-14">
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="border border-gray-300 rounded-lg p-6 text-center shadow-lg dark:bg-gray-700 dark:border-gray-600"
+              className="relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:scale-105"
             >
-              <img
-                src={testimonial.profiles.avatar_url}
-                alt={`Avatar for ${testimonial.profiles.full_name}`}
-                className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
-              />
-              <h3 className="text-lg font-semibold mb-2 dark:text-white">
-                {testimonial.profiles.full_name}
-              </h3>
-              <p className="italic text-sm text-gray-600 dark:text-gray-300 break-words">
-                "{testimonial.message}"
-              </p>
-              <div className="mt-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className={`text-xl ${
-                      testimonial.rating >= star
-                        ? "text-yellow-500"
-                        : "text-gray-300"
-                    }`}
-                  >
-                    ★
-                  </span>
-                ))}
+              {/* Avatar */}
+              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+                <img
+                  src={testimonial.profiles.avatar_url}
+                  alt={`Avatar of ${testimonial.profiles.full_name}`}
+                  className="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg"
+                />
+              </div>
+
+              <div className="mt-12 text-center">
+                {/* Name */}
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                  {testimonial.profiles.full_name}
+                </h3>
+
+                {/* Testimonial Message */}
+                <p className="italic text-sm text-gray-600 dark:text-gray-300 mt-2">
+                  "{testimonial.message}"
+                </p>
+
+                {/* Star Rating */}
+                <div className="mt-3 flex justify-center space-x-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className={`text-xl ${
+                        testimonial.rating >= star
+                          ? "text-yellow-500"
+                          : "text-gray-300"
+                      }`}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}

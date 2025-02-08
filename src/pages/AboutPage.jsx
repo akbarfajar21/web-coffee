@@ -15,8 +15,50 @@ function AboutPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        <div className="loader animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-70"></div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        {/* Cangkir Kopi */}
+        <div className="relative flex items-center justify-center">
+          {/* Uap Kopi */}
+          <div className="absolute -top-6 flex space-x-2">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`w-2 h-${
+                  6 + i
+                } bg-gray-400 opacity-50 rounded-full animate-steam`}
+                style={{ animationDelay: `${i * 0.2}s` }}
+              ></div>
+            ))}
+          </div>
+
+          {/* Cangkir */}
+          <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400 w-16 h-12 rounded-t-full flex items-end justify-center shadow-lg">
+            <div className="absolute bottom-0 w-14 h-10 bg-white dark:bg-gray-800 rounded-t-full"></div>
+          </div>
+
+          {/* Pegangan Cangkir */}
+          <div className="absolute right-[-12px] top-[6px] w-6 h-6 border-4 border-orange-500 rounded-full"></div>
+        </div>
+
+        {/* Teks Loading */}
+        <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">
+          Brewing your coffee...
+        </p>
+
+        {/* Animasi CSS */}
+        <style>
+          {`
+            @keyframes steam {
+              0% { transform: translateY(0) scale(1); opacity: 1; }
+              50% { opacity: 0.7; }
+              100% { transform: translateY(-20px) scale(1.2); opacity: 0; }
+            }
+  
+            .animate-steam {
+              animation: steam 2s infinite ease-in-out;
+            }
+          `}
+        </style>
       </div>
     );
   }
@@ -24,86 +66,75 @@ function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen dark:bg-gray-900">
       <Header />
-      <main className="flex-grow mt-10 px-6 md:px-20">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mt-10 dark:text-white text-center">
+      <main className="flex-grow mt-20 px-6 md:px-16 lg:px-24">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white text-center mb-12">
           About Us
         </h1>
-        <section className="about py-12 rounded-lg">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl">
-              At Coffee Shop Me, we believe that coffee is more than just a
-              beverage—it's a way of life. Since our establishment in 2022, we
-              have been committed to serving the finest cup of coffee with
-              authentic and impressive flavors. This is a space to relax, enjoy
-              coffee while creating memories with friends, or work in an
-              environment that supports productivity.
+
+        {/* About Section */}
+        <section className="py-12 bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-10 px-6">
+            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-2xl">
+              At <span className="font-semibold">CoffeeShopMe</span>, we believe
+              that coffee is more than just a beverage—it's a way of life.
+              Established in 2022, we are dedicated to serving the finest coffee
+              with authentic flavors. Whether you’re looking for a cozy spot to
+              relax, work, or catch up with friends, we are here to make your
+              coffee moments special.
             </p>
-            <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl">
-              Our story began with a passion for great coffee and the desire to
-              create a community hub where people can come together, relax, and
-              experience quality coffee. From the moment you step inside, our
-              cozy ambiance and friendly staff will make you feel right at home.
+            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-2xl">
+              Our journey began with a passion for great coffee and a dream to
+              create a warm, welcoming space for coffee lovers. From the moment
+              you step inside, our cozy ambiance and friendly staff will make
+              you feel right at home.
             </p>
           </div>
         </section>
 
-        <section className="mission py-12  dark:bg-gray-800 rounded-lg">
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 dark:text-gray-100 mb-6 text-center">
-            Our Mission
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl mx-auto text-center">
-            Our mission is to provide every customer with a unique and
-            unforgettable coffee experience. We focus on using ethically sourced
-            beans, providing excellent service, and maintaining a welcoming
-            environment. We strive to inspire a passion for coffee and create a
-            community where everyone feels welcome.
+        {/* Mission Section */}
+        <section className="py-12 mt-12 bg-gradient-to-r from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-2xl shadow-xl text-white text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Mission</h2>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed">
+            We are committed to providing a unique and unforgettable coffee
+            experience. By using ethically sourced beans and creating a warm,
+            inclusive community, we strive to inspire a deep appreciation for
+            coffee culture.
           </p>
         </section>
 
-        <section className="gallery">
-          <h2 className="text-3xl md:text-4xl mt-6 font-semibold text-gray-800 dark:text-gray-100 mb-6 text-center">
+        {/* Gallery Section */}
+        <section className="mt-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-6">
             Our Gallery
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div data-aos="fade-right">
-              <img
-                src="gallery1.webp"
-                alt="Interior"
-                className="rounded-lg shadow-md"
-              />
-            </div>
-            <div data-aos="fade-down-right">
-              <img
-                src="gallery2.jpg"
-                alt="Coffee Event"
-                className="rounded-lg shadow-md"
-              />
-            </div>
-            <div data-aos="fade-down-left">
-              <img
-                src="gallery3.jpg"
-                alt="Coffee Menu"
-                className="rounded-lg shadow-md"
-              />
-            </div>
-            <div data-aos="fade-left">
-              <img
-                src="gallery4.jpg"
-                alt="Barista"
-                className="rounded-lg shadow-md"
-              />
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { src: "gallery1.webp", alt: "Interior", aos: "fade-right" },
+              { src: "gallery2.jpg", alt: "Coffee Event", aos: "fade-up" },
+              { src: "gallery3.jpg", alt: "Coffee Menu", aos: "fade-down" },
+              { src: "gallery4.jpg", alt: "Barista", aos: "fade-left" },
+            ].map((img, index) => (
+              <div
+                key={index}
+                data-aos={img.aos}
+                className="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-300"
+              >
+                <img src={img.src} alt={img.alt} className="w-full h-full" />
+              </div>
+            ))}
           </div>
         </section>
 
-        <section className="cta text-center mt-20">
+        {/* CTA Section */}
+        <section className="text-center mt-20">
           <h2 className="text-3xl md:text-4xl font-extrabold dark:text-white mb-6">
             Join Our Coffee Community
           </h2>
-          <p className="text-base md:text-lg mb-8 max-w-2xl dark:text-white mx-auto">
-            Follow us on social media and be a part of our journey. Share your
-            coffee moments using #CoffeeShopMe and meet new friends who share
-            the same love for coffee.
+          <p className="text-lg max-w-2xl mx-auto dark:text-gray-300 mb-8">
+            Follow us on social media and be part of our journey. Share your
+            coffee moments using{" "}
+            <span className="font-semibold text-orange-500">#CoffeeShopMe</span>{" "}
+            and connect with fellow coffee lovers.
           </p>
         </section>
       </main>

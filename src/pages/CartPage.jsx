@@ -102,12 +102,38 @@ export default function CartPage() {
           Swal.fire({
             title: "Berhasil Dihapus!",
             text: "Produk telah dihapus dari keranjang.",
-            icon: "success",
+            iconHtml: `
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" 
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-check-circle text-green-500 animate-scale-up">
+                <path d="M9 12l2 2 4-4"></path>
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            `,
             timer: 2000,
             timerProgressBar: true,
             background: "#ffffff",
-            color: "#333333",
+            color: "#333",
             showConfirmButton: false,
+            toast: true,
+            position: "top-end",
+            customClass: {
+              popup:
+                "rounded-xl shadow-lg border border-gray-300 dark:border-gray-700",
+              title: "text-lg font-semibold text-gray-900 dark:text-white",
+              htmlContainer: "text-gray-600 dark:text-gray-300 text-sm",
+              timerProgressBar: "bg-green-500",
+            },
+            willOpen: () => {
+              document.querySelector(".animate-scale-up").style.transform =
+                "scale(0.8)";
+              setTimeout(() => {
+                document.querySelector(".animate-scale-up").style.transform =
+                  "scale(1)";
+                document.querySelector(".animate-scale-up").style.transition =
+                  "all 0.3s ease-out";
+              }, 50);
+            },
           });
         }
       }
@@ -117,96 +143,118 @@ export default function CartPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
-      <div className="p-4 sm:p-6 flex-grow max-w-7xl mx-auto">
-        <div className="flex items-center space-x-4 mb-6">
+
+      <div className="p-6 flex-grow max-w-7xl mx-auto mt-14">
+        <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate("/product")}
-            className="text-gray-600 dark:text-gray-200 text-xl hover:text-gray-800 dark:hover:text-gray-400 transition-colors"
+            className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md text-gray-600 dark:text-gray-200 
+              hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
           >
-            <FaArrowLeft />
+            <FaArrowLeft className="text-2xl" />
           </button>
-
-          <h1 className="mt-32 text-2xl sm:text-3xl font-bold text-center flex-grow text-gray-800 dark:text-gray-200">
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mx-auto drop-shadow-md">
             Shopping Cart
           </h1>
+          <div className="w-10"></div>{" "}
+          {/* Placeholder untuk menjaga layout seimbang */}
         </div>
 
         {cart.length === 0 ? (
-          <div className="flex justify-center items-center flex-col">
+          <div className="flex flex-col items-center justify-center text-center py-10">
             <img
               src="/Empty.gif"
               alt="Empty Cart"
-              className="w-48 sm:w-64 h-auto"
+              className="w-64 sm:w-80 h-auto rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
             />
-            <p className="text-gray-500 dark:text-gray-300 text-center mt-4">
-              Your cart is empty.
+            <p className="text-lg text-gray-600 dark:text-gray-300 mt-6 max-w-md">
+              Oops! Looks like your cart is empty. Start adding your favorite
+              coffee!
             </p>
             <button
               onClick={() => navigate("/product")}
-              className="mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all"
+              className="mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full shadow-xl text-lg font-semibold 
+                 hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300"
             >
-              Shop Now
+              Start Shopping
             </button>
           </div>
         ) : (
-          <div className="space-y-6">
-            {cart.map((item) => (
-              <div
-                key={item.coffee_id}
-                className="flex items-center p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 border-b border-gray-200 dark:border-gray-700 w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto"
-              >
-                <img
-                  src={item.coffee.foto_barang}
-                  alt={item.coffee.nama_produk}
-                  className="w-24 sm:w-32 h-24 sm:h-32 object-cover rounded-lg shadow-sm transition-transform duration-300 ease-in-out transform hover:scale-105"
-                />
-                <div className="flex-grow ml-4 sm:ml-6">
-                  <h2 className="text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-200">
-                    {item.coffee.nama_produk}
-                  </h2>
-                  <p className="text-xs sm:text-xs text-gray-500 dark:text-gray-300">
-                    {formatHarga(item.coffee.harga_produk)}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <QuantityControl
-                    item={item}
-                    setCart={setCart}
-                    cart={cart}
-                    updateQuantityInDb={updateQuantityInDb}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* List Produk */}
+            <div className="lg:col-span-2 space-y-6">
+              {cart.map((item) => (
+                <div
+                  key={item.coffee_id}
+                  className="flex items-center p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                >
+                  <img
+                    src={item.coffee.foto_barang}
+                    alt={item.coffee.nama_produk}
+                    className="w-24 sm:w-32 h-24 sm:h-32 object-cover rounded-lg shadow-sm transition-transform duration-300 ease-in-out transform hover:scale-105"
                   />
-                  <button
-                    onClick={() => handleDelete(item.coffee_id)}
-                    className="text-red-600 dark:text-red-400 text-lg sm:text-xl hover:text-red-800 dark:hover:text-red-500 transition-all"
-                  >
-                    <FaTrashAlt />
-                  </button>
+                  <div className="flex-grow ml-4 sm:ml-6">
+                    <h2 className="text-sm sm:text-lg font-semibold text-gray-800 dark:text-gray-200">
+                      {item.coffee.nama_produk}
+                    </h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-300">
+                      {formatHarga(item.coffee.harga_produk)}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <QuantityControl
+                      item={item}
+                      setCart={setCart}
+                      cart={cart}
+                      updateQuantityInDb={updateQuantityInDb}
+                    />
+                    <button
+                      onClick={() => handleDelete(item.coffee_id)}
+                      className="text-red-600 dark:text-red-400 text-lg sm:text-xl hover:text-red-800 dark:hover:text-red-500 transition-all"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Ringkasan Belanja */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sticky top-20 border border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-5 text-center">
+                Order Summary
+              </h2>
+
+              {/* Detail Harga */}
+              <div className="space-y-4 text-gray-700 dark:text-gray-300">
+                <div className="flex justify-between items-center text-base">
+                  <p>Subtotal</p>
+                  <p className="font-medium">{formatHarga(totalHarga)}</p>
+                </div>
+
+                <div className="flex justify-between items-center text-base">
+                  <p>Shipping</p>
+                  <p className="text-green-500 font-medium">FREE</p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
 
-        <div className="border-t mt-6 mb-4 dark:border-gray-700"></div>
-        {cart.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-4">
-            <p className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200">
-              Total: {formatHarga(totalHarga)}
-            </p>
+              {/* Garis Pembatas */}
+              <hr className="my-5 border-gray-300 dark:border-gray-600" />
 
-            <div className="flex space-x-2">
-              <button
-                onClick={() => navigate("/product")}
-                className="px-4 py-2 text-sm sm:text-base text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-200 active:scale-95"
-              >
-                Lanjutkan Belanja
-              </button>
+              {/* Total Harga */}
+              <div className="flex justify-between items-center text-xl font-semibold">
+                <p>Total</p>
+                <p>{formatHarga(totalHarga)}</p>
+              </div>
 
-              <CheckoutButton
-                cart={cart}
-                totalHarga={totalHarga}
-                navigate={navigate}
-              />
+              {/* Tombol Checkout */}
+              <div className="mt-6">
+                <CheckoutButton
+                  cart={cart}
+                  totalHarga={totalHarga}
+                  navigate={navigate}
+                />
+              </div>
             </div>
           </div>
         )}
