@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../utils/SupaClient";
 import Swal from "sweetalert2";
-import { FiSettings, FiLogOut, FiClipboard } from "react-icons/fi";
+import { Settings2, ListOrdered, LogOut } from "lucide-react";
 import { FaMoon, FaSun } from "react-icons/fa"; // Import untuk ikon tema
 
 const Header = () => {
@@ -45,24 +45,31 @@ const Header = () => {
           if (!localStorage.getItem("hasLoggedIn")) {
             localStorage.setItem("hasLoggedIn", "true");
             Swal.fire({
-              title: "🚀 Selamat Datang Kembali!",
-              text: `Hai, ${
-                profileData.full_name || "Pengguna"
-              }! Semoga harimu menyenangkan! 🌟`,
-              iconHtml: "🎊", // Ikon party untuk sambutan hangat
-              confirmButtonText: "Siap! 🚀",
-              background: "#F9FAFB", // Soft & fresh
-              color: "#333", // Teks lebih kontras
-              confirmButtonColor: "#FF6632",
+              title: "✨ Selamat Datang Kembali!",
+              html: `
+                <div class="text-gray-700 dark:text-gray-200 text-lg font-medium">
+                  Hai, <span class="font-bold">${
+                    profileData.full_name || "Pengguna"
+                  }</span>! 
+                  Semoga harimu menyenangkan! 🌟
+                </div>
+              `,
+              iconHtml: "🎉", // Party icon untuk kesan meriah
+              confirmButtonText: "Lanjutkan 🚀",
+              background: "linear-gradient(135deg, #FFEDD5, #FECACA)", // Gradasi soft warm
+              color: "#333", // Teks kontras agar mudah dibaca
+              confirmButtonColor: "#FF5733", // Oranye modern
               showClass: {
-                popup: "animate__animated animate__fadeInDown animate__faster",
+                popup: "animate__animated animate__zoomIn animate__faster",
               },
               hideClass: {
-                popup: "animate__animated animate__fadeOutUp animate__faster",
+                popup: "animate__animated animate__fadeOut animate__faster",
               },
               customClass: {
-                popup: "rounded-xl shadow-lg",
-                confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+                popup: "rounded-2xl shadow-xl px-8 py-6", // Popup lebih modern & soft
+                title: "text-2xl font-bold text-gray-800 dark:text-white",
+                confirmButton:
+                  "px-6 py-3 rounded-lg text-lg font-semibold bg-orange-500 hover:bg-orange-600 transition-all duration-300 shadow-md",
               },
             });
           }
@@ -196,7 +203,7 @@ const Header = () => {
                   );
                 })}
               </ul>
-              <div className="w-full flex justify-end lg:border-l border-[#6d4c41]/10 items-center gap-3 pl-4 relative">
+              <div className="w-full flex justify-end  items-center gap-3 pl-4 relative">
                 <div className="flex items-center gap-4">
                   <button
                     onClick={toggleTheme}
@@ -225,29 +232,29 @@ const Header = () => {
                     </div>
 
                     {dropdownVisible && (
-                      <div className="absolute right-0 mt-2 bg-white dark:bg-[#3e2723] rounded-lg shadow-lg w-48 py-2 transform transition-all duration-300 ease-in-out z-30">
+                      <div className="absolute right-0 mt-2 bg-white dark:bg-[#252525] dark:border dark:border-gray-600 rounded-xl shadow-xl w-52 py-2 transform transition-all duration-300 ease-out scale-95 z-30">
                         <div className="px-4 py-2">
                           <Link
                             to="/settings"
-                            className="flex items-center text-sm text-gray-700 dark:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white rounded-lg p-2 transition duration-200"
+                            className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
                           >
-                            <FiSettings className="mr-2" /> Settings
+                            <Settings2 className="mr-2 w-5 h-5" /> Settings
                           </Link>
                         </div>
                         <div className="px-4 py-2">
                           <Link
                             to="/history"
-                            className="flex items-center text-sm text-gray-700 dark:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white rounded-lg p-2 transition duration-200"
+                            className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
                           >
-                            <FiClipboard className="mr-2" /> History
+                            <ListOrdered className="mr-2 w-5 h-5" /> History
                           </Link>
                         </div>
                         <div className="px-4 py-2">
                           <button
                             onClick={handleLogout}
-                            className="flex w-full items-center text-sm text-gray-700 dark:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:text-white rounded-lg p-2 transition duration-200"
+                            className="flex w-full items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
                           >
-                            <FiLogOut className="mr-2" /> Log Out
+                            <LogOut className="mr-2 w-5 h-5" /> Log Out
                           </button>
                         </div>
                       </div>

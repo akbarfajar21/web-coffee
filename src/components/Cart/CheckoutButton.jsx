@@ -133,11 +133,31 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
         },
 
         onPending: () => {
-          Swal.fire(
-            "Pembayaran Tertunda",
-            "Silakan selesaikan pembayaran Anda.",
-            "info"
-          );
+          Swal.fire({
+            title: "⚠️ Pembayaran Tertunda",
+            html: `
+              <p class="text-gray-700 dark:text-gray-200 text-lg">
+                Silakan selesaikan pembayaran Anda untuk melanjutkan transaksi.
+              </p>
+            `,
+            iconHtml: "💳",
+            background: "linear-gradient(135deg, #E0F2FE, #BAE6FD)",
+            color: "#333",
+            confirmButtonText: "Bayar Sekarang 💰",
+            confirmButtonColor: "#0284C7",
+            showClass: {
+              popup: "animate__animated animate__fadeInDown animate__fast",
+            },
+            hideClass: {
+              popup: "animate__animated animate__fadeOutUp animate__fast",
+            },
+            customClass: {
+              popup: "rounded-xl shadow-2xl px-8 py-6",
+              title: "text-2xl font-bold text-gray-800 dark:text-white",
+              confirmButton:
+                "px-6 py-3 rounded-lg text-lg font-semibold bg-blue-500 hover:bg-blue-600 transition-all duration-300 shadow-md",
+            },
+          });
         },
         onError: () => {
           Swal.fire(
@@ -156,15 +176,27 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
   };
 
   return (
-    <button
-      onClick={handleCheckout}
-      className={`bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all w-full sm:w-auto text-base ${
-        isProcessing ? "opacity-50 cursor-not-allowed" : ""
-      }`}
-      disabled={isProcessing}
-    >
-      {isProcessing ? "Memproses..." : "Lanjutkan Pembayaran"}
-    </button>
+    <div className="mt-6">
+      <button
+        onClick={handleCheckout}
+        className={`relative flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full shadow-xl transition-all duration-300 ease-in-out transform active:scale-95 w-full text-lg font-semibold tracking-wide h-12 min-w-[180px] ${
+          isProcessing
+            ? "opacity-60 cursor-not-allowed"
+            : "hover:from-orange-600 hover:to-orange-700 hover:shadow-2xl"
+        }`}
+        disabled={isProcessing}
+      >
+        <div className="flex items-center space-x-2">
+          {isProcessing && (
+            <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          )}
+
+          <span>
+            {isProcessing ? "Memproses Tunggu." : "Lanjutkan Pembayaran"}
+          </span>
+        </div>
+      </button>
+    </div>
   );
 };
 

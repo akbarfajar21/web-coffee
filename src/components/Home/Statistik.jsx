@@ -58,38 +58,47 @@ const Statistik = ({ isDarkMode }) => {
   return (
     <section
       ref={sectionRef}
-      className={`p-10 transition-all duration-300 flex items-center justify-center ${
-        isDarkMode ? "bg-gray-900 text-white" : "dark:bg-gray-800 text-gray-900"
-      }`}
+      className="p-6 transition-all duration-300 flex items-center justify-center text-gray-900 dark:bg-gray-900 dark:text-gray-100"
     >
-      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="max-w-5xl w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
         {[
           {
-            icon: <Users size={40} className="mb-3" />,
+            icon: <Users size={32} className="text-white dark:text-gray-300" />,
             title: "Pengguna Aktif",
             count: activeUsers,
-            color: "from-blue-400 to-blue-600",
+            color: "bg-blue-500 dark:bg-blue-600",
           },
           {
-            icon: <ShoppingCart size={40} className="mb-3" />,
+            icon: (
+              <ShoppingCart
+                size={32}
+                className="text-white dark:text-gray-300"
+              />
+            ),
             title: "Produk Terjual",
             count: totalSoldProducts,
-            color: "from-green-400 to-green-600",
+            color: "bg-green-500 dark:bg-green-600",
           },
         ].map((stat, index) => (
           <div
             key={index}
-            className={`p-6 rounded-2xl shadow-lg bg-gradient-to-br ${stat.color} text-white text-center flex flex-col items-center
-            transition-all duration-300 transform hover:scale-[1.05] hover:shadow-2xl`}
+            className={`p-6 rounded-xl shadow-md text-white text-center flex flex-col items-center border border-white/10 dark:border-gray-700 ${stat.color}`}
           >
-            {stat.icon}
-            <h3 className="text-lg font-semibold mb-2">{stat.title}</h3>
+            {/* Ikon dengan Background Soft */}
+            <div className="p-3 bg-white/20 dark:bg-white/10 rounded-lg">
+              {stat.icon}
+            </div>
+
+            {/* Judul */}
+            <h3 className="text-sm font-medium mt-3 mb-1">{stat.title}</h3>
+
+            {/* Angka CountUp */}
             {inView && (
-              <p className="text-4xl font-bold">
+              <p className="text-3xl font-bold tracking-tight">
                 <CountUp
                   start={0}
                   end={stat.count}
-                  duration={2.5}
+                  duration={2}
                   separator=","
                 />
               </p>

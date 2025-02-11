@@ -101,13 +101,49 @@ export default function DetailProduct() {
 
       if (comment.trim() === "") {
         Swal.fire({
-          title: "Isi Semua Formulir!",
+          title: "⚠️ Isi Semua Formulir!",
           text: "Harap berikan komentar sebelum mengirim.",
-          icon: "warning",
+          iconHtml: "⚠️",
+          confirmButtonText: "OK, Mengerti",
+          background: "#ffffff",
+          color: "#333",
+          confirmButtonColor: "#F59E0B",
+          showClass: {
+            popup: "animate__animated animate__fadeInDown animate__faster",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutUp animate__faster",
+          },
+          customClass: {
+            popup:
+              "rounded-xl shadow-lg backdrop-blur-sm border border-gray-200",
+            confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+          },
+        });
+
+        return;
+      }
+
+      // Cek apakah pengguna sudah memberikan rating sebelumnya
+      const { data: existingRatings, error: existingError } = await supabase
+        .from("rating")
+        .select("id")
+        .eq("coffee_id", id)
+        .eq("profile_id", user.id);
+
+      if (existingError) throw existingError;
+
+      if (existingRatings.length > 0) {
+        Swal.fire({
+          title: "Anda Sudah Memberikan Rating!",
+          text: "Anda hanya bisa memberikan satu rating per produk.",
+          icon: "info",
+          confirmButtonColor: "#ff7b00",
         });
         return;
       }
 
+      // Jika belum ada rating, lanjutkan menyimpan rating baru
       const { data, error } = await supabase.from("rating").insert([
         {
           coffee_id: id,
@@ -144,6 +180,7 @@ export default function DetailProduct() {
         window.location.reload();
       });
 
+      // Hitung rata-rata rating terbaru
       const { data: ratingsData, error: ratingsError } = await supabase
         .from("rating")
         .select("rating")
@@ -155,6 +192,7 @@ export default function DetailProduct() {
         ratingsData.reduce((sum, rating) => sum + rating.rating, 0) /
         ratingsData.length;
 
+      // Update rating di tabel coffee
       await supabase
         .from("coffee")
         .update({ rating_produk: avgRating })
@@ -176,9 +214,21 @@ export default function DetailProduct() {
       setComment("");
     } catch (error) {
       Swal.fire({
-        title: "Gagal Memberikan Rating!",
-        text: error.message || "Silakan coba lagi.",
-        icon: "error",
+        title: "❌ Gagal Memberikan Rating!",
+        text: error.message || "Silakan coba lagi nanti.",
+        iconHtml: "❌",
+        confirmButtonText: "OK, Mengerti",
+        background: "#ffffff",
+        color: "#333",
+        confirmButtonColor: "#EF4444",
+        showClass: {
+          popup: "animate__animated animate__shakeX",
+        },
+        customClass: {
+          popup:
+            "rounded-lg shadow-2xl backdrop-blur-sm border border-gray-200",
+          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+        },
       });
     }
   };

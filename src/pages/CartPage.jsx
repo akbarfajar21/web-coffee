@@ -68,14 +68,14 @@ export default function CartPage() {
       text: "Produk ini akan dihapus dari keranjang Anda.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#ef4444", // Warna merah modern
-      cancelButtonColor: "#6b7280", // Warna abu-abu soft
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
       confirmButtonText: "Ya, hapus!",
       cancelButtonText: "Batal",
-      background: "#ffffff", // Warna background terang
-      color: "#333333", // Warna teks gelap agar kontras
+      background: "#ffffff",
+      color: "#333333",
       customClass: {
-        popup: "rounded-xl shadow-lg", // Style lebih modern
+        popup: "rounded-xl shadow-lg",
         title: "text-lg font-semibold",
         confirmButton: "px-6 py-2 rounded-lg bg-red-500 hover:bg-red-600",
         cancelButton: "px-6 py-2 rounded-lg bg-gray-400 hover:bg-gray-500",
@@ -112,26 +112,29 @@ export default function CartPage() {
             `,
             timer: 2000,
             timerProgressBar: true,
-            background: "#ffffff",
-            color: "#333",
+            background: "#ffffff", // Selalu putih
+            color: "#222222", // Teks selalu hitam
             showConfirmButton: false,
             toast: true,
             position: "top-end",
             customClass: {
-              popup:
-                "rounded-xl shadow-lg border border-gray-300 dark:border-gray-700",
-              title: "text-lg font-semibold text-gray-900 dark:text-white",
-              htmlContainer: "text-gray-600 dark:text-gray-300 text-sm",
+              popup: "rounded-xl shadow-xl border border-gray-200",
+              title: "text-lg font-semibold text-gray-900",
+              htmlContainer: "text-gray-700 text-sm",
               timerProgressBar: "bg-green-500",
             },
+            showClass: {
+              popup: "animate__animated animate__fadeInDown animate__faster",
+            },
+            hideClass: {
+              popup: "animate__animated animate__fadeOutUp animate__faster",
+            },
             willOpen: () => {
-              document.querySelector(".animate-scale-up").style.transform =
-                "scale(0.8)";
+              const icon = document.querySelector(".animate-scale-up");
+              icon.style.transform = "scale(0.8)";
               setTimeout(() => {
-                document.querySelector(".animate-scale-up").style.transform =
-                  "scale(1)";
-                document.querySelector(".animate-scale-up").style.transition =
-                  "all 0.3s ease-out";
+                icon.style.transform = "scale(1)";
+                icon.style.transition = "all 0.3s ease-out";
               }, 50);
             },
           });
@@ -144,22 +147,23 @@ export default function CartPage() {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
 
-      <div className="p-6 flex-grow max-w-7xl mx-auto mt-14">
+      <div className="p-6 flex-grow max-w-7xl mx-auto mt-12">
+        {/* Header Navigasi */}
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate("/product")}
-            className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md text-gray-600 dark:text-gray-200 
-              hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+            className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 shadow-lg text-gray-600 dark:text-gray-200 
+      hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
           >
             <FaArrowLeft className="text-2xl" />
           </button>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mx-auto drop-shadow-md">
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white drop-shadow-md">
             Shopping Cart
           </h1>
-          <div className="w-10"></div>{" "}
-          {/* Placeholder untuk menjaga layout seimbang */}
+          <div className="w-10"></div> {/* Placeholder untuk menjaga layout */}
         </div>
 
+        {/* Keranjang Kosong */}
         {cart.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center py-10">
             <img
@@ -173,26 +177,29 @@ export default function CartPage() {
             </p>
             <button
               onClick={() => navigate("/product")}
-              className="mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full shadow-xl text-lg font-semibold 
-                 hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300"
+              className="mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-lg shadow-lg text-lg font-semibold 
+        hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300"
             >
               Start Shopping
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* List Produk */}
+            {/* Daftar Produk */}
             <div className="lg:col-span-2 space-y-6">
               {cart.map((item) => (
                 <div
                   key={item.coffee_id}
-                  className="flex items-center p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                  className="flex items-center p-5 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
                 >
+                  {/* Gambar Produk */}
                   <img
                     src={item.coffee.foto_barang}
                     alt={item.coffee.nama_produk}
                     className="w-24 sm:w-32 h-24 sm:h-32 object-cover rounded-lg shadow-sm transition-transform duration-300 ease-in-out transform hover:scale-105"
                   />
+
+                  {/* Detail Produk */}
                   <div className="flex-grow ml-4 sm:ml-6">
                     <h2 className="text-sm sm:text-lg font-semibold text-gray-800 dark:text-gray-200">
                       {item.coffee.nama_produk}
@@ -201,6 +208,8 @@ export default function CartPage() {
                       {formatHarga(item.coffee.harga_produk)}
                     </p>
                   </div>
+
+                  {/* Kontrol Jumlah & Hapus */}
                   <div className="flex items-center space-x-4">
                     <QuantityControl
                       item={item}
@@ -242,7 +251,7 @@ export default function CartPage() {
               <hr className="my-5 border-gray-300 dark:border-gray-600" />
 
               {/* Total Harga */}
-              <div className="flex justify-between items-center text-xl font-semibold">
+              <div className="flex justify-between dark:text-white items-center text-xl font-semibold">
                 <p>Total</p>
                 <p>{formatHarga(totalHarga)}</p>
               </div>

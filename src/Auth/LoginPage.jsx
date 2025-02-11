@@ -105,26 +105,29 @@ const Login = () => {
     setIsLoading(true);
 
     if (!email || !password) {
-      setIsLoading(false);
-      Swal.fire({
-        title: "⚠️ Oops!",
-        text: "Email dan password wajib diisi.",
-        iconHtml: "⚠️",
-        confirmButtonText: "OK",
-        background: "#FFFFFF",
-        color: "#333",
-        confirmButtonColor: "#F59E0B",
-        showClass: {
-          popup: "animate__animated animate__fadeInDown animate__faster",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp animate__faster",
-        },
-        customClass: {
-          popup: "rounded-lg shadow-xl backdrop-blur-sm border border-gray-200",
-          confirmButton: "px-6 py-2 rounded-lg text-lg",
-        },
-      });
+      setTimeout(() => {
+        setIsLoading(false);
+        Swal.fire({
+          title: "⚠️ Oops!",
+          text: "Email dan password wajib diisi.",
+          iconHtml: "⚠️",
+          confirmButtonText: "OK",
+          background: "#FFFFFF",
+          color: "#333",
+          confirmButtonColor: "#F59E0B",
+          showClass: {
+            popup: "animate__animated animate__fadeInDown animate__faster",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutUp animate__faster",
+          },
+          customClass: {
+            popup:
+              "rounded-lg shadow-xl backdrop-blur-sm border border-gray-200",
+            confirmButton: "px-6 py-2 rounded-lg text-lg",
+          },
+        });
+      }, 2000); // Delay 2 detik sebelum loading hilang
       return;
     }
 
@@ -134,53 +137,58 @@ const Login = () => {
         password,
       });
 
-      setIsLoading(false);
-
       if (error) {
-        Swal.fire({
-          title: "❌ Login Gagal!",
-          text: "Email atau password salah.",
-          iconHtml: "❌",
-          confirmButtonText: "Coba Lagi",
-          background: "#FFFFFF",
-          color: "#333",
-          confirmButtonColor: "#EF4444",
-          showClass: {
-            popup: "animate__animated animate__shakeX",
-          },
-          customClass: {
-            popup:
-              "rounded-lg shadow-2xl backdrop-blur-sm border border-gray-200",
-            confirmButton: "px-6 py-2 rounded-lg text-lg",
-          },
-        });
+        setTimeout(() => {
+          setIsLoading(false);
+          Swal.fire({
+            title: "❌ Login Gagal!",
+            text: "Email atau password salah.",
+            iconHtml: "❌",
+            confirmButtonText: "Coba Lagi",
+            background: "#FFFFFF",
+            color: "#333",
+            confirmButtonColor: "#EF4444",
+            showClass: { popup: "animate__animated animate__shakeX" },
+            customClass: {
+              popup:
+                "rounded-lg shadow-2xl backdrop-blur-sm border border-gray-200",
+              confirmButton: "px-6 py-2 rounded-lg text-lg",
+            },
+          });
+        }, 2000); // Delay 2 detik sebelum loading hilang
         return;
       }
 
       if (user) {
-        navigate("/"); // Langsung redirect ke dashboard tanpa SweetAlert
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate("/"); // Redirect setelah loading selesai
+        }, 4500); // Delay 2 detik sebelum pindah halaman
       }
     } catch (err) {
-      setIsLoading(false);
-      Swal.fire({
-        title: "⚠️ Oops, Terjadi Kesalahan!",
-        text: "Terjadi masalah tak terduga. Silakan coba lagi nanti.",
-        iconHtml: "❗",
-        confirmButtonText: "OK",
-        background: "#FFFFFF",
-        color: "#333",
-        confirmButtonColor: "#4F46E5",
-        showClass: {
-          popup: "animate__animated animate__fadeIn animate__faster",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOut animate__faster",
-        },
-        customClass: {
-          popup: "rounded-xl shadow-lg backdrop-blur-sm border border-gray-200",
-          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
-        },
-      });
+      setTimeout(() => {
+        setIsLoading(false);
+        Swal.fire({
+          title: "⚠️ Oops, Terjadi Kesalahan!",
+          text: "Terjadi masalah tak terduga. Silakan coba lagi nanti.",
+          iconHtml: "❗",
+          confirmButtonText: "OK",
+          background: "#FFFFFF",
+          color: "#333",
+          confirmButtonColor: "#4F46E5",
+          showClass: {
+            popup: "animate__animated animate__fadeIn animate__faster",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOut animate__faster",
+          },
+          customClass: {
+            popup:
+              "rounded-xl shadow-lg backdrop-blur-sm border border-gray-200",
+            confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+          },
+        });
+      }, 2000); // Delay 2 detik sebelum loading hilang
     }
   };
 
@@ -195,10 +203,50 @@ const Login = () => {
       {/* Overlay Transparan */}
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
-      {/* Loader */}
       {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="loader border-t-4 border-white w-16 h-16 rounded-full animate-spin"></div>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center z-50">
+          {/* Uap Kopi */}
+          <div className="relative flex items-center justify-center">
+            <div className="absolute -top-6 flex space-x-2">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-${
+                    6 + i
+                  } bg-gray-400 opacity-50 rounded-full animate-steam`}
+                  style={{ animationDelay: `${i * 0.2}s` }}
+                ></div>
+              ))}
+            </div>
+
+            {/* Cangkir */}
+            <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400 w-16 h-12 rounded-t-full flex items-end justify-center shadow-lg">
+              <div className="absolute bottom-0 w-14 h-10 bg-white dark:bg-gray-800 rounded-t-full"></div>
+            </div>
+
+            {/* Pegangan Cangkir */}
+            <div className="absolute right-[-12px] top-[6px] w-6 h-6 border-4 border-orange-500 rounded-full"></div>
+          </div>
+
+          {/* Teks Loading */}
+          <p className="text-white mt-4 text-lg font-semibold">
+            Brewing your coffee...
+          </p>
+
+          {/* Animasi CSS */}
+          <style>
+            {`
+            @keyframes steam {
+              0% { transform: translateY(0) scale(1); opacity: 1; }
+              50% { opacity: 0.7; }
+              100% { transform: translateY(-20px) scale(1.2); opacity: 0; }
+            }
+
+            .animate-steam {
+              animation: steam 2s infinite ease-in-out;
+            }
+          `}
+          </style>
         </div>
       )}
 
