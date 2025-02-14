@@ -273,24 +273,24 @@ export default function ProductPage() {
           </svg>
         `,
         confirmButtonText: "Coba Lagi",
-        confirmButtonColor: "#E11D48", // Warna merah modern
-        background: "#ffffff", // Selalu putih
-        color: "#222222", // Teks selalu hitam
-        position: "center", // Menempatkan di tengah
+        confirmButtonColor: "#EF4444", 
+        background: "#F9FAFB",
+        color: "#374151",
+        position: "center",
         showClass: {
-          popup: "animate__animated animate__fadeInDown animate__faster",
+          popup: "animate__animated animate__fadeInUp animate__fast",
         },
         hideClass: {
-          popup: "animate__animated animate__fadeOutUp animate__faster",
+          popup: "animate__animated animate__fadeOutDown animate__fast",
         },
         customClass: {
-          popup: "rounded-xl shadow-xl border border-gray-200",
-          title: "text-lg font-semibold text-gray-900",
-          htmlContainer: "text-gray-700 text-sm",
+          popup: "rounded-2xl shadow-2xl border border-gray-300 p-6",
+          title: "text-xl font-bold text-gray-900",
+          htmlContainer: "text-gray-600 text-base",
           confirmButton:
-            "px-6 py-2 rounded-lg text-lg font-semibold bg-red-500 hover:bg-red-600 text-white",
+            "px-6 py-2 rounded-full text-lg font-semibold bg-red-500 hover:bg-red-600 text-white shadow-md transition-all",
         },
-      });
+      });      
     }
   };
 

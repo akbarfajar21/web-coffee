@@ -5,20 +5,17 @@ import Footer from "../components/Footer";
 function AboutPage() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulasi loading selesai setelah beberapa waktu
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000); // Durasi 1 detik
+    }, 3000); 
     return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        {/* Cangkir Kopi */}
         <div className="relative flex items-center justify-center">
-          {/* Uap Kopi */}
           <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (
               <div
@@ -29,16 +26,13 @@ function AboutPage() {
             ))}
           </div>
 
-          {/* Cangkir */}
           <div className="relative w-20 h-16 bg-gradient-to-b from-orange-500 to-orange-700 rounded-t-full flex items-end justify-center shadow-lg glow-effect">
             <div className="absolute bottom-0 w-16 h-12 bg-white dark:bg-gray-800 rounded-t-full"></div>
           </div>
 
-          {/* Pegangan Cangkir */}
           <div className="absolute right-[-10px] top-[6px] w-5 h-5 border-4 border-orange-500 rounded-full"></div>
         </div>
 
-        {/* Teks Loading */}
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
           Brewing your coffee...
         </p>
@@ -47,23 +41,20 @@ function AboutPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen dark:bg-gray-900">
+    <div className="flex flex-col min-h-screen dark:bg-gray-900 bg-gray-100">
       <Header />
       <main className="flex-grow mt-20 px-6 md:px-16 lg:px-24">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white text-center mb-12">
           About Us
         </h1>
-
-        {/* About Section */}
-        <section className="py-12 bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-10 px-6">
+  
+        <section className="py-12 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl px-8 md:px-12">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-2xl">
-              At <span className="font-semibold">CoffeeShopMe</span>, we believe
-              that coffee is more than just a beverage—it's a way of life.
-              Established in 2022, we are dedicated to serving the finest coffee
-              with authentic flavors. Whether you’re looking for a cozy spot to
-              relax, work, or catch up with friends, we are here to make your
-              coffee moments special.
+              At <span className="font-semibold text-orange-600 dark:text-orange-400">CoffeeShopMe</span>, we believe
+              that coffee is more than just a beverage—it's a way of life. Established in 2022, we are dedicated to
+              serving the finest coffee with authentic flavors. Whether you’re looking for a cozy spot to relax, work, or
+              catch up with friends, we are here to make your coffee moments special.
             </p>
             <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-2xl">
               Our journey began with a passion for great coffee and a dream to
@@ -73,14 +64,11 @@ function AboutPage() {
             </p>
           </div>
         </section>
-
-        {/* Mission Section */}
-        <section className="py-16 px-6 md:py-20 bg-gradient-to-r mt-10 from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-2xl shadow-xl text-white text-center">
+  
+        <section className="py-16 px-6 md:py-20 bg-gradient-to-r mt-12 from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-3xl shadow-2xl text-white text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
-              Our Mission
-            </h2>
-            <p className="text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
+            <h2 className="text-4xl font-bold mb-6 leading-tight">Our Mission</h2>
+            <p className="text-lg max-w-3xl mx-auto leading-relaxed">
               We are committed to providing a unique and unforgettable coffee
               experience. By using ethically sourced beans and creating a warm,
               inclusive community, we strive to inspire a deep appreciation for
@@ -88,39 +76,27 @@ function AboutPage() {
             </p>
           </div>
         </section>
-
-        {/* Gallery Section */}
+  
         <section className="mt-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-6">
-            Our Gallery
-          </h2>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-10">Our Gallery</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { src: "gallery1.webp", alt: "Interior", aos: "fade-right" },
-              { src: "gallery2.jpg", alt: "Coffee Event", aos: "fade-up" },
-              { src: "gallery3.jpg", alt: "Coffee Menu", aos: "fade-down" },
-              { src: "gallery4.jpg", alt: "Barista", aos: "fade-left" },
-            ].map((img, index) => (
+            {["gallery1.webp", "gallery2.jpg", "gallery3.jpg", "gallery4.jpg"].map((src, index) => (
               <div
                 key={index}
-                data-aos={img.aos}
-                className="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-300"
+                data-aos={index % 2 === 0 ? "fade-up" : "fade-down"}
+                className="rounded-xl overflow-hidden shadow-xl transform hover:scale-105 transition-all duration-300"
               >
-                <img src={img.src} alt={img.alt} className="w-full h-full" />
+                <img src={src} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
               </div>
             ))}
           </div>
         </section>
-
-        {/* CTA Section */}
+  
         <section className="text-center mt-20">
-          <h2 className="text-3xl md:text-4xl font-extrabold dark:text-white mb-6">
-            Join Our Coffee Community
-          </h2>
+          <h2 className="text-4xl font-extrabold dark:text-white mb-6">Join Our Coffee Community</h2>
           <p className="text-lg max-w-2xl mx-auto dark:text-gray-300 mb-8">
             Follow us on social media and be part of our journey. Share your
-            coffee moments using{" "}
-            <span className="font-semibold text-orange-500">#CoffeeShopMe</span>{" "}
+            coffee moments using <span className="font-semibold text-orange-500">#CoffeeShopMe</span>
             and connect with fellow coffee lovers.
           </p>
         </section>
@@ -128,6 +104,7 @@ function AboutPage() {
       <Footer />
     </div>
   );
+  
 }
 
 export default AboutPage;

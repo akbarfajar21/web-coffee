@@ -48,30 +48,24 @@ const Header = () => {
               title: "✨ Selamat Datang Kembali!",
               html: `
                 <div class="text-gray-700 dark:text-gray-200 text-lg font-medium">
-                  Hai, <span class="font-bold">${
-                    profileData.full_name || "Pengguna"
-                  }</span>! 
+                  Hai, <span class="font-bold">${profileData.full_name || "Pengguna"}</span>! 
                   Semoga harimu menyenangkan! 🌟
                 </div>
               `,
-              iconHtml: "🎉", // Party icon untuk kesan meriah
+              iconHtml: "🎉",
               confirmButtonText: "Lanjutkan 🚀",
-              background: "linear-gradient(135deg, #FFEDD5, #FECACA)", // Gradasi soft warm
-              color: "#333", // Teks kontras agar mudah dibaca
-              confirmButtonColor: "#FF5733", // Oranye modern
-              showClass: {
-                popup: "animate__animated animate__zoomIn animate__faster",
-              },
-              hideClass: {
-                popup: "animate__animated animate__fadeOut animate__faster",
-              },
+              background: document.documentElement.classList.contains("dark") ? "#1E293B" : "#FFFAF0",
+              color: document.documentElement.classList.contains("dark") ? "#E5E7EB" : "#333",
+              confirmButtonColor: document.documentElement.classList.contains("dark") ? "#F97316" : "#FF5733",
+              showClass: { popup: "animate__animated animate__zoomIn animate__faster" },
+              hideClass: { popup: "animate__animated animate__fadeOut animate__faster" },
               customClass: {
-                popup: "rounded-2xl shadow-xl px-8 py-6", // Popup lebih modern & soft
-                title: "text-2xl font-bold text-gray-800 dark:text-white",
+                popup: "rounded-3xl shadow-2xl px-10 py-8 border border-gray-200 dark:border-gray-700",
+                title: "text-3xl font-extrabold text-gray-900 dark:text-white",
                 confirmButton:
-                  "px-6 py-3 rounded-lg text-lg font-semibold bg-orange-500 hover:bg-orange-600 transition-all duration-300 shadow-md",
+                  "px-6 py-3 rounded-lg text-lg font-semibold bg-orange-500 hover:bg-orange-600 transition-all duration-300 shadow-lg",
               },
-            });
+            });                       
           }
         }
       } else {
