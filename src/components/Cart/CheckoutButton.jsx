@@ -96,7 +96,11 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
           const { error: cartError } = await supabase
             .from("cart")
             .delete()
-            .eq("profile_id", user.user.id);
+            .eq("profile_id", user.user.id)
+            .in(
+              "coffee_id",
+              cart.map((item) => item.coffee_id)
+            ); // Hapus hanya yang dipilih
 
           if (cartError) {
             console.error(cartError);

@@ -273,7 +273,7 @@ export default function ProductPage() {
           </svg>
         `,
         confirmButtonText: "Coba Lagi",
-        confirmButtonColor: "#EF4444", 
+        confirmButtonColor: "#EF4444",
         background: "#F9FAFB",
         color: "#374151",
         position: "center",
@@ -290,7 +290,7 @@ export default function ProductPage() {
           confirmButton:
             "px-6 py-2 rounded-full text-lg font-semibold bg-red-500 hover:bg-red-600 text-white shadow-md transition-all",
         },
-      });      
+      });
     }
   };
 
@@ -319,7 +319,7 @@ export default function ProductPage() {
       <Header />
       <div className="min-h-screen py-6 dark:bg-gray-900">
         <div className="mb-8">
-          <h1 className="mt-14 text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
+          <h1 className="mt-16 text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
             Our Products
           </h1>
         </div>
@@ -332,38 +332,40 @@ export default function ProductPage() {
         </button>
 
         <div className="bg-white dark:bg-gray-900 py-6 px-4 lg:px-16 flex gap-6">
-          <aside className="w-1/5 hidden lg:block bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 sticky top-20 max-h-[80vh] min-h-fit overflow-y-auto">
+          <aside className="w-1/6 hidden lg:block bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 sticky top-20 max-h-[75vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700">
+            {/* Header */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Filters
               </h2>
-
               <button
                 onClick={() => navigate("/cart")}
-                className="relative flex items-center justify-center text-orange-500 border border-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 ease-in-out p-2 rounded-lg shadow-sm dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:text-white"
+                className="relative flex items-center justify-center text-orange-500 border border-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out p-2 rounded-lg shadow-sm dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:text-white hover:scale-105"
               >
                 <BsCart4 className="w-6 h-6" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 text-xs font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full px-2 py-0.5 shadow-md">
+                  <span className="absolute -top-2 -right-2 text-xs font-bold text-white bg-red-600 border border-white dark:border-gray-800 rounded-full px-1.5 py-0.5 shadow-md">
                     {cartCount}
                   </span>
                 )}
               </button>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {/* Search Input */}
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Search Product
               </label>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search for products..."
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white"
+                placeholder="Search..."
+                className="w-full px-3 py-1.5 border rounded-md shadow-sm text-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white transition-all"
               />
             </div>
 
+            {/* Filter Options */}
             <div className="space-y-4">
               {[
                 {
@@ -372,8 +374,8 @@ export default function ProductPage() {
                   value: priceSortOrder,
                   onChange: setPriceSortOrder,
                   options: [
-                    { value: "asc", label: "Lowest to Highest" },
-                    { value: "desc", label: "Highest to Lowest" },
+                    { value: "asc", label: "Low - High" },
+                    { value: "desc", label: "High - Low" },
                   ],
                 },
                 {
@@ -402,20 +404,20 @@ export default function ProductPage() {
                   value: ratingSortOrder,
                   onChange: setRatingSortOrder,
                   options: [
-                    { value: "asc", label: "Lowest to Highest" },
-                    { value: "desc", label: "Highest to Lowest" },
+                    { value: "asc", label: "Low - High" },
+                    { value: "desc", label: "High - Low" },
                   ],
                 },
               ].map(({ id, label, value, onChange, options }) => (
                 <div key={id} className="space-y-1">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                  <h3 className="text-xs font-medium text-gray-900 dark:text-white">
                     {label}
                   </h3>
                   <div className="flex flex-col space-y-1">
                     {options.map((option) => (
                       <label
                         key={option.value}
-                        className="flex items-center justify-between p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm"
+                        className="flex items-center justify-between px-2.5 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
                       >
                         <span className="text-gray-800 dark:text-gray-300 text-xs font-medium">
                           {option.label}
@@ -429,13 +431,15 @@ export default function ProductPage() {
                           className="hidden"
                         />
                         <span
-                          className={`relative w-8 h-4 flex items-center bg-gray-300 dark:bg-gray-600 rounded-full p-0.5 transition-all duration-200 ${
-                            value === option.value ? "bg-orange-500" : ""
+                          className={`relative w-7 h-4 flex items-center bg-gray-300 dark:bg-gray-500 rounded-full p-0.5 transition-all duration-200 ${
+                            value === option.value
+                              ? "bg-orange-500 dark:bg-orange-400"
+                              : ""
                           }`}
                         >
                           <span
                             className={`w-3 h-3 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-all duration-200 ${
-                              value === option.value ? "translate-x-4" : ""
+                              value === option.value ? "translate-x-3" : ""
                             }`}
                           />
                         </span>
@@ -446,9 +450,10 @@ export default function ProductPage() {
               ))}
             </div>
 
+            {/* Reset Button */}
             <button
               onClick={resetFilters}
-              className="w-full py-3 rounded-lg shadow-md border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 ease-in-out mt-6"
+              className="w-full py-2 rounded-md shadow-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out mt-4 text-sm font-medium"
             >
               Reset Filters
             </button>
@@ -618,25 +623,21 @@ export default function ProductPage() {
             ) : (
               <>
                 <div
-                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 p-2 gap-2 flex-grow place-items-start"
-                  style={{ gridAutoRows: "minmax(280px, auto)" }}
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-5 gap-2"
+                  style={{ gridAutoRows: "minmax(300px, auto)" }}
                 >
                   {currentProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className="bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden flex flex-col cursor-pointer min-h-[280px]"
-                      onClick={() => handleProductClick(product.id)}
-                    >
+                    <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
                       {/* Product Image */}
                       <div className="relative">
                         <img
                           src={product.foto_barang}
                           alt={product.nama_produk}
-                          className="w-full h-40 object-cover rounded-t-2xl"
+                          className="w-full h-44 object-cover rounded-t-xl transition-transform duration-300 hover:scale-105"
                         />
                         {product.stok === 0 && (
-                          <div className="absolute inset-0 bg-black/70 flex justify-center items-center rounded-t-2xl">
-                            <span className="text-white font-semibold text-xs bg-red-600 rounded-md px-2 py-1">
+                          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center rounded-t-xl">
+                            <span className="text-white font-semibold text-xs bg-red-600 px-2 py-1 rounded-md shadow-md">
                               Out of Stock
                             </span>
                           </div>
@@ -649,11 +650,12 @@ export default function ProductPage() {
                           {product.nama_produk}
                         </h2>
 
-                        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 mt-1 min-h-[32px]">
+                        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 mt-1">
                           {product.deskripsi}
                         </p>
 
-                        <div className="flex justify-between items-center text-xs text-gray-600 dark:text-gray-400 mt-2 min-h-[24px]">
+                        {/* Stock & Rating */}
+                        <div className="flex justify-between items-center text-xs text-gray-600 dark:text-gray-400 mt-3">
                           <span className="flex items-center space-x-1">
                             <i className="fas fa-box"></i>
                             <span className="font-medium">
@@ -673,7 +675,8 @@ export default function ProductPage() {
                           </span>
                         </div>
 
-                        <p className="text-lg font-bold text-orange-600 dark:text-orange-400 mt-3 min-h-[28px]">
+                        {/* Price */}
+                        <p className="text-lg font-bold text-orange-600 dark:text-orange-400 mt-3">
                           {formatRupiah(product.harga_produk)}
                         </p>
                       </div>
@@ -686,9 +689,9 @@ export default function ProductPage() {
                             handleAddToCart(product.id);
                           }}
                           disabled={product.stok === 0}
-                          className={`w-full py-2 rounded-md text-xs font-medium text-white transition-all ${
+                          className={`w-full py-2 rounded-lg text-sm font-medium text-white transition-all shadow-md ${
                             product.stok === 0
-                              ? "bg-gray-500 cursor-not-allowed"
+                              ? "bg-gray-400 cursor-not-allowed opacity-60"
                               : "bg-orange-600 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-800"
                           }`}
                         >
