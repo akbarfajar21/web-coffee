@@ -297,7 +297,7 @@ export default function ProductPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000); // Durasi 1 detik
+    }, 2000); // Durasi 1 detik
     return () => clearTimeout(timer);
   }, []);
 
@@ -317,7 +317,7 @@ export default function ProductPage() {
         onLoaderFinished={() => setProgress(0)}
       />
       <Header />
-      <div className="min-h-screen py-6 dark:bg-gray-900">
+      <div className="h-screen overflow-hidden py-6 dark:bg-gray-900">
         <div className="mb-8">
           <h1 className="mt-16 text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
             Our Products
@@ -331,8 +331,8 @@ export default function ProductPage() {
           <BsFilter className="text-2xl" />
         </button>
 
-        <div className="bg-white dark:bg-gray-900 py-6 px-4 lg:px-16 flex gap-6">
-          <aside className="w-1/6 hidden lg:block bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 sticky top-20 max-h-[75vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-900 px-4 flex gap-6">
+          <aside className="w-1/5 hidden lg:block bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 sticky top-20 max-h-[83vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -450,7 +450,6 @@ export default function ProductPage() {
               ))}
             </div>
 
-            {/* Reset Button */}
             <button
               onClick={resetFilters}
               className="w-full py-2 rounded-md shadow-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out mt-4 text-sm font-medium"
@@ -595,7 +594,7 @@ export default function ProductPage() {
             </div>
           )}
 
-          <section className="w-full lg:w-4/5 h-screen max-h-screen flex flex-col overflow-y-auto pb-52">
+          <section className="w-full h-screen max-h-screen flex flex-col overflow-y-auto pb-52">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
                 <div className="relative flex items-center justify-center">
@@ -623,28 +622,28 @@ export default function ProductPage() {
             ) : (
               <>
                 <div
-                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-5 gap-2"
-                  style={{ gridAutoRows: "minmax(300px, auto)" }}
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2"
+                  style={{ gridAutoRows: "minmax(320px, auto)" }}
                 >
                   {currentProducts.map((product) => (
-                    <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col">
                       {/* Product Image */}
-                      <div className="relative">
+                      <div className="relative group">
                         <img
                           src={product.foto_barang}
                           alt={product.nama_produk}
-                          className="w-full h-44 object-cover rounded-t-xl transition-transform duration-300 hover:scale-105"
+                          className="w-full h-48 object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105"
                         />
                         {product.stok === 0 && (
-                          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center rounded-t-xl">
-                            <span className="text-white font-semibold text-xs bg-red-600 px-2 py-1 rounded-md shadow-md">
+                          <div className="absolute inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center rounded-t-2xl">
+                            <span className="text-white font-semibold text-xs bg-red-600 px-3 py-1 rounded-full shadow-md">
                               Out of Stock
                             </span>
                           </div>
                         )}
                       </div>
 
-                      {/* Product Info */}
+                      {/* Product Info (Menggunakan flex-grow agar tombol selalu di bawah) */}
                       <div className="p-4 flex flex-col flex-grow">
                         <h2 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                           {product.nama_produk}
@@ -679,24 +678,33 @@ export default function ProductPage() {
                         <p className="text-lg font-bold text-orange-600 dark:text-orange-400 mt-3">
                           {formatRupiah(product.harga_produk)}
                         </p>
-                      </div>
 
-                      {/* Add to Cart Button */}
-                      <div className="p-4 pt-0">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(product.id);
-                          }}
-                          disabled={product.stok === 0}
-                          className={`w-full py-2 rounded-lg text-sm font-medium text-white transition-all shadow-md ${
-                            product.stok === 0
-                              ? "bg-gray-400 cursor-not-allowed opacity-60"
-                              : "bg-orange-600 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-800"
-                          }`}
-                        >
-                          {product.stok === 0 ? "Out of Stock" : "Add To Cart"}
-                        </button>
+                        {/* Add to Cart Button (Selalu di bawah) */}
+                        <div className="mt-auto pt-4">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(product.id);
+                            }}
+                            disabled={product.stok === 0}
+                            className={`w-full py-2 rounded-lg text-sm font-medium text-white transition-all shadow-md flex items-center justify-center gap-2 ${
+                              product.stok === 0
+                                ? "bg-gray-400 cursor-not-allowed opacity-60"
+                                : "bg-orange-600 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-800"
+                            }`}
+                          >
+                            {product.stok === 0 ? (
+                              <>
+                                <i className="fas fa-times-circle"></i> Out of
+                                Stock
+                              </>
+                            ) : (
+                              <>
+                                <i className="fas fa-cart-plus"></i> Add To Cart
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -714,7 +722,6 @@ export default function ProductPage() {
             )}
           </section>
         </div>
-        <Footer />
       </div>
     </>
   );

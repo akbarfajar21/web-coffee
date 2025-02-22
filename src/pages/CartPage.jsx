@@ -27,11 +27,19 @@ export default function CartPage() {
         console.error(error);
       } else {
         setCart(data);
-        setSelectedItems([]);
+
+        // Ambil data ceklis dari localStorage
+        const storedCheckedItems =
+          JSON.parse(localStorage.getItem("checkedItems")) || [];
+        const validCheckedItems = storedCheckedItems.filter((id) =>
+          data.some((item) => item.coffee_id === id)
+        );
+
+        setSelectedItems(validCheckedItems);
       }
     };
 
-    fetchCart().then(() => setSelectedItems([]));
+    fetchCart();
   }, []);
 
   const formatHarga = (harga) => {
@@ -42,13 +50,17 @@ export default function CartPage() {
     }).format(harga);
   };
 
-  const toggleCheck = (coffee_id) => {
-    setSelectedItems(
-      (prevSelected) =>
-        prevSelected.includes(coffee_id)
-          ? prevSelected.filter((id) => id !== coffee_id) // Hapus jika sudah ada
-          : [...prevSelected, coffee_id] // Tambahkan jika belum ada
-    );
+  const toggleCheck = (coffeeId) => {
+    setSelectedItems((prev) => {
+      const newCheckedItems = prev.includes(coffeeId)
+        ? prev.filter((id) => id !== coffeeId) // Uncheck
+        : [...prev, coffeeId]; // Check
+
+      // Simpan ke localStorage
+      localStorage.setItem("checkedItems", JSON.stringify(newCheckedItems));
+
+      return newCheckedItems;
+    });
   };
 
   const filteredCart = cart.filter((item) =>
@@ -115,33 +127,33 @@ export default function CartPage() {
       <Header />
 
       <div className="p-6 flex-grow max-w-7xl mx-auto mt-12">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center mt-7 justify-between mb-6 sm:mb-8">
           <button
             onClick={() => navigate("/product")}
-            className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 shadow-lg text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+            className="p-2 sm:p-3 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
           >
-            <FaArrowLeft className="text-2xl" />
+            <FaArrowLeft className="text-xl sm:text-2xl" />
           </button>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white drop-shadow-md">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white drop-shadow-md">
             Shopping Cart
           </h1>
-          <div className="w-10"></div>
+          <div className="w-8 sm:w-10"></div>
         </div>
 
         {cart.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center py-10">
+          <div className="flex flex-col items-center justify-center text-center py-8 sm:py-10">
             <img
               src="/Empty.gif"
               alt="Empty Cart"
-              className="w-64 sm:w-80 h-auto rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
+              className="w-48 sm:w-64 h-auto rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
             />
-            <p className="text-lg text-gray-600 dark:text-gray-300 mt-6 max-w-md">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mt-4 sm:mt-6 max-w-xs sm:max-w-md">
               Oops! Looks like your cart is empty. Start adding your favorite
               coffee!
             </p>
             <button
               onClick={() => navigate("/product")}
-              className="mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-lg shadow-lg text-lg font-semibold hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300"
+              className="mt-4 sm:mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg shadow-md text-base sm:text-lg font-semibold hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300"
             >
               Start Shopping
             </button>
@@ -173,7 +185,7 @@ export default function CartPage() {
                   filteredCart.map((item) => (
                     <div
                       key={item.coffee_id}
-                      className="flex justify-between items-center text-sm border-b border-gray-300 dark:border-gray-600 pb-2"
+                      className="flex justify-between items-center text-sm  pb-2"
                     >
                       <p className="truncate max-w-[65%]">
                         {item.coffee.nama_produk} × {item.quantity}
