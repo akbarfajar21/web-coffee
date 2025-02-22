@@ -359,56 +359,57 @@ export default function DetailProduct() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-12 px-6 lg:px-12">
-        <div className="flex mt-8 items-center mb-8">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center text-gray-700 hover:text-gray-900 dark:text-white transition-all duration-300"
-          >
-            <FaArrowLeft className="text-xl mr-2" />
-            <span className="text-lg font-medium">Kembali</span>
-          </button>
-        </div>
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-12 px-6 lg:px-16">
+        {/* Tombol Kembali */}
+        <button
+          onClick={() => navigate('/product')}
+          className="flex items-center text-gray-700 mt-5 hover:text-gray-900 dark:text-white transition-all duration-300"
+        >
+          <FaArrowLeft className="text-xl mr-2" />
+          <span className="text-lg font-medium">Kembali</span>
+        </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
           {/* Gambar Produk */}
           <div className="flex justify-center">
             <img
               src={product.foto_barang}
               alt={product.nama_produk}
-              className="w-full max-w-md h-auto object-cover rounded-xl shadow-lg "
+              className="w-full max-w-md h-auto object-cover rounded-2xl shadow-xl"
             />
           </div>
 
           {/* Info Produk */}
-          <div className="flex flex-col justify-between">
-            <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white mb-4">
+          <div className="flex flex-col">
+            <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
               {product.nama_produk}
             </h1>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mt-4">
               {product.deskripsi}
             </p>
-            <p className="text-2xl font-semibold text-orange-600 dark:text-orange-400 mb-6">
+
+            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mt-6">
               Rp {product.harga_produk.toLocaleString("id-ID")}
             </p>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+
+            <p className="text-lg text-gray-700 dark:text-gray-300 mt-4">
               <strong>Stok:</strong> {product.stok}
             </p>
 
             {/* Rating Produk */}
-            <div className="flex items-center mb-6">
-              <FaStar className="text-yellow-500 text-xl" />
-              <p className="text-lg font-medium text-gray-800 dark:text-white ml-2">
+            <div className="flex items-center mt-6">
+              <FaStar className="text-yellow-500 text-2xl" />
+              <p className="text-xl font-medium text-gray-800 dark:text-white ml-2">
                 {rating ? Number(rating).toFixed(1) : "N/A"} / 5
               </p>
             </div>
 
             {/* Form Rating dan Komentar */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+            <div className="mt-8">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
                 Berikan Rating dan Komentar:
               </h2>
-              <div className="flex items-center space-x-4 mb-4">
+              <div className="flex items-center space-x-3 mt-4">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
@@ -427,12 +428,12 @@ export default function DetailProduct() {
                 placeholder="Tambahkan komentar Anda..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full p-4 border-2 border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mb-6"
+                className="w-full p-4 border-2 border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mt-4"
                 rows={4}
               />
               <button
                 onClick={handleRating}
-                className="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-all duration-300"
+                className="w-full py-3 mt-4 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-all duration-300"
               >
                 Kirim
               </button>
@@ -442,48 +443,49 @@ export default function DetailProduct() {
 
         <div className="border-t border-gray-300 dark:border-gray-700 my-12"></div>
 
-        <div className="mt-12">
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+        {/* Rating Pengguna Lain */}
+        <div className="mt-10">
+          <h3 className="text-xl md:text-2xl font-semibold text-gray-800 dark:text-white">
             Rating Pengguna Lain:
           </h3>
-          <div className="space-y-6">
+          <div className="space-y-4 mt-4">
             {userRatings.length > 0 ? (
               userRatings.map((ratingItem, index) => (
                 <div
                   key={ratingItem.profile_id}
-                  className="flex items-start space-x-4 p-4 border-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
+                  className="flex items-start space-x-3 p-3 md:p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700"
                 >
                   <img
                     src={ratingItem.profile.avatar_url || "/default-avatar.png"}
                     alt={ratingItem.profile.full_name}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-orange-500"
                   />
                   <div className="flex-grow">
-                    <p className="font-semibold text-gray-800 dark:text-white">
+                    <p className="font-semibold text-gray-800 dark:text-white text-sm md:text-base">
                       {ratingItem.profile.full_name}
                     </p>
-                    <div className="flex space-x-1 text-yellow-500">
-                      {[...Array(ratingItem.rating)].map((_, index) => (
-                        <FaStar key={index} />
+                    <div className="flex space-x-1 text-yellow-500 mt-1">
+                      {[...Array(ratingItem.rating)].map((_, i) => (
+                        <FaStar key={i} className="text-sm md:text-base" />
                       ))}
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 mt-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                       {ratingItem.komentar}
                     </p>
                   </div>
 
-                  {/* Dropdown Menu untuk Pengguna yang Memberi Rating */}
+                  {/* Dropdown Menu untuk Edit / Hapus */}
                   {user && ratingItem.profile_id === user.id && (
                     <div className="relative">
                       <button
                         onClick={() => toggleDropdown(index)}
-                        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-110"
+                        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105"
                       >
-                        <FaEllipsisV className="text-lg" />
+                        <FaEllipsisV className="text-base" />
                       </button>
 
                       {showDropdown === index && (
-                        <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl transition-all duration-200 ease-in-out transform opacity-100">
+                        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl transition-all duration-200 ease-in-out">
                           <button
                             onClick={() =>
                               handleDeleteRating(ratingItem.profile_id)
@@ -499,7 +501,7 @@ export default function DetailProduct() {
                 </div>
               ))
             ) : (
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                 Belum ada rating dari pengguna lain.
               </p>
             )}

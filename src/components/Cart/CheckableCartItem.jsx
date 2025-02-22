@@ -55,7 +55,7 @@ export default function CheckableCartItem({
   };
 
   return (
-    <div className="flex items-center gap-4 p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-2xl shadow-md sm:shadow-lg border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl w-full max-w-xl mx-auto">
+    <div className="flex items-center gap-4 p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-2xl shadow-md sm:shadow-lg border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl w-full max-w-4xl mx-auto">
       {/* Checkbox */}
       <input
         type="checkbox"

@@ -253,3 +253,61 @@
   animation: glow 1.5s infinite alternate;
 }
 
+/* Styling khusus untuk SweetAlert2 */
+.swal-popup {
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.swal-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.swal-container {
+  text-align: left;
+  font-size: 0.9rem;
+  color: #4a4a4a;
+}
+
+.swal-products {
+  margin-top: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.swal-product {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.swal-product span:first-child {
+  font-weight: 600;
+  color: #f97316;
+}
+
+.swal-total {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.swal-confirm {
+  background-color: #f97316 !important;
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+  padding: 8px 16px !important;
+}
+
+.swal-cancel {
+  font-size: 0.85rem !important;
+  padding: 6px 14px !important;
+}

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { supabase } from "../utils/SupaClient";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import LoadingBar from "react-top-loading-bar";
 import Pagination from "../components/Pagination";
 import { BsCart4, BsFilter } from "react-icons/bs";
-import { IoClose } from "react-icons/io5"; // Import icon close
+import { IoClose } from "react-icons/io5";
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -626,7 +625,10 @@ export default function ProductPage() {
                   style={{ gridAutoRows: "minmax(320px, auto)" }}
                 >
                   {currentProducts.map((product) => (
-                    <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col">
+                    <div
+                      onClick={() => handleProductClick(product.id)}
+                      className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col"
+                    >
                       {/* Product Image */}
                       <div className="relative group">
                         <img

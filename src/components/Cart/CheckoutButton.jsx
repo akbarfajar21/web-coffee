@@ -2,8 +2,69 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { supabase } from "../../utils/SupaClient";
 
+const formatHarga = (harga) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(harga);
+};
+
 const CheckoutButton = ({ cart, totalHarga, navigate }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const confirmCheckout = () => {
+    if (cart.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Keranjang Kosong!",
+        text: "Silakan pilih produk sebelum melanjutkan pembayaran.",
+        confirmButtonColor: "#f97316",
+      });
+      return;
+    }
+
+    const productList = cart
+      .map(
+        (item) =>
+          `<div class="swal-product">
+            <span>${item.quantity}×</span> 
+            <span>${item.coffee.nama_produk}</span> 
+            <span>${formatHarga(
+              item.coffee.harga_produk * item.quantity
+            )}</span>
+          </div>`
+      )
+      .join("");
+
+    Swal.fire({
+      title: "Konfirmasi Pembelian",
+      html: `
+        <div class="swal-container">
+          <div class="swal-products">${productList}</div>
+          <div class="swal-total">
+            <b>Total Harga: ${formatHarga(totalHarga)}</b>
+          </div>
+        </div>
+      `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Beli Sekarang",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#f97316",
+      cancelButtonColor: "#d33",
+      customClass: {
+        popup: "swal-popup",
+        title: "swal-title",
+        confirmButton: "swal-confirm",
+        cancelButton: "swal-cancel",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleCheckout();
+      }
+    });
+  };
 
   const handleCheckout = async () => {
     if (isProcessing) return;
@@ -182,7 +243,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
   return (
     <div className="mt-6">
       <button
-        onClick={handleCheckout}
+        onClick={confirmCheckout}
         className={`relative flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full shadow-xl transition-all duration-300 ease-in-out transform active:scale-95 w-full text-lg font-semibold tracking-wide h-12 min-w-[180px] ${
           isProcessing
             ? "opacity-60 cursor-not-allowed"
