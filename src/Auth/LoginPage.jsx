@@ -20,7 +20,7 @@ const Login = () => {
       const { user, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/home`, // Redirect ke /home setelah login
+          redirectTo: `${window.location.origin}/home`, 
         },
       });
 
@@ -100,7 +100,7 @@ const Login = () => {
           },
         }).then(() => {
           setIsLoading(false);
-          navigate("/");
+          navigate("/home");
         });
       }
     } catch (err) {
