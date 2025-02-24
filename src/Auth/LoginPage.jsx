@@ -3,6 +3,7 @@ import { supabase } from "../utils/SupaClient";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   const handleGoogleLogin = async () => {
     try {
@@ -104,30 +106,31 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    if (!recaptchaToken) {
+      setIsLoading(false);
+      Swal.fire({
+        title: "⚠️ Verifikasi Gagal!",
+        text: "Silakan selesaikan reCAPTCHA terlebih dahulu.",
+        iconHtml: "⚠️",
+        confirmButtonText: "OK",
+        background: "#FFFFFF",
+        color: "#333",
+        confirmButtonColor: "#F59E0B",
+      });
+      return;
+    }
+
     if (!email || !password) {
-      setTimeout(() => {
-        setIsLoading(false);
-        Swal.fire({
-          title: "⚠️ Oops!",
-          text: "Email dan password wajib diisi.",
-          iconHtml: "⚠️",
-          confirmButtonText: "OK",
-          background: "#FFFFFF",
-          color: "#333",
-          confirmButtonColor: "#F59E0B",
-          showClass: {
-            popup: "animate__animated animate__fadeInDown animate__faster",
-          },
-          hideClass: {
-            popup: "animate__animated animate__fadeOutUp animate__faster",
-          },
-          customClass: {
-            popup:
-              "rounded-lg shadow-xl backdrop-blur-sm border border-gray-200",
-            confirmButton: "px-6 py-2 rounded-lg text-lg",
-          },
-        });
-      }, 2000); // Delay 2 detik sebelum loading hilang
+      setIsLoading(false);
+      Swal.fire({
+        title: "⚠️ Oops!",
+        text: "Email dan password wajib diisi.",
+        iconHtml: "⚠️",
+        confirmButtonText: "OK",
+        background: "#FFFFFF",
+        color: "#333",
+        confirmButtonColor: "#F59E0B",
+      });
       return;
     }
 
@@ -138,57 +141,34 @@ const Login = () => {
       });
 
       if (error) {
-        setTimeout(() => {
-          setIsLoading(false);
-          Swal.fire({
-            title: "❌ Login Gagal!",
-            text: "Email atau password salah.",
-            iconHtml: "❌",
-            confirmButtonText: "Coba Lagi",
-            background: "#FFFFFF",
-            color: "#333",
-            confirmButtonColor: "#EF4444",
-            showClass: { popup: "animate__animated animate__shakeX" },
-            customClass: {
-              popup:
-                "rounded-lg shadow-2xl backdrop-blur-sm border border-gray-200",
-              confirmButton: "px-6 py-2 rounded-lg text-lg",
-            },
-          });
-        }, 2000); // Delay 2 detik sebelum loading hilang
+        setIsLoading(false);
+        Swal.fire({
+          title: "❌ Login Gagal!",
+          text: "Email atau password salah.",
+          iconHtml: "❌",
+          confirmButtonText: "Coba Lagi",
+          background: "#FFFFFF",
+          color: "#333",
+          confirmButtonColor: "#EF4444",
+        });
         return;
       }
 
       if (user) {
-        setTimeout(() => {
-          setIsLoading(false);
-          navigate("/"); // Redirect setelah loading selesai
-        }, 4500); // Delay 2 detik sebelum pindah halaman
+        setIsLoading(false);
+        navigate("/");
       }
     } catch (err) {
-      setTimeout(() => {
-        setIsLoading(false);
-        Swal.fire({
-          title: "⚠️ Oops, Terjadi Kesalahan!",
-          text: "Terjadi masalah tak terduga. Silakan coba lagi nanti.",
-          iconHtml: "❗",
-          confirmButtonText: "OK",
-          background: "#FFFFFF",
-          color: "#333",
-          confirmButtonColor: "#4F46E5",
-          showClass: {
-            popup: "animate__animated animate__fadeIn animate__faster",
-          },
-          hideClass: {
-            popup: "animate__animated animate__fadeOut animate__faster",
-          },
-          customClass: {
-            popup:
-              "rounded-xl shadow-lg backdrop-blur-sm border border-gray-200",
-            confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
-          },
-        });
-      }, 2000); // Delay 2 detik sebelum loading hilang
+      setIsLoading(false);
+      Swal.fire({
+        title: "⚠️ Oops, Terjadi Kesalahan!",
+        text: "Terjadi masalah tak terduga. Silakan coba lagi nanti.",
+        iconHtml: "❗",
+        confirmButtonText: "OK",
+        background: "#FFFFFF",
+        color: "#333",
+        confirmButtonColor: "#4F46E5",
+      });
     }
   };
 
@@ -288,11 +268,18 @@ const Login = () => {
             </button>
           </div>
 
+          <div className="flex justify-center">
+            <ReCAPTCHA
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              onChange={(token) => setRecaptchaToken(token)}
+            />
+          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300"
           >
-            Login dengan Email
+            Login
           </button>
         </form>
 
