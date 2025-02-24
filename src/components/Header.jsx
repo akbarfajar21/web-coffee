@@ -126,7 +126,7 @@ const Header = () => {
           confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
         },
       }).then(() => {
-        navigate("/");
+        navigate("/home");
       });
     }
   };
@@ -177,7 +177,7 @@ const Header = () => {
               }`}
             >
               <ul className="space-y-6 tracking-wide font-medium text-base lg:text-sm lg:flex lg:space-y-0 lg:space-x-6 justify-center items-center">
-                {["/", "/product", "/about", "/contact"].map((path, index) => {
+                {["/home", "/product", "/about", "/contact"].map((path, index) => {
                   const labels = ["Home", "Product", "About", "Contact"];
                   const isActive = location.pathname === path;
 

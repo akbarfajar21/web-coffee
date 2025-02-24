@@ -16,7 +16,7 @@ const NotFoundPage = () => {
           halaman utama.
         </p>
         <a
-          href="/"
+          href="/home"
           className="inline-block bg-white text-pink-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 hover:text-white transition-all duration-300 animate__animated animate__fadeInUp animate__delay-3s"
         >
           Kembali ke Beranda

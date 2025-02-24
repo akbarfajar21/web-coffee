@@ -41,7 +41,7 @@ function AboutPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen dark:bg-gray-900 bg-gray-100">
+    <div className="flex flex-col min-h-screen dark:bg-gray-900">
       <Header />
       <main className="flex-grow mt-20 px-6 md:px-16 lg:px-24">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white text-center mb-12">

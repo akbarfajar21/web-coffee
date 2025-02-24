@@ -305,49 +305,27 @@ export default function DetailProduct() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        {/* Cangkir Kopi */}
         <div className="relative flex items-center justify-center">
-          {/* Uap Kopi */}
-          <div className="absolute -top-6 flex space-x-2">
+          <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className={`w-2 h-${
-                  6 + i
-                } bg-gray-400 opacity-50 rounded-full animate-steam`}
+                className="w-2 h-6 bg-gray-400 opacity-50 rounded-full animate-steam"
                 style={{ animationDelay: `${i * 0.2}s` }}
               ></div>
             ))}
           </div>
 
-          {/* Cangkir */}
-          <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400 w-16 h-12 rounded-t-full flex items-end justify-center shadow-lg">
-            <div className="absolute bottom-0 w-14 h-10 bg-white dark:bg-gray-800 rounded-t-full"></div>
+          <div className="relative w-20 h-16 bg-gradient-to-b from-orange-500 to-orange-700 rounded-t-full flex items-end justify-center shadow-lg glow-effect">
+            <div className="absolute bottom-0 w-16 h-12 bg-white dark:bg-gray-800 rounded-t-full"></div>
           </div>
 
-          {/* Pegangan Cangkir */}
-          <div className="absolute right-[-12px] top-[6px] w-6 h-6 border-4 border-orange-500 rounded-full"></div>
+          <div className="absolute right-[-10px] top-[6px] w-5 h-5 border-4 border-orange-500 rounded-full"></div>
         </div>
 
-        {/* Teks Loading */}
-        <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">
+        <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
           Brewing your coffee...
         </p>
-
-        {/* Animasi CSS */}
-        <style>
-          {`
-            @keyframes steam {
-              0% { transform: translateY(0) scale(1); opacity: 1; }
-              50% { opacity: 0.7; }
-              100% { transform: translateY(-20px) scale(1.2); opacity: 0; }
-            }
-  
-            .animate-steam {
-              animation: steam 2s infinite ease-in-out;
-            }
-          `}
-        </style>
       </div>
     );
   }
@@ -362,7 +340,7 @@ export default function DetailProduct() {
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-12 px-6 lg:px-16">
         {/* Tombol Kembali */}
         <button
-          onClick={() => navigate('/product')}
+          onClick={() => navigate("/product")}
           className="flex items-center text-gray-700 mt-5 hover:text-gray-900 dark:text-white transition-all duration-300"
         >
           <FaArrowLeft className="text-xl mr-2" />

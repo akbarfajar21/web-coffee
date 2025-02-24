@@ -14,9 +14,14 @@ const Login = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   const handleGoogleLogin = async () => {
+    setIsLoading(true);
+
     try {
       const { user, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/home`, // Redirect ke /home setelah login
+        },
       });
 
       if (error) {
@@ -94,6 +99,7 @@ const Login = () => {
             confirmButton: "px-6 py-2 rounded-lg text-lg",
           },
         }).then(() => {
+          setIsLoading(false);
           navigate("/");
         });
       }
@@ -156,7 +162,7 @@ const Login = () => {
 
       if (user) {
         setIsLoading(false);
-        navigate("/");
+        navigate("/home");
       }
     } catch (err) {
       setIsLoading(false);
@@ -185,7 +191,6 @@ const Login = () => {
 
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center z-50">
-          {/* Uap Kopi */}
           <div className="relative flex items-center justify-center">
             <div className="absolute -top-6 flex space-x-2">
               {[0, 1, 2].map((i) => (
@@ -198,22 +203,14 @@ const Login = () => {
                 ></div>
               ))}
             </div>
-
-            {/* Cangkir */}
             <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400 w-16 h-12 rounded-t-full flex items-end justify-center shadow-lg">
               <div className="absolute bottom-0 w-14 h-10 bg-white dark:bg-gray-800 rounded-t-full"></div>
             </div>
-
-            {/* Pegangan Cangkir */}
             <div className="absolute right-[-12px] top-[6px] w-6 h-6 border-4 border-orange-500 rounded-full"></div>
           </div>
-
-          {/* Teks Loading */}
           <p className="text-white mt-4 text-lg font-semibold">
             Brewing your coffee...
           </p>
-
-          {/* Animasi CSS */}
           <style>
             {`
             @keyframes steam {
@@ -230,7 +227,6 @@ const Login = () => {
         </div>
       )}
 
-      {/* Card Form */}
       <div className="relative max-w-md w-full bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl p-8">
         <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
           Selamat Datang 👋
@@ -239,7 +235,6 @@ const Login = () => {
           Masuk untuk melanjutkan ke akun Anda!
         </p>
 
-        {/* Form Login */}
         <form onSubmit={handleEmailLogin} className="space-y-5">
           <input
             type="email"
@@ -283,14 +278,12 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center justify-between my-6">
           <hr className="w-full border-gray-300" />
           <span className="text-gray-400 px-4">atau</span>
           <hr className="w-full border-gray-300" />
         </div>
 
-        {/* Login Google */}
         <button
           onClick={handleGoogleLogin}
           className="w-full bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-800 transition-all duration-300 flex items-center justify-center space-x-3"
@@ -299,7 +292,6 @@ const Login = () => {
           <span>Login dengan Google</span>
         </button>
 
-        {/* Register Link */}
         <p className="text-gray-500 mt-4 text-center">
           Belum punya akun?{" "}
           <span

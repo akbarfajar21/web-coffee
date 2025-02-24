@@ -122,7 +122,7 @@ const ContactPage = () => {
           },
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.href = "/"; // Redirect ke halaman utama
+            window.location.href = "/home"; // Redirect ke halaman utama
           }
         });
 
@@ -134,9 +134,7 @@ const ContactPage = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        {/* Cangkir Kopi */}
         <div className="relative flex items-center justify-center">
-          {/* Uap Kopi */}
           <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (
               <div
@@ -147,16 +145,13 @@ const ContactPage = () => {
             ))}
           </div>
 
-          {/* Cangkir */}
           <div className="relative w-20 h-16 bg-gradient-to-b from-orange-500 to-orange-700 rounded-t-full flex items-end justify-center shadow-lg glow-effect">
             <div className="absolute bottom-0 w-16 h-12 bg-white dark:bg-gray-800 rounded-t-full"></div>
           </div>
 
-          {/* Pegangan Cangkir */}
           <div className="absolute right-[-10px] top-[6px] w-5 h-5 border-4 border-orange-500 rounded-full"></div>
         </div>
 
-        {/* Teks Loading */}
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
           Brewing your coffee...
         </p>
@@ -181,7 +176,6 @@ const ContactPage = () => {
             onSubmit={handleSubmit}
             className="space-y-8 bg-white p-10 rounded-3xl shadow-2xl border border-gray-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 transition-all"
           >
-            {/* Pesan */}
             <div className="space-y-3">
               <label
                 htmlFor="message"
@@ -204,7 +198,6 @@ const ContactPage = () => {
               )}
             </div>
 
-            {/* Rating */}
             <div className="space-y-3">
               <label
                 htmlFor="rating"
@@ -233,7 +226,6 @@ const ContactPage = () => {
               )}
             </div>
 
-            {/* Tombol Submit */}
             <div className="flex justify-center mt-6">
               <button
                 type="submit"

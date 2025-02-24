@@ -23,49 +23,27 @@ const PrivacyPolicy = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        {/* Cangkir Kopi */}
         <div className="relative flex items-center justify-center">
-          {/* Uap Kopi */}
-          <div className="absolute -top-6 flex space-x-2">
+          <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className={`w-2 h-${
-                  6 + i
-                } bg-gray-400 opacity-50 rounded-full animate-steam`}
+                className="w-2 h-6 bg-gray-400 opacity-50 rounded-full animate-steam"
                 style={{ animationDelay: `${i * 0.2}s` }}
               ></div>
             ))}
           </div>
 
-          {/* Cangkir */}
-          <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400 w-16 h-12 rounded-t-full flex items-end justify-center shadow-lg">
-            <div className="absolute bottom-0 w-14 h-10 bg-white dark:bg-gray-800 rounded-t-full"></div>
+          <div className="relative w-20 h-16 bg-gradient-to-b from-orange-500 to-orange-700 rounded-t-full flex items-end justify-center shadow-lg glow-effect">
+            <div className="absolute bottom-0 w-16 h-12 bg-white dark:bg-gray-800 rounded-t-full"></div>
           </div>
 
-          {/* Pegangan Cangkir */}
-          <div className="absolute right-[-12px] top-[6px] w-6 h-6 border-4 border-orange-500 rounded-full"></div>
+          <div className="absolute right-[-10px] top-[6px] w-5 h-5 border-4 border-orange-500 rounded-full"></div>
         </div>
 
-        {/* Teks Loading */}
-        <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">
+        <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
           Brewing your coffee...
         </p>
-
-        {/* Animasi CSS */}
-        <style>
-          {`
-            @keyframes steam {
-              0% { transform: translateY(0) scale(1); opacity: 1; }
-              50% { opacity: 0.7; }
-              100% { transform: translateY(-20px) scale(1.2); opacity: 0; }
-            }
-  
-            .animate-steam {
-              animation: steam 2s infinite ease-in-out;
-            }
-          `}
-        </style>
       </div>
     );
   }
@@ -133,20 +111,33 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
-      <div className="max-w-3xl mx-auto px-6 py-12 bg-white dark:bg-gray-900 shadow-lg rounded-xl">
+    <div className="relative min-h-screen flex items-center justify-center p-6 bg-gray-900">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center blur-sm opacity-50"
+        style={{
+          backgroundImage:
+            "url('https://cdn.pixabay.com/photo/2020/07/18/16/29/coffee-5417663_1280.png')",
+        }}
+      ></div>
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* Content */}
+      <div className="relative max-w-3xl w-full bg-white/80 dark:bg-gray-800/80 shadow-2xl backdrop-blur-lg rounded-3xl p-8">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition mb-6"
+          className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition mb-6"
         >
           <FaArrowLeft className="text-lg" />
           <span className="text-sm font-medium">Back</span>
         </button>
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+        <div className="text-center mb-8 animate-fade-in">
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
             Privacy Policy
           </h1>
           <p className="text-md text-gray-600 dark:text-gray-300 mt-3">
@@ -158,13 +149,16 @@ const PrivacyPolicy = () => {
         {/* Content */}
         <div className="space-y-6">
           {sections.map((section, index) => (
-            <section key={index} className="flex gap-3 items-start">
-              {section.icon}
+            <section
+              key={index}
+              className="flex gap-4 items-start p-5 bg-gray-100 dark:bg-gray-700 rounded-xl shadow-md transition hover:scale-105 duration-300 ease-in-out"
+            >
+              <div className="text-orange-500 text-2xl">{section.icon}</div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   {section.title}
                 </h2>
-                <p className="text-gray-700 dark:text-gray-400 text-sm leading-relaxed">
+                <p className="text-sm text-gray-700 dark:text-gray-400 leading-relaxed">
                   {section.content}
                 </p>
               </div>
