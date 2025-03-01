@@ -4,6 +4,7 @@ import { supabase } from "../utils/SupaClient";
 import Header from "../components/Header";
 import Swal from "sweetalert2";
 import { FaStar, FaArrowLeft, FaEllipsisV } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 export default function DetailProduct() {
   const { id } = useParams();
@@ -305,6 +306,9 @@ export default function DetailProduct() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <Helmet>
+          <title>{`CoffeeShopMe - ${product?.nama_produk || "Produk"}`}</title>
+        </Helmet>
         <div className="relative flex items-center justify-center">
           <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (

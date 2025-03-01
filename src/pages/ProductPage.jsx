@@ -7,6 +7,7 @@ import LoadingBar from "react-top-loading-bar";
 import Pagination from "../components/Pagination";
 import { BsCart4, BsFilter } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
+import { Helmet } from "react-helmet";
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -307,6 +308,9 @@ export default function ProductPage() {
 
   return (
     <>
+      <Helmet>
+        <title>CoffeeShopMe | Product</title>
+      </Helmet>
       <LoadingBar
         color="linear-gradient(to right, #ff6632, #ffb432)"
         progress={progress}

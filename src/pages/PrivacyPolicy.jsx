@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import {
   FaUserSecret,
   FaShieldAlt,
@@ -23,6 +24,9 @@ const PrivacyPolicy = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <Helmet>
+          <title>CoffeeShopMe | PrivacyPolicy</title>
+        </Helmet>
         <div className="relative flex items-center justify-center">
           <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (

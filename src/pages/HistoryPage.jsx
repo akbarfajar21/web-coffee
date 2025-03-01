@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import HistoryLogic from "../components/History/HistoryLogic";
 import HistoryUI from "../components/History/HistoryUI";
+import { Helmet } from "react-helmet";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState([]);
@@ -10,6 +11,9 @@ export default function HistoryPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Helmet>
+        <title>CoffeeShopMe | History</title>
+      </Helmet>
       <Header />
       <main className="flex-grow bg-gray-50 dark:bg-gray-900">
         <HistoryLogic

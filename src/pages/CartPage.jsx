@@ -5,6 +5,7 @@ import { supabase } from "../utils/SupaClient";
 import Header from "../components/Header";
 import CheckoutButton from "../components/Cart/CheckoutButton";
 import CheckableCartItem from "../components/Cart/CheckableCartItem";
+import { Helmet } from "react-helmet";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
@@ -125,6 +126,9 @@ export default function CartPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
+      <Helmet>
+        <title>CoffeeShopMe | Cart</title>
+      </Helmet>
 
       <div className="p-6 flex-grow max-w-7xl mx-auto mt-12">
         <div className="flex items-center mt-7 justify-between mb-6 sm:mb-8">

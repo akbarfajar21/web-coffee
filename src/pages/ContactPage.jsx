@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { supabase } from "../utils/SupaClient";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -134,6 +135,9 @@ const ContactPage = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <Helmet>
+          <title>CoffeeShopMe | Contact</title>
+        </Helmet>
         <div className="relative flex items-center justify-center">
           <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (

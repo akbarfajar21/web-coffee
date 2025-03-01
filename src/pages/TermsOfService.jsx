@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import {
   FaArrowLeft,
   FaGlobe,
@@ -121,6 +122,9 @@ const TermsOfService = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 bg-gray-900">
+      <Helmet>
+        <title>CoffeeShopMe | TermsOfService</title>
+      </Helmet>
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center blur-sm opacity-50"

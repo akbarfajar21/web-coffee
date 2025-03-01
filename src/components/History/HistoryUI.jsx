@@ -1,13 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { BiSearch } from "react-icons/bi"; // Import ikon pencarian
+import { BiSearch } from "react-icons/bi";
+import { useSearchParams } from "react-router-dom";
 
 export default function HistoryUI({
   history,
   showNotification,
-  searchQuery,
-  setSearchQuery,
+  searchQuery, // Diterima dari props
+  setSearchQuery, // Diterima dari props
 }) {
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  useEffect(() => {
+    const queryFromUrl = searchParams.get("q") || "";
+    setSearchQuery(queryFromUrl);
+  }, []);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
   useEffect(() => {
     if (showNotification) {
       Swal.fire({
@@ -20,7 +29,21 @@ export default function HistoryUI({
         timerProgressBar: true,
       });
     }
-  }, [showNotification]);
+
+    // Ambil query dari URL saat pertama kali halaman dimuat
+    const queryFromUrl = searchParams.get("q") || "";
+    setSearchQuery(queryFromUrl);
+  }, []);
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query); // Menggunakan setSearchQuery dari props
+    if (query) {
+      setSearchParams({ q: query });
+    } else {
+      setSearchParams({});
+    }
+  };
 
   const filteredHistory = history.filter(
     (item) =>
@@ -28,6 +51,24 @@ export default function HistoryUI({
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
       item.order_id.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const groupedHistory = filteredHistory.reduce((acc, item) => {
+    if (!acc[item.order_id]) {
+      acc[item.order_id] = {
+        ...item,
+        items: [item],
+        total: item.quantity * item.harga_saat_transaksi,
+      };
+    } else {
+      acc[item.order_id].items.push(item);
+      acc[item.order_id].total += item.quantity * item.harga_saat_transaksi;
+    }
+    return acc;
+  }, {});
+
+  const historyArray = Object.values(groupedHistory).sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
 
   return (
@@ -41,106 +82,167 @@ export default function HistoryUI({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             placeholder="Cari produk atau Order ID..."
-            className="w-full px-5 py-3 pl-12 border rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all duration-200"
+            className="w-full px-5 py-3 pl-12 border rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
           <BiSearch className="absolute top-1/2 left-4 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 text-lg" />
         </div>
       </div>
 
-      {filteredHistory.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10">
-          {/* Icon */}
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-full shadow-md">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-12 h-12 text-gray-400 dark:text-gray-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-9A2.25 2.25 0 002.25 5.25v13.5A2.25 2.25 0 005.25 21h9a2.25 2.25 0 002.25-2.25V15"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M18 14.25l3 3m0 0l-3 3m3-3H9"
-              />
-            </svg>
-          </div>
+      {historyArray.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-64">
+          <svg
+            className="w-14 h-14 text-gray-400 dark:text-gray-500 mb-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 8v4l3 3m9 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
 
-          {/* Teks */}
-          <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-medium">
-            Belum ada riwayat pembayaran
+          <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+            Riwayat pembelian masih kosong
           </p>
-          <p className="text-gray-500 dark:text-gray-400 text-sm text-center max-w-xs">
-            Kamu belum melakukan transaksi pembayaran. Mulai belanja sekarang!
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            Yuk, mulai belanja dan temukan kopi favoritmu!
           </p>
+          <a
+            href="/product"
+            className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium shadow-md hover:bg-blue-700 transition-all"
+          >
+            Belanja Sekarang
+          </a>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-7 gap-2 m-5">
-          {filteredHistory.map((item) => {
-            const hargaTerbaru = item.coffee.harga_produk;
-            const hargaTransaksi = item.harga_saat_transaksi || hargaTerbaru;
+        <div className="overflow-x-auto mx-4 mb-5">
+          <div className="w-full bg-white dark:bg-gray-900 shadow-xl rounded-xl overflow-hidden">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gradient-to-r from-indigo-200 to-indigo-400 dark:from-indigo-700 dark:to-indigo-900 text-white text-xs sm:text-sm">
+                  <th className="px-3 sm:px-4 py-2 sm:py-3">No</th>
+                  <th className="px-3 sm:px-4 py-2 sm:py-3">Order ID</th>
+                  <th className="px-3 sm:px-4 py-2 sm:py-3 hidden sm:table-cell">
+                    Total
+                  </th>
+                  <th className="px-3 sm:px-4 py-2 sm:py-3">Status</th>
+                  <th className="px-3 sm:px-4 py-2 sm:py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {historyArray.map((item, index) => (
+                  <tr
+                    key={item.order_id}
+                    className="border-b bg-gray-50 dark:bg-gray-800 text-xs sm:text-sm hover:bg-indigo-100 dark:hover:bg-indigo-700 transition-all"
+                  >
+                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-center">
+                      {index + 1}
+                    </td>
+                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-center font-semibold text-gray-800 dark:text-gray-300">
+                      {item.order_id}
+                    </td>
+                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-center font-medium text-gray-700 dark:text-gray-300 hidden sm:table-cell">
+                      Rp {item.total.toLocaleString("id-ID")}
+                    </td>
 
-            return (
-              <div
-                key={item.id}
-                className="relative bg-white dark:bg-gray-900 p-5 rounded-2xl border border-gray-300 dark:border-gray-700 shadow-md"
+                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-center">
+                      <span
+                        className={`px-3 py-1 rounded-full text-white text-[10px] sm:text-xs font-medium ${
+                          item.status?.trim().toLowerCase() === "approved"
+                            ? "bg-green-500"
+                            : item.status?.trim().toLowerCase() === "pending"
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
+                        }`}
+                      >
+                        {item.status || "Pending"}
+                      </span>
+                    </td>
+
+                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-center">
+                      <button
+                        onClick={() => setSelectedOrder(item)}
+                        className="text-white text-[10px] sm:text-xs px-3 sm:px-4 py-1 sm:py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-all shadow-md"
+                      >
+                        Detail
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {selectedOrder && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white dark:bg-gray-900 p-5 sm:p-7 rounded-lg shadow-xl max-w-xs sm:max-w-sm md:max-w-md w-full text-gray-900 dark:text-gray-200 border dark:border-gray-700">
+            <h2 className="text-lg sm:text-xl font-semibold border-b pb-3 mb-4">
+              Detail Pesanan
+            </h2>
+
+            <p className="mb-2">
+              <strong>Order ID:</strong> {selectedOrder.order_id}
+            </p>
+
+            <p className="mb-2">
+              <strong>Status:</strong>{" "}
+              <span
+                className={`px-3 py-1 rounded-md text-white text-sm ${
+                  selectedOrder.status?.trim().toLowerCase() === "approved"
+                    ? "bg-green-500"
+                    : selectedOrder.status?.trim().toLowerCase() === "pending"
+                    ? "bg-yellow-500"
+                    : "bg-red-500"
+                }`}
               >
-                <div className="relative">
-                  <img
-                    src={item.coffee.foto_barang}
-                    alt={item.coffee.nama_produk}
-                    className="w-full h-36 sm:h-40 object-cover rounded-xl"
-                  />
-                  {item.status === "Approved" && (
-                    <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                      Approved
-                    </span>
-                  )}
+                {selectedOrder.status || "Pending"}
+              </span>
+            </p>
 
-                  {item.status === "Pending" && (
-                    <span className="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                      Pending
-                    </span>
-                  )}
-                </div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-3">
-                  {item.coffee.nama_produk}
-                </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Harga Satuan:{" "}
-                  <span className="font-medium">
-                    Rp {hargaTransaksi.toLocaleString("id-ID")}
-                  </span>
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Jumlah:{" "}
-                  <span className="font-medium">{item.quantity} produk</span>
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  Total:{" "}
-                  <span className="font-semibold text-gray-900 dark:text-gray-100">
-                    Rp{" "}
-                    {(item.quantity * hargaTransaksi).toLocaleString("id-ID")}
-                  </span>
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Order ID: <span className="font-medium">{item.order_id}</span>
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
-                  Tanggal Pembelian:{" "}
-                  {new Date(item.created_at).toLocaleString("id-ID")}
-                </p>
-              </div>
-            );
-          })}
+            <p className="mb-2">
+              <strong>Total:</strong> Rp{" "}
+              {selectedOrder.items
+                .reduce(
+                  (total, item) =>
+                    total + item.quantity * item.harga_saat_transaksi,
+                  0
+                )
+                .toLocaleString("id-ID")}
+            </p>
+
+            <p className="mb-3">
+              <strong>Tanggal:</strong>{" "}
+              {new Date(selectedOrder.created_at).toLocaleString("id-ID")}
+            </p>
+
+            <h3 className="font-semibold border-b pb-2 mb-3">Item Pesanan:</h3>
+            <ul className="list-none space-y-2">
+              {selectedOrder.items.map((item, i) => (
+                <li
+                  key={i}
+                  className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-md"
+                >
+                  {item.coffee.nama_produk} - {item.quantity}x Rp{" "}
+                  {item.harga_saat_transaksi.toLocaleString("id-ID")}
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() => setSelectedOrder(null)}
+              className="mt-5 w-full bg-red-500 dark:bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-600 dark:hover:bg-red-800"
+            >
+              Tutup
+            </button>
+          </div>
         </div>
       )}
     </div>

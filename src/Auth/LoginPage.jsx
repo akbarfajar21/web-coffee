@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ReCAPTCHA from "react-google-recaptcha";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Login = () => {
       const { user, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/home`, 
+          redirectTo: `${window.location.origin}/home`,
         },
       });
 
@@ -188,6 +189,9 @@ const Login = () => {
     >
       {/* Overlay Transparan */}
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+      <Helmet>
+        <title>CoffeeShopMe | Login</title>
+      </Helmet>
 
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center z-50">

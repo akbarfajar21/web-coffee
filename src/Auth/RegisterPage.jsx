@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../utils/SupaClient";
+import { Helmet } from "react-helmet";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -71,6 +72,9 @@ const Register = () => {
 
   return (
     <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-400 via-blue-500 to-purple-600 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>CoffeeShopMe | Register</title>
+      </Helmet>
       <div className="max-w-lg w-full bg-white dark:bg-[#1E1E1E] shadow-xl rounded-2xl p-8 space-y-6 sm:p-10">
         <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white">
           Daftar Akun Baru

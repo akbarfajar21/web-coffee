@@ -1,8 +1,12 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const MaintenancePage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 p-6">
+      <Helmet>
+        <title>CoffeeShopMe | Maintenance</title>
+      </Helmet>
       <div className="relative text-center space-y-6 max-w-lg mx-auto bg-white/30 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20 dark:bg-gray-900/50 dark:border-gray-700 dark:text-white">
         {/* Animasi Icon */}
         <div className="flex justify-center">

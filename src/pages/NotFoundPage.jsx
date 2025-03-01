@@ -1,9 +1,13 @@
 import React from "react";
 import "animate.css";
+import { Helmet } from "react-helmet";
 
 const NotFoundPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-red-500 via-pink-500 to-purple-500 text-white px-6">
+      <Helmet>
+        <title>CoffeeShopMe | NotFound</title>
+      </Helmet>
       <div className="text-center bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl shadow-xl border border-white/20 animate__animated animate__fadeIn">
         <h1 className="text-9xl font-extrabold text-white drop-shadow-lg animate__animated animate__fadeInDown">
           404
