@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "../utils/SupaClient";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -14,14 +14,42 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
 
+  useEffect(() => {
+    // Cek sesi login setelah halaman reload
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session) {
+        navigate("/home");
+      }
+    };
+
+    checkSession();
+
+    // Listener untuk menangkap event login
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "SIGNED_IN" && session) {
+          navigate("/home");
+        }
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [navigate]);
+
   const handleGoogleLogin = async () => {
     setIsLoading(true);
 
     try {
-      const { user, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/home`,
+          redirectTo: `${window.location.origin}/home`, // Pastikan URL benar
         },
       });
 
@@ -33,79 +61,13 @@ const Login = () => {
           confirmButtonText: "OK",
           background: "#1E1E1E",
           color: "#FFF",
-          showClass: {
-            popup: "animate__animated animate__fadeInDown",
-          },
-          hideClass: {
-            popup: "animate__animated animate__fadeOutUp",
-          },
           confirmButtonColor: "#F87171",
-        });
-        return;
-      }
-
-      if (user) {
-        const { data: profileData, error: profileError } = await supabase
-          .from("profiles")
-          .select("id, username, email, role")
-          .eq("id", user.id)
-          .single();
-
-        let fullName;
-
-        if (profileError || !profileData) {
-          const { error: insertError } = await supabase
-            .from("profiles")
-            .upsert({
-              id: user.id,
-              username: user.user_metadata.full_name,
-              avatar_url: user.user_metadata.picture,
-              email: user.user_metadata.email,
-              role: "user",
-            });
-
-          if (insertError) {
-            Swal.fire({
-              title: "Error",
-              text: "Gagal menyimpan profil pengguna.",
-              icon: "error",
-              confirmButtonText: "OK",
-              background: "#1E1E1E",
-              color: "#FFF",
-              confirmButtonColor: "#F87171",
-            });
-            return;
-          }
-          fullName = user.user_metadata.full_name;
-        } else {
-          fullName = profileData.username;
-        }
-
-        Swal.fire({
-          title: "Login Berhasil! 🎉",
-          text: `Selamat datang kembali, ${fullName}!`,
-          iconHtml: "✅",
-          confirmButtonText: "OK",
-          background: "rgba(30, 30, 30, 0.9)",
-          color: "#FFF",
-          showClass: {
-            popup: "animate__animated animate__fadeInUp animate__faster",
-          },
-          hideClass: {
-            popup: "animate__animated animate__fadeOutDown animate__faster",
-          },
-          confirmButtonColor: "#4CAF50",
-          customClass: {
-            popup: "rounded-xl shadow-2xl backdrop-blur-md",
-            confirmButton: "px-6 py-2 rounded-lg text-lg",
-          },
-        }).then(() => {
-          setIsLoading(false);
-          navigate("/home");
         });
       }
     } catch (err) {
       console.error("Unhandled error during Google login:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,13 +104,12 @@ const Login = () => {
     }
 
     try {
-      const { data: user, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        setIsLoading(false);
         Swal.fire({
           title: "❌ Login Gagal!",
           text: "Email atau password salah.",
@@ -158,15 +119,10 @@ const Login = () => {
           color: "#333",
           confirmButtonColor: "#EF4444",
         });
-        return;
-      }
-
-      if (user) {
-        setIsLoading(false);
+      } else {
         navigate("/home");
       }
     } catch (err) {
-      setIsLoading(false);
       Swal.fire({
         title: "⚠️ Oops, Terjadi Kesalahan!",
         text: "Terjadi masalah tak terduga. Silakan coba lagi nanti.",
@@ -176,6 +132,8 @@ const Login = () => {
         color: "#333",
         confirmButtonColor: "#4F46E5",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 

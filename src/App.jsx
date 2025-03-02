@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import MaintenancePage from "./pages/MaintenancePage";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -41,7 +46,6 @@ const App = () => {
     <Router>
       <ScrollToTop />
 
-      {/* Tampilkan modal jika state showWelcomeModal true */}
       {showWelcomeModal && (
         <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
       )}
@@ -51,6 +55,8 @@ const App = () => {
           <Route path="*" element={<MaintenancePage />} />
         ) : (
           <>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+
             <Route path="/home" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/product" element={<ProductPage />} />
