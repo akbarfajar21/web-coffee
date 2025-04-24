@@ -52,9 +52,9 @@ function AboutPage() {
           About Us
         </h1>
 
-        <section className="py-12 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl px-8 md:px-12">
+        <section className="py-16 bg-white dark:bg-gray-800 rounded-3xl shadow-lg px-8 md:px-12">
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
-            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-2xl">
+            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-3xl">
               At{" "}
               <span className="font-semibold text-orange-600 dark:text-orange-400">
                 CoffeeShopMe
@@ -65,7 +65,7 @@ function AboutPage() {
               cozy spot to relax, work, or catch up with friends, we are here to
               make your coffee moments special.
             </p>
-            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-2xl">
+            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mt-6 md:mt-0">
               Our journey began with a passion for great coffee and a dream to
               create a warm, welcoming space for coffee lovers. From the moment
               you step inside, our cozy ambiance and friendly staff will make
@@ -74,9 +74,9 @@ function AboutPage() {
           </div>
         </section>
 
-        <section className="py-16 px-6 md:py-20 bg-gradient-to-r mt-12 from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-3xl shadow-2xl text-white text-center">
+        <section className="py-16 px-8 md:py-20 bg-gradient-to-r mt-12 from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-3xl shadow-lg text-white text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-6 leading-tight">
+            <h2 className="text-4xl font-extrabold mb-6 leading-tight">
               Our Mission
             </h2>
             <p className="text-lg max-w-3xl mx-auto leading-relaxed">
@@ -88,11 +88,11 @@ function AboutPage() {
           </div>
         </section>
 
-        <section className="mt-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-10">
+        <section className="mt-16 px-8">
+          <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-10">
             Our Gallery
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               "gallery1.webp",
               "gallery2.jpg",
@@ -107,14 +107,14 @@ function AboutPage() {
                 <img
                   src={src}
                   alt={`Gallery ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-xl"
                 />
               </div>
             ))}
           </div>
         </section>
 
-        <section className="text-center mt-20">
+        <section className="text-center mt-20 px-8">
           <h2 className="text-4xl font-extrabold dark:text-white mb-6">
             Join Our Coffee Community
           </h2>

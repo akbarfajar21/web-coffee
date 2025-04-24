@@ -45,27 +45,42 @@ const Header = () => {
           if (!localStorage.getItem("hasLoggedIn")) {
             localStorage.setItem("hasLoggedIn", "true");
             Swal.fire({
-              title: "✨ Selamat Datang Kembali!",
+              title: "Selamat Datang Kembali!",
               html: `
                 <div class="text-gray-700 dark:text-gray-200 text-lg font-medium">
-                  Hai, <span class="font-bold">${profileData.full_name || "Pengguna"}</span>! 
-                  Semoga harimu menyenangkan! 🌟
+                  Hai, <span class="font-bold">${
+                    profileData.full_name || "Pengguna"
+                  }</span>! 
+                  Semoga harimu menyenangkan!
                 </div>
               `,
-              iconHtml: "🎉",
-              confirmButtonText: "Lanjutkan 🚀",
-              background: document.documentElement.classList.contains("dark") ? "#1E293B" : "#FFFAF0",
-              color: document.documentElement.classList.contains("dark") ? "#E5E7EB" : "#333",
-              confirmButtonColor: document.documentElement.classList.contains("dark") ? "#F97316" : "#FF5733",
-              showClass: { popup: "animate__animated animate__zoomIn animate__faster" },
-              hideClass: { popup: "animate__animated animate__fadeOut animate__faster" },
-              customClass: {
-                popup: "rounded-3xl shadow-2xl px-10 py-8 border border-gray-200 dark:border-gray-700",
-                title: "text-3xl font-extrabold text-gray-900 dark:text-white",
-                confirmButton:
-                  "px-6 py-3 rounded-lg text-lg font-semibold bg-orange-500 hover:bg-orange-600 transition-all duration-300 shadow-lg",
+              icon: "success", // Menggunakan ikon bawaan SweetAlert2 yang lebih minimal dan bersih
+              confirmButtonText: "Lanjutkan",
+              background: document.documentElement.classList.contains("dark")
+                ? "#1E293B" // Warna latar belakang gelap
+                : "#FFFAF0", // Warna latar belakang terang
+              color: document.documentElement.classList.contains("dark")
+                ? "#E5E7EB" // Warna teks terang saat mode gelap
+                : "#333", // Warna teks gelap saat mode terang
+              confirmButtonColor: document.documentElement.classList.contains(
+                "dark"
+              )
+                ? "#F97316" // Warna tombol konfirmasi mode gelap
+                : "#FF5733", // Warna tombol konfirmasi mode terang
+              showClass: {
+                popup: "animate__animated animate__zoomIn animate__faster", // Animasi popup yang smooth
               },
-            });                       
+              hideClass: {
+                popup: "animate__animated animate__fadeOut animate__faster", // Animasi keluar yang halus
+              },
+              customClass: {
+                popup:
+                  "rounded-3xl shadow-2xl px-10 py-8 border border-gray-200 dark:border-gray-700", // Desain kotak popup dengan sudut bulat dan bayangan
+                title: "text-3xl font-extrabold text-gray-900 dark:text-white", // Teks judul besar dengan font tebal
+                confirmButton:
+                  "px-6 py-3 rounded-lg text-lg font-semibold bg-orange-500 hover:bg-orange-600 transition-all duration-300 shadow-lg", // Tombol konfirmasi yang menarik dengan efek hover
+              },
+            });
           }
         }
       } else {
@@ -108,13 +123,13 @@ const Header = () => {
 
     if (!error) {
       Swal.fire({
-        title: "🚪 Logout Berhasil!",
-        text: "Anda telah keluar. Sampai jumpa lagi! ✨",
-        iconHtml: "👋", // Ikon tangan melambai untuk efek farewell
-        background: "#F9FAFB", // Soft & fresh
-        color: "#333", // Teks lebih kontras
-        confirmButtonText: "Bye! 👋",
-        confirmButtonColor: "#FF6632",
+        title: "Logout Berhasil",
+        text: "Anda telah keluar. Sampai jumpa lagi!",
+        icon: "success", // Menggunakan ikon bawaan SweetAlert2 yang lebih bersih
+        background: "#ffffff", // Latar belakang putih untuk kesan minimalis
+        color: "#333", // Teks dengan warna kontras yang jelas
+        confirmButtonText: "Kembali ke Halaman Utama",
+        confirmButtonColor: "#4CAF50", // Warna hijau untuk tombol konfirmasi
         showClass: {
           popup: "animate__animated animate__fadeInDown animate__faster",
         },
@@ -122,8 +137,9 @@ const Header = () => {
           popup: "animate__animated animate__fadeOutUp animate__faster",
         },
         customClass: {
-          popup: "rounded-xl shadow-lg",
-          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+          popup: "rounded-2xl shadow-xl", // Sudut yang lebih tumpul dan bayangan yang lebih halus
+          confirmButton:
+            "px-6 py-3 text-lg font-semibold bg-green-500 hover:bg-green-600 rounded-lg transition-all duration-300", // Tombol dengan warna hijau yang lembut
         },
       }).then(() => {
         navigate("/home");
@@ -177,25 +193,27 @@ const Header = () => {
               }`}
             >
               <ul className="space-y-6 tracking-wide font-medium text-base lg:text-sm lg:flex lg:space-y-0 lg:space-x-6 justify-center items-center">
-                {["/home", "/product", "/about", "/contact"].map((path, index) => {
-                  const labels = ["Home", "Product", "About", "Contact"];
-                  const isActive = location.pathname === path;
+                {["/home", "/product", "/about", "/contact"].map(
+                  (path, index) => {
+                    const labels = ["Home", "Product", "About", "Contact"];
+                    const isActive = location.pathname === path;
 
-                  return (
-                    <li key={index} className="relative group">
-                      <Link
-                        to={path}
-                        className={`relative inline-block w-full text-center px-6 py-2 transition-all transform rounded-lg shadow-md ${
-                          isActive
-                            ? "bg-gradient-to-r from-[#ff6632] to-[#ff9966] text-white scale-105"
-                            : "text-[#2c2c2c] dark:text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:shadow-lg hover:scale-110"
-                        }`}
-                      >
-                        <span className="relative z-10">{labels[index]}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
+                    return (
+                      <li key={index} className="relative group">
+                        <Link
+                          to={path}
+                          className={`relative inline-block w-full text-center px-6 py-2 transition-all transform rounded-lg shadow-md ${
+                            isActive
+                              ? "bg-gradient-to-r from-[#ff6632] to-[#ff9966] text-white scale-105"
+                              : "text-[#2c2c2c] dark:text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:shadow-lg hover:scale-110"
+                          }`}
+                        >
+                          <span className="relative z-10">{labels[index]}</span>
+                        </Link>
+                      </li>
+                    );
+                  }
+                )}
               </ul>
               <div className="w-full flex justify-end  items-center gap-3 pl-4 relative">
                 <div className="flex items-center gap-4">

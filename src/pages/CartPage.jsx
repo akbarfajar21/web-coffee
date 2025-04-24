@@ -177,19 +177,19 @@ export default function CartPage() {
               ))}
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sticky top-20 border border-gray-200 dark:border-gray-700 flex flex-col min-h-[320px]">
+            <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl p-6 sticky top-20 flex flex-col min-h-[320px] transition-all duration-300">
               {/* Judul Order Summary */}
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-5 text-center">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight">
                 Order Summary
               </h2>
 
               {/* Daftar Item */}
-              <div className="space-y-4 text-gray-700 dark:text-gray-300 flex-grow">
+              <div className="space-y-4 text-gray-800 dark:text-gray-300 flex-grow">
                 {filteredCart.length > 0 ? (
                   filteredCart.map((item) => (
                     <div
                       key={item.coffee_id}
-                      className="flex justify-between items-center text-sm  pb-2"
+                      className="flex justify-between items-center text-sm pb-2 border-b border-gray-200 dark:border-gray-700"
                     >
                       <p className="truncate max-w-[65%]">
                         {item.coffee.nama_produk} × {item.quantity}
@@ -207,10 +207,10 @@ export default function CartPage() {
               </div>
 
               {/* Garis Pemisah */}
-              <hr className="my-5 border-gray-300 dark:border-gray-600" />
+              <hr className="my-6 border-gray-300 dark:border-gray-600" />
 
               {/* Total Harga */}
-              <div className="flex justify-between dark:text-white items-center text-lg font-bold">
+              <div className="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
                 <p>Total</p>
                 <p>{formatHarga(totalHarga)}</p>
               </div>

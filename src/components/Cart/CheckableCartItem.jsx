@@ -55,30 +55,30 @@ export default function CheckableCartItem({
   };
 
   return (
-    <div className="flex items-center gap-4 p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-2xl shadow-md sm:shadow-lg border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl w-full max-w-4xl mx-auto">
+    <div className="flex items-center gap-4 p-5 sm:p-6 bg-white/80 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-3xl shadow-lg hover:shadow-2xl transition-all w-full max-w-4xl mx-auto">
       {/* Checkbox */}
       <input
         type="checkbox"
         checked={isChecked}
         onChange={() => toggleCheck(item?.coffee_id)}
-        className="w-4 h-4 sm:w-5 sm:h-5 rounded-md border-2 border-gray-300 bg-white hover:scale-105 transition-transform"
+        className="w-5 h-5 accent-emerald-500 rounded-md border-2 border-gray-300 bg-white hover:scale-105 transition-transform"
       />
 
       {/* Product Image */}
-      <div className="relative w-20 h-20 sm:w-24 sm:h-24">
+      <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-300 dark:border-gray-600 shadow-sm">
         <img
           src={item?.coffee?.foto_barang}
           alt={item?.coffee?.nama_produk}
-          className="w-full h-full object-cover rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm"
+          className="w-full h-full object-cover"
         />
       </div>
 
       {/* Product Details */}
-      <div className="flex-grow space-y-1 sm:space-y-2">
-        <h3 className="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200">
+      <div className="flex-grow space-y-1.5">
+        <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
           {item?.coffee?.nama_produk}
         </h3>
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           {item?.quantity} x{" "}
           {item?.coffee?.harga_produk?.toLocaleString("id-ID")}
         </p>
@@ -86,11 +86,10 @@ export default function CheckableCartItem({
           quantity={item?.quantity || 1}
           stok={item?.coffee?.stok}
           onIncrease={() => updateQuantity(item?.coffee_id, item?.quantity + 1)}
-          onDecrease={
-            () =>
-              item?.quantity > 1
-                ? updateQuantity(item?.coffee_id, item?.quantity - 1)
-                : handleRemove(item?.coffee_id) // Pakai handleRemove agar ada konfirmasi
+          onDecrease={() =>
+            item?.quantity > 1
+              ? updateQuantity(item?.coffee_id, item?.quantity - 1)
+              : handleRemove(item?.coffee_id)
           }
         />
       </div>
@@ -98,7 +97,7 @@ export default function CheckableCartItem({
       {/* Remove Button */}
       <button
         onClick={() => handleRemove(item?.coffee_id)}
-        className="text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all transform hover:scale-110 p-1 sm:p-2 rounded-lg"
+        className="text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all hover:scale-110 p-2 rounded-full"
       >
         <FaTrashAlt className="text-lg sm:text-xl" />
       </button>

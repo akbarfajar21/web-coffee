@@ -351,44 +351,44 @@ export default function DetailProduct() {
           <span className="text-lg font-medium">Kembali</span>
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-8 px-4 md:px-8">
           {/* Gambar Produk */}
-          <div className="flex justify-center">
+          <div className="flex justify-center items-center">
             <img
               src={product.foto_barang}
               alt={product.nama_produk}
-              className="w-full max-w-md h-auto object-cover rounded-2xl shadow-xl"
+              className="w-full max-w-lg h-auto object-cover rounded-3xl shadow-xl transform transition-transform duration-300 ease-in-out hover:scale-105"
             />
           </div>
 
           {/* Info Produk */}
-          <div className="flex flex-col">
-            <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
+          <div className="flex flex-col space-y-6">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">
               {product.nama_produk}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mt-4">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">
               {product.deskripsi}
             </p>
 
-            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mt-6">
+            <p className="text-2xl sm:text-3xl font-semibold text-orange-600 dark:text-orange-400 mt-4">
               Rp {product.harga_produk.toLocaleString("id-ID")}
             </p>
 
-            <p className="text-lg text-gray-700 dark:text-gray-300 mt-4">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mt-2">
               <strong>Stok:</strong> {product.stok}
             </p>
 
             {/* Rating Produk */}
-            <div className="flex items-center mt-6">
-              <FaStar className="text-yellow-500 text-2xl" />
-              <p className="text-xl font-medium text-gray-800 dark:text-white ml-2">
+            <div className="flex items-center mt-4 space-x-1">
+              <FaStar className="text-yellow-500 text-xl sm:text-2xl" />
+              <p className="text-lg font-medium text-gray-800 dark:text-white ml-2">
                 {rating ? Number(rating).toFixed(1) : "N/A"} / 5
               </p>
             </div>
 
             {/* Form Rating dan Komentar */}
-            <div className="mt-8">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+            <div className="mt-6 space-y-6">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                 Berikan Rating dan Komentar:
               </h2>
               <div className="flex items-center space-x-3 mt-4">
@@ -396,7 +396,7 @@ export default function DetailProduct() {
                   <button
                     key={star}
                     onClick={() => setUserRating(star)}
-                    className={`text-3xl transition-all duration-300 ${
+                    className={`text-2xl sm:text-3xl transition-all duration-300 ${
                       star <= userRating
                         ? "text-yellow-500"
                         : "text-gray-400 dark:text-gray-500"
@@ -430,12 +430,12 @@ export default function DetailProduct() {
           <h3 className="text-xl md:text-2xl font-semibold text-gray-800 dark:text-white">
             Rating Pengguna Lain:
           </h3>
-          <div className="space-y-4 mt-4">
+          <div className="space-y-6 mt-4">
             {userRatings.length > 0 ? (
               userRatings.map((ratingItem, index) => (
                 <div
                   key={ratingItem.profile_id}
-                  className="flex items-start space-x-3 p-3 md:p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700"
+                  className="flex items-start space-x-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 ease-in-out"
                 >
                   <img
                     src={ratingItem.profile.avatar_url || "/default-avatar.png"}
@@ -451,7 +451,7 @@ export default function DetailProduct() {
                         <FaStar key={i} className="text-sm md:text-base" />
                       ))}
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                       {ratingItem.komentar}
                     </p>
                   </div>
@@ -463,11 +463,11 @@ export default function DetailProduct() {
                         onClick={() => toggleDropdown(index)}
                         className="text-gray-600 dark:text-gray-400 hover:text-gray-900 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105"
                       >
-                        <FaEllipsisV className="text-base" />
+                        <FaEllipsisV className="text-lg" />
                       </button>
 
                       {showDropdown === index && (
-                        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl transition-all duration-200 ease-in-out">
+                        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-xl transition-all duration-200 ease-in-out">
                           <button
                             onClick={() =>
                               handleDeleteRating(ratingItem.profile_id)

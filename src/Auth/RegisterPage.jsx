@@ -75,78 +75,52 @@ const Register = () => {
       <Helmet>
         <title>CoffeeShopMe | Register</title>
       </Helmet>
-      <div className="max-w-lg w-full bg-white dark:bg-[#1E1E1E] shadow-xl rounded-2xl p-8 space-y-6 sm:p-10">
-        <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white">
+      <div className="max-w-lg w-full bg-white dark:bg-[#121212] shadow-2xl rounded-3xl p-12 space-y-8 sm:p-14 border border-gray-200 dark:border-gray-700 transition-all duration-300">
+        <h2 className="text-4xl font-extrabold text-center text-gray-900 dark:text-white">
           Daftar Akun Baru
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-center text-sm">
+        <p className="text-gray-500 dark:text-gray-400 text-center text-base">
           Buat akun untuk menikmati layanan terbaik kami
         </p>
 
         {/* Notifikasi Error / Success */}
         {errorMessage && (
-          <div className="text-sm text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-300 p-3 rounded-md">
+          <div className="text-sm text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-300 p-4 rounded-xl border border-red-500 shadow-md">
             {errorMessage}
           </div>
         )}
         {successMessage && (
-          <div className="text-sm text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300 p-3 rounded-md">
+          <div className="text-sm text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300 p-4 rounded-xl border border-green-500 shadow-md">
             {successMessage}
           </div>
         )}
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           {[
-            {
-              label: "Nama Lengkap",
-              type: "text",
-              key: "fullName",
-              placeholder: "Masukkan nama lengkap",
-            },
-            {
-              label: "Username",
-              type: "text",
-              key: "username",
-              placeholder: "Pilih username",
-            },
-            {
-              label: "Email",
-              type: "email",
-              key: "email",
-              placeholder: "Masukkan email",
-            },
-            {
-              label: "Nomor Telepon",
-              type: "tel",
-              key: "noTelepon",
-              placeholder: "Masukkan nomor telepon",
-            },
-            {
-              label: "Kata Sandi",
-              type: "password",
-              key: "password",
-              placeholder: "Masukkan kata sandi",
-            },
-            {
-              label: "Konfirmasi Kata Sandi",
-              type: "password",
-              key: "confirmPassword",
-              placeholder: "Masukkan ulang kata sandi",
-            },
-          ].map((field, index) => (
+            "Nama Lengkap",
+            "Username",
+            "Email",
+            "Nomor Telepon",
+            "Kata Sandi",
+            "Konfirmasi Kata Sandi",
+          ].map((label, index) => (
             <div key={index}>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                {field.label}
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                {label}
               </label>
               <input
-                type={field.type}
-                value={formData[field.key]}
-                onChange={(e) =>
-                  setFormData({ ...formData, [field.key]: e.target.value })
+                type={
+                  label.includes("Sandi")
+                    ? "password"
+                    : label.includes("Email")
+                    ? "email"
+                    : label.includes("Telepon")
+                    ? "tel"
+                    : "text"
                 }
+                className="w-full px-5 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white focus:ring-4 focus:ring-indigo-400 dark:focus:ring-indigo-600 transition-all duration-300 shadow-sm hover:shadow-md"
+                placeholder={`Masukkan ${label.toLowerCase()}`}
                 required
-                className="w-full mt-2 px-4 py-3 border dark:border-gray-600 rounded-xl shadow-sm bg-gray-50 dark:bg-[#2A2A2A] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                placeholder={field.placeholder}
               />
             </div>
           ))}
@@ -155,10 +129,10 @@ const Register = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 text-white font-semibold rounded-xl shadow-md transition-all ${
+            className={`w-full py-4 text-white font-semibold rounded-2xl shadow-lg transition-all transform active:scale-95 duration-300 ${
               isLoading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90"
+                : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-85 hover:shadow-xl"
             }`}
           >
             {isLoading ? "Mendaftarkan..." : "Buat Akun"}
@@ -166,12 +140,12 @@ const Register = () => {
         </form>
 
         {/* Sudah Punya Akun */}
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Sudah punya akun?{" "}
             <a
               href="/login"
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-semibold transition-colors duration-300"
             >
               Masuk Sekarang
             </a>
