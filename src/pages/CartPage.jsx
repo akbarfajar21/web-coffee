@@ -98,29 +98,36 @@ export default function CartPage() {
   };
 
   const updateQuantity = async (coffee_id, newQuantity) => {
-    if (newQuantity < 1) return; // Pastikan tidak kurang dari 1
+    if (newQuantity < 1) return;
 
-    const { data: user } = await supabase.auth.getUser();
-    if (!user) return;
-
-    // Update quantity di database
-    const { error } = await supabase
-      .from("cart")
-      .update({ quantity: newQuantity })
-      .eq("profile_id", user.user.id)
-      .eq("coffee_id", coffee_id);
-
-    if (error) {
-      console.error("Error updating quantity:", error);
-      return;
-    }
-
-    // Update state lokal setelah berhasil
+    // 1. Optimistic update: langsung update UI
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.coffee_id === coffee_id ? { ...item, quantity: newQuantity } : item
       )
     );
+
+    // 2. Async update ke database tanpa menahan UI
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error("User not found");
+
+      const { error } = await supabase
+        .from("cart")
+        .update({ quantity: newQuantity })
+        .eq("profile_id", user.id)
+        .eq("coffee_id", coffee_id);
+
+      if (error) {
+        console.error("Database update failed:", error.message);
+        // (Opsional) Rollback jika perlu
+      }
+    } catch (err) {
+      console.error("Update failed:", err.message);
+    }
   };
 
   return (

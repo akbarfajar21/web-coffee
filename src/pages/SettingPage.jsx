@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 const SettingPage = () => {
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -98,7 +98,7 @@ const SettingPage = () => {
         throw new Error("Profile ID not found.");
       }
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .update({
           username: editData.username,
@@ -107,14 +107,21 @@ const SettingPage = () => {
           no_telepon: editData.no_telepon,
           avatar_url: editData.avatar_url,
         })
-        .eq("id", profile.id);
+        .eq("id", profile.id)
+        .select(); // ambil data terbaru yang diupdate
 
       if (error) {
         throw new Error(error.message);
       }
 
+      // Update state lokal profile
+      if (data && data.length > 0) {
+        setProfile(data[0]); // update state global atau lokal dengan data baru
+      }
+
       setTimeout(() => {
         setIsProcessing(false);
+        toggleModal(); // <-- Tutup modal
         Swal.fire({
           title: "Success!",
           text: "Profile updated successfully.",
@@ -122,10 +129,6 @@ const SettingPage = () => {
           showConfirmButton: false,
           timer: 1200,
           timerProgressBar: true,
-        }).then(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
         });
       }, 3000);
     } catch (error) {
@@ -139,6 +142,8 @@ const SettingPage = () => {
         icon: "error",
         confirmButtonText: "OK",
       });
+    } finally {
+      document.body.classList.remove("overflow-hidden");
     }
   };
 
@@ -165,61 +170,53 @@ const SettingPage = () => {
   const handleAvatarSelect = async (event) => {
     try {
       const file = event.target.files[0];
-      if (!file) {
-        throw new Error("No file selected.");
-      }
+      if (!file) throw new Error("No file selected.");
 
       setUploading(true);
       setProgress(0);
 
-      let interval = setInterval(() => {
-        setProgress((prevProgress) => {
-          if (prevProgress >= 100) {
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
             clearInterval(interval);
-            setUploading(false);
             return 100;
           }
-          return prevProgress + 10;
+          return prev + 10;
         });
       }, 100);
 
       const avatarUrl = await uploadAvatarToStorage(file);
 
-      setEditData((prevData) => ({
-        ...prevData,
-        avatar_url: avatarUrl,
-      }));
-      setProfile((prevProfile) => ({
-        ...prevProfile,
-        avatar_url: avatarUrl,
-      }));
-
-      const { error } = await supabase
+      // Update Supabase
+      const { data, error } = await supabase
         .from("profiles")
         .update({ avatar_url: avatarUrl })
-        .eq("id", profile.id);
+        .eq("id", profile.id)
+        .select();
 
-      if (error) {
-        throw new Error("Failed to update avatar in database.");
+      if (error) throw new Error("Failed to update avatar in database.");
+      if (data && data.length > 0) {
+        setProfile(data[0]); // Update global/local state profile
       }
 
-      setIsAvatarModalOpen(false);
-
-      Swal.fire({
-        title: "Profile picture updated successfully...",
-        timer: 2000,
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      }).then(() => {
-        window.location.reload();
-      });
+      // Tunggu progress selesai dulu
+      setTimeout(() => {
+        setUploading(false);
+        setProgress(100);
+        toggleAvatarModal(); // Tutup modal setelah loading
+        Swal.fire({
+          title: "Avatar Updated!",
+          text: "Your profile picture has been updated.",
+          icon: "success",
+          timer: 1600,
+          showConfirmButton: false,
+        });
+      }, 1200);
     } catch (error) {
       setUploading(false);
       Swal.fire({
         title: "Error",
-        text: error.message || "An error occurred while updating avatar.",
+        text: error.message || "Failed to update avatar.",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -452,7 +449,7 @@ const SettingPage = () => {
             {/* Progress Bar */}
             <div className="w-full bg-gray-300 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden shadow-inner">
               <div
-                className="bg-indigo-600 dark:bg-indigo-400 h-1.5 transition-all duration-500 ease-in-out" 
+                className="bg-indigo-600 dark:bg-indigo-400 h-1.5 transition-all duration-500 ease-in-out"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -467,13 +464,11 @@ const SettingPage = () => {
 
       {isAvatarModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
-          <div className="bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 backdrop-blur-lg rounded-2xl shadow-2xl p-6 max-w-md w-full animate-fadeIn">
-            {/* Header */}
-            <h2 className="text-lg font-semibold text-center text-gray-900 dark:text-white mb-5 tracking-wide">
+          <div className="bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 backdrop-blur-lg rounded-2xl shadow-2xl p-6 max-w-md w-full animate-fadeIn transition-all duration-300">
+            <h2 className="text-xl font-semibold text-center text-gray-900 dark:text-white mb-5 tracking-wide">
               Select Avatar Photo
             </h2>
 
-            {/* Input File */}
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Upload Image
             </label>
@@ -481,29 +476,28 @@ const SettingPage = () => {
               type="file"
               accept="image/*"
               onChange={handleAvatarSelect}
-              className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-500 dark:file:text-white dark:hover:file:bg-indigo-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-700 dark:text-white"
+              className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 dark:file:bg-indigo-500 dark:file:text-white dark:hover:file:bg-indigo-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-700 dark:text-white"
             />
 
-            {/* Progress Upload */}
+            {/* Modern Progress Bar */}
             {uploading && (
-              <div className="w-full mt-4">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+              <div className="w-full mt-4 space-y-2">
+                <p className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
                   Uploading...
                 </p>
-                <div className="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded-full overflow-hidden shadow-inner">
+                <div className="w-full h-2 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
-                    className="bg-indigo-600 dark:bg-indigo-400 h-full rounded-full transition-all duration-500 ease-in-out"
+                    className="h-full bg-gradient-to-r from-indigo-500 via-indigo-400 to-indigo-600 rounded-full transition-all duration-300 ease-out"
                     style={{ width: `${progress}%` }}
                   ></div>
                 </div>
               </div>
             )}
 
-            {/* Action Buttons */}
             <div className="mt-6 flex justify-end">
               <button
                 onClick={toggleAvatarModal}
-                className="px-5 py-2 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white text-sm font-medium rounded-lg shadow hover:bg-gray-400 dark:hover:bg-gray-500 transition-all"
+                className="px-5 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-medium rounded-lg shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
               >
                 Cancel
               </button>

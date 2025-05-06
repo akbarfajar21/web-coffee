@@ -183,12 +183,6 @@ export default function ProductPage() {
         confirmButtonColor: "#6366F1",
         background: "#ffffff",
         color: "#1f2937",
-        showClass: {
-          popup: "animate__animated animate__fadeInDown animate__faster",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp animate__faster",
-        },
         customClass: {
           popup:
             "rounded-2xl shadow-2xl border border-gray-200 px-6 pt-6 pb-4 backdrop-blur-sm",
@@ -202,6 +196,51 @@ export default function ProductPage() {
       });
       return;
     }
+
+    setCartCount((prevCount) => prevCount + 1);
+
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "<b>Produk berhasil ditambahkan ke keranjang!</b>",
+      showConfirmButton: false,
+      timer: 1400,
+      timerProgressBar: true,
+      background: "#ffffff",
+      color: "#1f2937", // slate-800
+      iconColor: "#22c55e", // green-500
+      customClass: {
+        popup: `
+      rounded-lg 
+      shadow-lg 
+      border 
+      border-gray-200 
+      px-5 py-4 
+      animate__animated 
+      animate__fadeInRight 
+      animate__faster 
+      backdrop-blur-sm 
+      bg-white/80 
+      dark:bg-gray-900/80 
+      dark:border-gray-700 
+    `,
+        title: `
+      text-sm 
+      font-semibold 
+      text-gray-800 
+      dark:text-white 
+      tracking-wide
+    `,
+        timerProgressBar: "bg-green-500 h-1 rounded-b-lg",
+      },
+      showClass: {
+        popup: "animate__animated animate__fadeInRight animate__fast",
+      },
+      hideClass: {
+        popup: "animate__animated animate__fadeOutRight animate__fast",
+      },
+    });
 
     try {
       const { data: cartData, error: cartError } = await supabase
@@ -220,7 +259,6 @@ export default function ProductPage() {
           .eq("coffee_id", product);
 
         if (updateError) throw updateError;
-        setCartCount((prevCount) => prevCount + 1);
       } else {
         const { error: insertError } = await supabase
           .from("cart")
@@ -229,35 +267,13 @@ export default function ProductPage() {
           ]);
 
         if (insertError) throw insertError;
-        setCartCount((prevCount) => prevCount + 1);
       }
-
-      Swal.fire({
-        toast: true,
-        icon: "success", // Menggunakan ikon bawaan 'success' dari SweetAlert2
-        title: "<b>Produk berhasil ditambahkan!</b>",
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        background: "#ffffff", // Warna latar belakang putih untuk toast
-        color: "#333333", // Warna teks hitam agar lebih kontras
-        iconColor: "#16A34A", // Warna hijau untuk ikon sukses
-        customClass: {
-          popup:
-            "rounded-xl shadow-xl border border-gray-200 animate__animated animate__fadeInDown animate__faster", // Popup dengan sudut tumpul dan bayangan halus
-          title: "text-base font-medium tracking-wide text-gray-900", // Teks judul dengan ukuran yang tepat dan kesan modern
-          timerProgressBar: "bg-green-500",
-        },
-        showClass: {
-          popup: "animate__animated animate__fadeInDown animate__faster", // Efek muncul dengan animasi fade-in
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp animate__faster", // Efek menghilang dengan animasi fade-out
-        },
-      });
     } catch (error) {
       console.error("Error handling cart:", error.message);
+
+      // ❗ Rollback cart count jika error
+      setCartCount((prevCount) => Math.max(0, prevCount - 1));
+
       Swal.fire({
         title: "Oops! ❌",
         text: "Gagal menambahkan produk ke keranjang.",
@@ -273,13 +289,6 @@ export default function ProductPage() {
         confirmButtonColor: "#EF4444",
         background: "#F9FAFB",
         color: "#374151",
-        position: "center",
-        showClass: {
-          popup: "animate__animated animate__fadeInUp animate__fast",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutDown animate__fast",
-        },
         customClass: {
           popup: "rounded-2xl shadow-2xl border border-gray-300 p-6",
           title: "text-xl font-bold text-gray-900",

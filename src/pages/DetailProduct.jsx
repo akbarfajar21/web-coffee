@@ -121,11 +121,10 @@ export default function DetailProduct() {
             confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
           },
         });
-
         return;
       }
 
-      // Cek apakah pengguna sudah memberikan rating sebelumnya
+      // Cek apakah pengguna sudah memberi rating
       const { data: existingRatings, error: existingError } = await supabase
         .from("rating")
         .select("id")
@@ -144,8 +143,8 @@ export default function DetailProduct() {
         return;
       }
 
-      // Jika belum ada rating, lanjutkan menyimpan rating baru
-      const { data, error } = await supabase.from("rating").insert([
+      // Simpan rating baru
+      const { error: insertError } = await supabase.from("rating").insert([
         {
           coffee_id: id,
           profile_id: user.id,
@@ -154,8 +153,36 @@ export default function DetailProduct() {
         },
       ]);
 
-      if (error) throw error;
+      if (insertError) throw insertError;
 
+      // Ambil data profil dari tabel profiles
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      if (profileError) throw profileError;
+
+      // Update state komentar secara lokal (langsung tampil tanpa reload)
+      setUserRatings((prev) => [
+        ...prev,
+        {
+          profile_id: user.id,
+          rating: userRating,
+          komentar: comment,
+          profile: {
+            full_name: profileData.full_name,
+            avatar_url: profileData.avatar_url,
+          },
+        },
+      ]);
+
+      // Reset input
+      setUserRating(0);
+      setComment("");
+
+      // Tampilkan notifikasi sukses
       Swal.fire({
         title: "🎉 Terima Kasih!",
         html: `
@@ -177,11 +204,9 @@ export default function DetailProduct() {
           confirmButton:
             "py-2 px-4 rounded-lg text-white bg-orange-500 hover:bg-orange-600 transition-all",
         },
-      }).then(() => {
-        window.location.reload();
       });
 
-      // Hitung rata-rata rating terbaru
+      // Hitung ulang rata-rata rating
       const { data: ratingsData, error: ratingsError } = await supabase
         .from("rating")
         .select("rating")
@@ -190,8 +215,7 @@ export default function DetailProduct() {
       if (ratingsError) throw ratingsError;
 
       const avgRating =
-        ratingsData.reduce((sum, rating) => sum + rating.rating, 0) /
-        ratingsData.length;
+        ratingsData.reduce((sum, r) => sum + r.rating, 0) / ratingsData.length;
 
       // Update rating di tabel coffee
       await supabase
@@ -200,19 +224,6 @@ export default function DetailProduct() {
         .eq("id", id);
 
       setRating(avgRating);
-      setUserRatings([
-        ...userRatings,
-        {
-          rating: userRating,
-          komentar: comment,
-          profile: {
-            full_name: user.user_metadata.full_name,
-            avatar_url: user.user_metadata.avatar_url,
-          },
-        },
-      ]);
-      setUserRating(0);
-      setComment("");
     } catch (error) {
       Swal.fire({
         title: "❌ Gagal Memberikan Rating!",
@@ -234,7 +245,7 @@ export default function DetailProduct() {
     }
   };
 
-  const handleDeleteRating = async (ratingId) => {
+  const handleDeleteRating = async (ratingProfileId) => {
     try {
       if (!user) {
         Swal.fire({
@@ -253,6 +264,39 @@ export default function DetailProduct() {
 
       if (error) throw error;
 
+      // Hapus dari state userRatings
+      setUserRatings((prevRatings) =>
+        prevRatings.filter(
+          (ratingItem) =>
+            !(
+              ratingItem.profile_id === user.id &&
+              ratingItem.profile_id === ratingProfileId
+            )
+        )
+      );
+
+      // Reset rating bintang di UI
+      setUserRating(0); // ← INI penting agar bintang langsung hilang
+
+      // Hitung ulang rata-rata rating
+      const { data: ratingsData, error: ratingsError } = await supabase
+        .from("rating")
+        .select("rating")
+        .eq("coffee_id", id);
+
+      if (ratingsError) throw ratingsError;
+
+      const avgRating = ratingsData.length
+        ? ratingsData.reduce((sum, r) => sum + r.rating, 0) / ratingsData.length
+        : null;
+
+      await supabase
+        .from("coffee")
+        .update({ rating_produk: avgRating })
+        .eq("id", id);
+
+      setRating(avgRating); // Update rata-rata di UI
+
       Swal.fire({
         title: "Rating Dihapus!",
         text: "Rating Anda telah dihapus.",
@@ -269,26 +313,6 @@ export default function DetailProduct() {
           title: "text-lg font-semibold",
           content: "text-gray-600",
         },
-      }).then(async () => {
-        const { data: ratingsData, error: ratingsError } = await supabase
-          .from("rating")
-          .select("rating")
-          .eq("coffee_id", id);
-
-        if (ratingsError) throw ratingsError;
-
-        const avgRating = ratingsData.length
-          ? ratingsData.reduce((sum, rating) => sum + rating.rating, 0) /
-            ratingsData.length
-          : null;
-
-        await supabase
-          .from("coffee")
-          .update({ rating_produk: avgRating })
-          .eq("id", id);
-
-        setRating(avgRating);
-        window.location.reload();
       });
     } catch (error) {
       Swal.fire({
@@ -341,6 +365,13 @@ export default function DetailProduct() {
   return (
     <>
       <Header />
+
+      <Helmet>
+        <title>{`CoffeeShopMe - ${
+          product ? product.nama_produk : "Memuat..."
+        }`}</title>
+      </Helmet>
+
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-12 px-6 lg:px-16">
         {/* Tombol Kembali */}
         <button
