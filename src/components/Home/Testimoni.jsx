@@ -52,7 +52,7 @@ const Testimonials = () => {
   }
 
   return (
-    <div className="py-12 px-6 w-full mx-auto bg-gray-50 dark:bg-gray-900">
+    <div className="py-12 mt-12 px-6 w-full mx-auto bg-gray-50 dark:bg-gray-900">
       <h2 className="text-4xl font-extrabold text-center mb-10 text-gray-800 dark:text-white">
         What Our Customers Say
       </h2>

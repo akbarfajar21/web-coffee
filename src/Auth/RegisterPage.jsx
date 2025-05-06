@@ -75,79 +75,79 @@ const Register = () => {
       <Helmet>
         <title>CoffeeShopMe | Register</title>
       </Helmet>
-      <div className="max-w-lg w-full bg-white dark:bg-[#121212] shadow-2xl rounded-3xl p-12 space-y-8 sm:p-14 border border-gray-200 dark:border-gray-700 transition-all duration-300">
-        <h2 className="text-4xl font-extrabold text-center text-gray-900 dark:text-white">
-          Daftar Akun Baru
+      <div className="max-w-md w-full bg-white dark:bg-[#121212] shadow-2xl rounded-2xl p-6 space-y-6 sm:p-8 border border-gray-200 dark:border-gray-700 transition-all duration-300">
+        <h2 className="text-2xl font-extrabold text-center text-gray-900 dark:text-white">
+          Create a New Account
         </h2>
-        <p className="text-gray-500 dark:text-gray-400 text-center text-base">
-          Buat akun untuk menikmati layanan terbaik kami
+        <p className="text-gray-500 dark:text-gray-400 text-center text-sm">
+          Create an account to enjoy our best services
         </p>
 
-        {/* Notifikasi Error / Success */}
+        {/* Error / Success Notification */}
         {errorMessage && (
-          <div className="text-sm text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-300 p-4 rounded-xl border border-red-500 shadow-md">
+          <div className="text-sm text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-300 p-3 rounded-xl border border-red-500 shadow-md">
             {errorMessage}
           </div>
         )}
         {successMessage && (
-          <div className="text-sm text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300 p-4 rounded-xl border border-green-500 shadow-md">
+          <div className="text-sm text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300 p-3 rounded-xl border border-green-500 shadow-md">
             {successMessage}
           </div>
         )}
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit}>
           {[
-            "Nama Lengkap",
+            "Full Name",
             "Username",
             "Email",
-            "Nomor Telepon",
-            "Kata Sandi",
-            "Konfirmasi Kata Sandi",
+            "Phone Number",
+            "Password",
+            "Confirm Password",
           ].map((label, index) => (
             <div key={index}>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {label}
               </label>
               <input
                 type={
-                  label.includes("Sandi")
+                  label.includes("Password")
                     ? "password"
                     : label.includes("Email")
                     ? "email"
-                    : label.includes("Telepon")
+                    : label.includes("Phone")
                     ? "tel"
                     : "text"
                 }
-                className="w-full px-5 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white focus:ring-4 focus:ring-indigo-400 dark:focus:ring-indigo-600 transition-all duration-300 shadow-sm hover:shadow-md"
-                placeholder={`Masukkan ${label.toLowerCase()}`}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 transition-all duration-300 text-sm"
+                placeholder={`Enter your ${label.toLowerCase()}`}
                 required
               />
             </div>
           ))}
 
-          {/* Tombol Register */}
+          {/* Register Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-4 text-white font-semibold rounded-2xl shadow-lg transition-all transform active:scale-95 duration-300 ${
+            className={`w-full py-3 text-white text-sm font-semibold rounded-xl shadow-md transition-all transform active:scale-95 duration-300 ${
               isLoading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-85 hover:shadow-xl"
+                : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-85 hover:shadow-lg"
             }`}
           >
-            {isLoading ? "Mendaftarkan..." : "Buat Akun"}
+            {isLoading ? "Registering..." : "Create Account"}
           </button>
         </form>
 
-        {/* Sudah Punya Akun */}
-        <div className="mt-6 text-center">
+        {/* Already Have an Account */}
+        <div className="mt-4 text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Sudah punya akun?{" "}
+            Already have an account?{" "}
             <a
               href="/login"
               className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-semibold transition-colors duration-300"
             >
-              Masuk Sekarang
+              Login Now
             </a>
           </p>
         </div>

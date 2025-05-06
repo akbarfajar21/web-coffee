@@ -167,24 +167,22 @@ export default function ProductPage() {
     setCurrentPage(1); // Reset ke halaman pertama setelah reset filter
   };
 
-  // Format currency
   const formatRupiah = (amount) => {
     return "Rp " + amount.toLocaleString("id-ID");
   };
 
-  // Handle Add to Cart functionality
   const handleAddToCart = async (product) => {
     const { data: user, error: userError } = await supabase.auth.getUser();
 
     if (userError || !user) {
       Swal.fire({
-        title: "🚀 Login Dulu Yuk!",
-        text: "Anda harus masuk untuk menambahkan produk ke keranjang.",
-        iconHtml: "🔑",
+        title: "Login Dulu Yuk!",
+        text: "Anda harus login untuk menambahkan produk ke keranjang.",
+        icon: "info",
         confirmButtonText: "Login Sekarang",
-        confirmButtonColor: "#4F46E5",
-        background: "rgba(255, 255, 255, 0.9)",
-        color: "#333",
+        confirmButtonColor: "#6366F1",
+        background: "#ffffff",
+        color: "#1f2937",
         showClass: {
           popup: "animate__animated animate__fadeInDown animate__faster",
         },
@@ -192,8 +190,12 @@ export default function ProductPage() {
           popup: "animate__animated animate__fadeOutUp animate__faster",
         },
         customClass: {
-          popup: "rounded-xl shadow-lg backdrop-blur-md border border-gray-200",
-          confirmButton: "px-6 py-2 rounded-lg text-lg font-semibold",
+          popup:
+            "rounded-2xl shadow-2xl border border-gray-200 px-6 pt-6 pb-4 backdrop-blur-sm",
+          title: "text-xl font-bold text-gray-800",
+          htmlContainer: "text-base text-gray-600",
+          confirmButton:
+            "bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-base font-medium shadow-md transition duration-200",
         },
       }).then((result) => {
         if (result.isConfirmed) navigate("/login");
@@ -295,8 +297,6 @@ export default function ProductPage() {
     }, 2000); // Durasi 1 detik
     return () => clearTimeout(timer);
   }, []);
-
-  // Navigate to product detail
   const handleProductClick = (productId) => {
     navigate(`/product-detail/${productId}`);
   };
@@ -330,17 +330,17 @@ export default function ProductPage() {
         </button>
 
         <div className="bg-white dark:bg-gray-900 px-4 flex gap-6">
-          <aside className="w-1/5 hidden lg:block bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 sticky top-20 max-h-[83vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700">
+          <aside className="w-full lg:w-1/5 lg:block bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 sticky top-20 max-h-[83vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700 lg:visible hidden">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white">
                 Filters
               </h2>
               <button
                 onClick={() => navigate("/cart")}
                 className="relative flex items-center justify-center text-orange-500 border border-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out p-2 rounded-lg shadow-sm dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:text-white hover:scale-105"
               >
-                <BsCart4 className="w-6 h-6" />
+                <BsCart4 className="w-5 h-5 sm:w-6 sm:h-6" />
                 {cartCount > 0 && (
                   <span className="absolute -top-2 -right-2 text-xs font-bold text-white bg-red-600 border border-white dark:border-gray-800 rounded-full px-1.5 py-0.5 shadow-md">
                     {cartCount}
@@ -351,7 +351,7 @@ export default function ProductPage() {
 
             {/* Search Input */}
             <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Search Product
               </label>
               <input
@@ -370,7 +370,8 @@ export default function ProductPage() {
                   id: "price",
                   label: "Sort by Price",
                   value: priceSortOrder,
-                  onChange: setPriceSortOrder,
+                  onChange: (value) =>
+                    setPriceSortOrder(value === priceSortOrder ? null : value), // Toggle between selected value and null
                   options: [
                     { value: "asc", label: "Low - High" },
                     { value: "desc", label: "High - Low" },
@@ -380,7 +381,8 @@ export default function ProductPage() {
                   id: "stock",
                   label: "Stock Availability",
                   value: stockSortOrder,
-                  onChange: setStockSortOrder,
+                  onChange: (value) =>
+                    setStockSortOrder(value === stockSortOrder ? null : value), // Toggle between selected value and null
                   options: [
                     { value: "asc", label: "Most Stock" },
                     { value: "desc", label: "Least Stock" },
@@ -390,7 +392,8 @@ export default function ProductPage() {
                   id: "name",
                   label: "Sort by Name",
                   value: nameSortOrder,
-                  onChange: setNameSortOrder,
+                  onChange: (value) =>
+                    setNameSortOrder(value === nameSortOrder ? null : value), // Toggle between selected value and null
                   options: [
                     { value: "asc", label: "A - Z" },
                     { value: "desc", label: "Z - A" },
@@ -400,7 +403,10 @@ export default function ProductPage() {
                   id: "rating",
                   label: "Sort by Rating",
                   value: ratingSortOrder,
-                  onChange: setRatingSortOrder,
+                  onChange: (value) =>
+                    setRatingSortOrder(
+                      value === ratingSortOrder ? null : value
+                    ), // Toggle between selected value and null
                   options: [
                     { value: "asc", label: "Low - High" },
                     { value: "desc", label: "High - Low" },
@@ -408,35 +414,33 @@ export default function ProductPage() {
                 },
               ].map(({ id, label, value, onChange, options }) => (
                 <div key={id} className="space-y-2">
-                  <h3 className="text-xs font-medium text-gray-900 dark:text-white">
+                  <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                     {label}
                   </h3>
                   <div className="flex flex-col space-y-2">
                     {options.map((option) => (
                       <label
                         key={option.value}
-                        className="flex items-center justify-between px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
+                        className="flex items-center justify-between px-2 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer text-xs sm:text-sm"
                       >
-                        <span className="text-gray-800 dark:text-gray-300 text-xs font-medium">
+                        <span className="text-gray-800 dark:text-gray-300 font-medium">
                           {option.label}
                         </span>
                         <input
-                          type="radio"
-                          name={id}
-                          value={option.value}
+                          type="checkbox" // Ganti menjadi checkbox
                           checked={value === option.value}
-                          onChange={() => onChange(option.value)}
+                          onChange={() => onChange(option.value)} // Toggle like before
                           className="hidden"
                         />
                         <span
-                          className={`relative w-8 h-5 flex items-center bg-gray-300 dark:bg-gray-500 rounded-full p-0.5 transition-all duration-200 ${
+                          className={`relative w-7 h-4 sm:w-8 sm:h-5 flex items-center bg-gray-300 dark:bg-gray-500 rounded-full p-0.5 transition-all duration-200 ${
                             value === option.value
                               ? "bg-orange-500 dark:bg-orange-400"
                               : ""
                           }`}
                         >
                           <span
-                            className={`w-4 h-4 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-all duration-200 ${
+                            className={`w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-all duration-200 ${
                               value === option.value ? "translate-x-3" : ""
                             }`}
                           />
@@ -451,7 +455,7 @@ export default function ProductPage() {
             {/* Reset Filters Button */}
             <button
               onClick={resetFilters}
-              className="w-full py-2 rounded-md shadow-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out mt-4 text-sm font-medium"
+              className="w-full py-2 rounded-md shadow-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out mt-4 text-xs sm:text-sm font-medium"
             >
               Reset Filters
             </button>

@@ -88,6 +88,36 @@ function AboutPage() {
           </div>
         </section>
 
+        {/* Timeline Section */}
+        <section className="mt-24 px-8">
+          <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-10">
+            Our Journey
+          </h2>
+          <div className="relative border-l-4 border-orange-500 dark:border-orange-400 pl-6 max-w-3xl mx-auto">
+            {[
+              {
+                year: "2022",
+                desc: "CoffeeShopMe was founded with a dream to redefine local coffee culture.",
+              },
+              {
+                year: "2023",
+                desc: "Opened our first shop and launched our signature blends.",
+              },
+              {
+                year: "2024",
+                desc: "Built a strong online presence and expanded our coffee community.",
+              },
+            ].map((event, index) => (
+              <div key={index} className="mb-10">
+                <h3 className="text-xl font-bold text-orange-600 dark:text-orange-400">
+                  {event.year}
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300">{event.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section className="mt-16 px-8">
           <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-10">
             Our Gallery

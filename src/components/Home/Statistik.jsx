@@ -64,7 +64,7 @@ const Statistik = ({ isDarkMode }) => {
         {[
           {
             icon: <Users size={32} className="text-white dark:text-gray-300" />,
-            title: "Pengguna Aktif",
+            title: "Active Users",
             count: activeUsers,
             color: "bg-blue-500 dark:bg-blue-600",
           },
@@ -75,7 +75,7 @@ const Statistik = ({ isDarkMode }) => {
                 className="text-white dark:text-gray-300"
               />
             ),
-            title: "Produk Terjual",
+            title: "Products Sold",
             count: totalSoldProducts,
             color: "bg-green-500 dark:bg-green-600",
           },
@@ -84,15 +84,15 @@ const Statistik = ({ isDarkMode }) => {
             key={index}
             className={`p-6 rounded-xl shadow-md text-white text-center flex flex-col items-center border border-white/10 dark:border-gray-700 ${stat.color}`}
           >
-            {/* Ikon dengan Background Soft */}
+            {/* Icon with Soft Background */}
             <div className="p-3 bg-white/20 dark:bg-white/10 rounded-lg">
               {stat.icon}
             </div>
 
-            {/* Judul */}
+            {/* Title */}
             <h3 className="text-sm font-medium mt-3 mb-1">{stat.title}</h3>
 
-            {/* Angka CountUp */}
+            {/* CountUp Number */}
             {inView && (
               <p className="text-3xl font-bold tracking-tight">
                 <CountUp

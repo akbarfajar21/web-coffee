@@ -5,35 +5,41 @@ import { useSearchParams } from "react-router-dom";
 
 export default function HistoryUI({
   history,
-  showNotification,
+  showNotification, // Diterima dari props
   searchQuery, // Diterima dari props
   setSearchQuery, // Diterima dari props
 }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
-  useEffect(() => {
-    const queryFromUrl = searchParams.get("q") || "";
-    setSearchQuery(queryFromUrl);
-  }, []);
-
+  const [showNotificationState, setShowNotificationState] = useState(true); // State baru untuk notifikasi
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (showNotification) {
+    // Handle URL query param and update search query
+    const queryFromUrl = searchParams.get("q") || "";
+    setSearchQuery(queryFromUrl);
+  }, [searchParams, setSearchQuery]);
+
+  useEffect(() => {
+    const hasApprovedStatus = history.some(
+      (item) => item.status?.trim().toLowerCase() === "approved"
+    );
+
+    // Cek jika ada status "approved" dan notifikasi belum pernah ditampilkan
+    if (hasApprovedStatus && showNotificationState) {
       Swal.fire({
         toast: true,
         position: "top-end",
         icon: "success",
-        title: "Terima kasih sudah memesan produk di website kami!",
+        title: "Thank you for your purchase!",
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,
       });
-    }
 
-    // Ambil query dari URL saat pertama kali halaman dimuat
-    const queryFromUrl = searchParams.get("q") || "";
-    setSearchQuery(queryFromUrl);
-  }, []);
+      // Setelah menampilkan notifikasi, set showNotificationState menjadi false
+      setShowNotificationState(false);
+    }
+  }, [history, showNotificationState]); // Menyebabkan efek saat history berubah
 
   const handleSearchChange = (e) => {
     const query = e.target.value;
@@ -47,8 +53,8 @@ export default function HistoryUI({
 
   const filteredHistory = history.filter(
     (item) =>
-      item.coffee.nama_produk
-        .toLowerCase()
+      item.coffee?.nama_produk
+        ?.toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
       item.order_id.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -74,7 +80,7 @@ export default function HistoryUI({
   return (
     <div className="flex flex-col min-h-screen">
       <h1 className="text-3xl mt-20 font-bold text-center text-gray-800 dark:text-gray-200 mb-6">
-        Riwayat Pembelian
+        Purchase History
       </h1>
 
       <div className="mx-4 text-center mb-6 relative">
@@ -83,7 +89,7 @@ export default function HistoryUI({
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            placeholder="Cari produk atau Order ID..."
+            placeholder="Search product or Order ID..."
             className="w-full px-5 py-3 pl-12 border rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
           <BiSearch className="absolute top-1/2 left-4 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 text-lg" />
@@ -108,16 +114,16 @@ export default function HistoryUI({
           </svg>
 
           <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
-            Riwayat pembelian masih kosong
+            No purchase history available
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Yuk, mulai belanja dan temukan kopi favoritmu!
+            Start shopping and find your favorite coffee!
           </p>
           <a
             href="/product"
             className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium shadow-md hover:bg-blue-700 transition-all"
           >
-            Belanja Sekarang
+            Shop Now
           </a>
         </div>
       ) : (
@@ -182,65 +188,73 @@ export default function HistoryUI({
       )}
 
       {selectedOrder && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white dark:bg-gray-900 p-5 sm:p-7 rounded-lg shadow-xl max-w-xs sm:max-w-sm md:max-w-md w-full text-gray-900 dark:text-gray-200 border dark:border-gray-700">
-            <h2 className="text-lg sm:text-xl font-semibold border-b pb-3 mb-4">
-              Detail Pesanan
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-[90%] p-6 sm:p-8 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 animate-fadeIn">
+            <h2 className="text-xl sm:text-2xl font-bold border-b border-gray-300 dark:border-gray-700 pb-4 mb-4 text-center">
+              🧾 Order Details
             </h2>
 
-            <p className="mb-2">
-              <strong>Order ID:</strong> {selectedOrder.order_id}
-            </p>
-
-            <p className="mb-2">
-              <strong>Status:</strong>{" "}
-              <span
-                className={`px-3 py-1 rounded-md text-white text-sm ${
-                  selectedOrder.status?.trim().toLowerCase() === "approved"
-                    ? "bg-green-500"
-                    : selectedOrder.status?.trim().toLowerCase() === "pending"
-                    ? "bg-yellow-500"
-                    : "bg-red-500"
-                }`}
-              >
-                {selectedOrder.status || "Pending"}
-              </span>
-            </p>
-
-            <p className="mb-2">
-              <strong>Total:</strong> Rp{" "}
-              {selectedOrder.items
-                .reduce(
-                  (total, item) =>
-                    total + item.quantity * item.harga_saat_transaksi,
-                  0
-                )
-                .toLocaleString("id-ID")}
-            </p>
-
-            <p className="mb-3">
-              <strong>Tanggal:</strong>{" "}
-              {new Date(selectedOrder.created_at).toLocaleString("id-ID")}
-            </p>
-
-            <h3 className="font-semibold border-b pb-2 mb-3">Item Pesanan:</h3>
-            <ul className="list-none space-y-2">
-              {selectedOrder.items.map((item, i) => (
-                <li
-                  key={i}
-                  className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-md"
+            <div className="space-y-3 text-sm sm:text-base">
+              <p>
+                <span className="font-medium">Order ID:</span>{" "}
+                {selectedOrder.order_id}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="font-medium">Status:</span>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
+                    selectedOrder.status?.trim().toLowerCase() === "approved"
+                      ? "bg-green-500"
+                      : selectedOrder.status?.trim().toLowerCase() === "pending"
+                      ? "bg-yellow-500"
+                      : "bg-red-500"
+                  }`}
                 >
-                  {item.coffee.nama_produk} - {item.quantity}x Rp{" "}
-                  {item.harga_saat_transaksi.toLocaleString("id-ID")}
-                </li>
-              ))}
-            </ul>
+                  {selectedOrder.status || "Pending"}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium">Total:</span> Rp{" "}
+                {selectedOrder.items
+                  .reduce(
+                    (total, item) =>
+                      total + item.quantity * item.harga_saat_transaksi,
+                    0
+                  )
+                  .toLocaleString("id-ID")}
+              </p>
+              <p>
+                <span className="font-medium">Date:</span>{" "}
+                {new Date(selectedOrder.created_at).toLocaleString("id-ID")}
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-base font-semibold border-b border-gray-300 dark:border-gray-700 pb-2 mb-3">
+                🛍️ Ordered Items
+              </h3>
+              <ul className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
+                {selectedOrder.items.map((item, i) => (
+                  <li
+                    key={i}
+                    className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md"
+                  >
+                    <span className="truncate">
+                      {item.coffee.nama_produk} × {item.quantity}
+                    </span>
+                    <span className="font-medium">
+                      Rp {item.harga_saat_transaksi.toLocaleString("id-ID")}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             <button
               onClick={() => setSelectedOrder(null)}
-              className="mt-5 w-full bg-red-500 dark:bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-600 dark:hover:bg-red-800"
+              className="mt-6 w-full bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 text-white py-2.5 rounded-xl font-semibold transition-all duration-200"
             >
-              Tutup
+              Close
             </button>
           </div>
         </div>

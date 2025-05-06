@@ -452,7 +452,7 @@ const SettingPage = () => {
             {/* Progress Bar */}
             <div className="w-full bg-gray-300 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden shadow-inner">
               <div
-                className="bg-indigo-600 dark:bg-indigo-400 h-1.5 transition-all duration-500 ease-in-out"
+                className="bg-indigo-600 dark:bg-indigo-400 h-1.5 transition-all duration-500 ease-in-out" 
                 style={{ width: `${progress}%` }}
               ></div>
             </div>

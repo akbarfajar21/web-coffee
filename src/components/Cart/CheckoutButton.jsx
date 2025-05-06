@@ -17,8 +17,8 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
     if (cart.length === 0) {
       Swal.fire({
         icon: "warning",
-        title: "Keranjang Kosong!",
-        text: "Silakan pilih produk sebelum melanjutkan pembayaran.",
+        title: "Cart is Empty!",
+        text: "Please select products before proceeding to checkout.",
         confirmButtonColor: "#f97316",
       });
       return;
@@ -38,19 +38,19 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
       .join("");
 
     Swal.fire({
-      title: "Konfirmasi Pembelian",
+      title: "Confirm Purchase",
       html: `
         <div class="swal-container">
           <div class="swal-products">${productList}</div>
           <div class="swal-total">
-            <b>Total Harga: ${formatHarga(totalHarga)}</b>
+            <b>Total Price: ${formatHarga(totalHarga)}</b>
           </div>
         </div>
       `,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Ya, Beli Sekarang",
-      cancelButtonText: "Batal",
+      confirmButtonText: "Yes, Buy Now",
+      cancelButtonText: "Cancel",
       confirmButtonColor: "#f97316",
       cancelButtonColor: "#d33",
       customClass: {
@@ -175,20 +175,20 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
           }
 
           Swal.fire({
-            title: "Pembayaran Berhasil!",
-            html: `<p>Pesanan Anda sedang diproses.</p>
+            title: "Payment Successful!",
+            html: `<p>Your order is being processed.</p>
                    <p><strong>Order ID:</strong> ${orderId}</p>`,
             icon: "success",
             showCancelButton: true,
-            cancelButtonText: "Tutup",
-            confirmButtonText: "Salin Order ID",
+            cancelButtonText: "Close",
+            confirmButtonText: "Copy Order ID",
             confirmButtonColor: "#3085d6",
           }).then((result) => {
             if (result.isConfirmed) {
               navigator.clipboard.writeText(orderId);
               Swal.fire(
-                "Tersalin!",
-                "Order ID telah disalin ke clipboard.",
+                "Copied!",
+                "Order ID has been copied to clipboard.",
                 "success"
               ).then(() => navigate("/history"));
             } else {
@@ -257,7 +257,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
           )}
 
           <span>
-            {isProcessing ? "Memproses Tunggu." : "Lanjutkan Pembayaran"}
+            {isProcessing ? "Processing, please wait." : "Proceed to Payment"}
           </span>
         </div>
       </button>

@@ -185,7 +185,7 @@ const ContactPage = () => {
                 htmlFor="message"
                 className="block text-lg font-medium text-gray-700 dark:text-gray-300"
               >
-                Pesan Anda
+                Your Message
               </label>
               <textarea
                 id="message"
@@ -195,7 +195,7 @@ const ContactPage = () => {
                 required
                 className="w-full p-4 border-2 border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-blue-400 transition-all"
                 rows="5"
-                placeholder="Tulis pesan Anda di sini..."
+                placeholder="Write your message here..."
               />
               {errors.message && (
                 <p className="text-red-500 text-sm">{errors.message}</p>
@@ -207,7 +207,7 @@ const ContactPage = () => {
                 htmlFor="rating"
                 className="block text-lg font-medium text-gray-700 dark:text-gray-300"
               >
-                Berikan Rating
+                Give a Rating
               </label>
               <div className="flex space-x-3 mt-2">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -235,7 +235,7 @@ const ContactPage = () => {
                 type="submit"
                 className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all transform hover:scale-105 dark:bg-gradient-to-r dark:from-blue-600 dark:to-indigo-700 dark:hover:from-blue-700 dark:hover:to-indigo-800"
               >
-                Kirim Testimoni
+                Submit Testimonial
               </button>
             </div>
           </form>

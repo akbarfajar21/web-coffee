@@ -191,10 +191,10 @@ const Login = () => {
 
       <div className="relative max-w-md w-full bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl p-8">
         <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
-          Selamat Datang 👋
+          Welcome 👋
         </h2>
         <p className="text-gray-600 text-center mb-6">
-          Masuk untuk melanjutkan ke akun Anda!
+          Log in to continue to your account!
         </p>
 
         <form onSubmit={handleEmailLogin} className="space-y-5">
@@ -242,7 +242,7 @@ const Login = () => {
 
         <div className="flex items-center justify-between my-6">
           <hr className="w-full border-gray-300" />
-          <span className="text-gray-400 px-4">atau</span>
+          <span className="text-gray-400 px-4">or</span>
           <hr className="w-full border-gray-300" />
         </div>
 
@@ -251,16 +251,16 @@ const Login = () => {
           className="w-full bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-800 transition-all duration-300 flex items-center justify-center space-x-3"
         >
           <img src="/logo-google.png" alt="Google" className="w-6 h-6" />
-          <span>Login dengan Google</span>
+          <span>Login with Google</span>
         </button>
 
         <p className="text-gray-500 mt-4 text-center">
-          Belum punya akun?{" "}
+          Don't have an account?{" "}
           <span
             onClick={() => navigate("/register")}
             className="text-blue-500 font-semibold cursor-pointer hover:underline"
           >
-            Daftar sekarang
+            Register now
           </span>
         </p>
       </div>

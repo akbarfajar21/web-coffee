@@ -7,6 +7,7 @@ import FAQ from "../components/Home/Faq";
 import Footer from "../components/Footer";
 import Statistik from "../components/Home/Statistik";
 import { Helmet } from "react-helmet";
+import Carousel from "../components/Home/Carousel";
 
 const HomePage = () => {
   return (
@@ -17,6 +18,7 @@ const HomePage = () => {
       <Header />
       <Hero />
       <TentangKami />
+      <Carousel />
       <Testimoni />
       <Statistik />
       <FAQ />

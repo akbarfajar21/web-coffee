@@ -178,12 +178,12 @@ export default function CartPage() {
             </div>
 
             <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl p-6 sticky top-20 flex flex-col min-h-[320px] transition-all duration-300">
-              {/* Judul Order Summary */}
+              {/* Order Summary Title */}
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight">
                 Order Summary
               </h2>
 
-              {/* Daftar Item */}
+              {/* Item List */}
               <div className="space-y-4 text-gray-800 dark:text-gray-300 flex-grow">
                 {filteredCart.length > 0 ? (
                   filteredCart.map((item) => (
@@ -201,21 +201,21 @@ export default function CartPage() {
                   ))
                 ) : (
                   <p className="text-gray-500 dark:text-gray-400 text-center italic">
-                    Pilih produk untuk checkout
+                    Select products to checkout
                   </p>
                 )}
               </div>
 
-              {/* Garis Pemisah */}
+              {/* Divider Line */}
               <hr className="my-6 border-gray-300 dark:border-gray-600" />
 
-              {/* Total Harga */}
+              {/* Total Price */}
               <div className="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
                 <p>Total</p>
                 <p>{formatHarga(totalHarga)}</p>
               </div>
 
-              {/* Tombol Checkout */}
+              {/* Checkout Button */}
               <div className="mt-6">
                 <CheckoutButton
                   cart={filteredCart}
