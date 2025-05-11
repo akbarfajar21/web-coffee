@@ -154,7 +154,7 @@ export default function ProductPage() {
     };
 
     fetchCart();
-  }, []); // Kosongkan array dependensi
+  }, []); 
 
   // Reset filters
   const resetFilters = () => {
@@ -303,7 +303,7 @@ export default function ProductPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Durasi 1 detik
+    }, 2000); 
     return () => clearTimeout(timer);
   }, []);
   const handleProductClick = (productId) => {

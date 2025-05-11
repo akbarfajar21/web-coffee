@@ -337,7 +337,6 @@ const SettingPage = () => {
             </div>
           </div>
 
-          {/* Edit Button */}
           <div className="mt-10 text-center">
             <button
               onClick={toggleModal}
@@ -352,7 +351,6 @@ const SettingPage = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
           <div className="relative w-full max-w-sm mx-auto p-6 bg-white/80 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 animate-fadeIn">
-            {/* Close Button */}
             <button
               onClick={toggleModal}
               className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition-all dark:text-gray-300 dark:hover:text-red-400"
@@ -371,13 +369,9 @@ const SettingPage = () => {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
-
-            {/* Header */}
             <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
               Edit Profile
             </h2>
-
-            {/* Form Fields */}
             <div className="space-y-4">
               {[
                 {
@@ -420,7 +414,6 @@ const SettingPage = () => {
               ))}
             </div>
 
-            {/* Action Buttons */}
             <div className="mt-6 flex justify-center">
               <button
                 onClick={handleUpdate}
@@ -436,17 +429,14 @@ const SettingPage = () => {
       {uploading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-xs bg-white/80 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 backdrop-blur-xl rounded-xl shadow-xl px-4 py-5 text-center relative">
-            {/* Spinner Icon */}
             <div className="flex justify-center mb-3">
               <div className="h-7 w-7 border-[3px] border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
 
-            {/* Judul */}
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
               Updating...
             </h2>
 
-            {/* Progress Bar */}
             <div className="w-full bg-gray-300 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden shadow-inner">
               <div
                 className="bg-indigo-600 dark:bg-indigo-400 h-1.5 transition-all duration-500 ease-in-out"
@@ -454,7 +444,6 @@ const SettingPage = () => {
               ></div>
             </div>
 
-            {/* Persentase */}
             <p className="mt-1.5 text-xs text-gray-600 dark:text-gray-300">
               {progress}%
             </p>
@@ -479,7 +468,6 @@ const SettingPage = () => {
               className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 dark:file:bg-indigo-500 dark:file:text-white dark:hover:file:bg-indigo-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-700 dark:text-white"
             />
 
-            {/* Modern Progress Bar */}
             {uploading && (
               <div className="w-full mt-4 space-y-2">
                 <p className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">

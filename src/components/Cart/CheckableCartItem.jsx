@@ -55,33 +55,31 @@ export default function CheckableCartItem({
   };
 
   return (
-    <div className="flex items-center gap-4 p-5 sm:p-6 bg-white/80 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-3xl shadow-lg hover:shadow-2xl transition-all w-full max-w-4xl mx-auto">
-      {/* Checkbox */}
+    <div className="flex items-center gap-6 p-5 sm:p-6 bg-white/80 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-3xl shadow-lg hover:shadow-2xl transition-all w-full max-w-4xl mx-auto">
       <input
         type="checkbox"
         checked={isChecked}
         onChange={() => toggleCheck(item?.coffee_id)}
-        className="w-5 h-5 accent-emerald-500 rounded-md border-2 border-gray-300 bg-white hover:scale-105 transition-transform"
+        className="w-6 h-6 accent-emerald-500 rounded-md border-2 border-gray-300 bg-white dark:bg-gray-800 hover:scale-105 transition-transform"
       />
 
-      {/* Product Image */}
-      <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-300 dark:border-gray-600 shadow-sm">
+      <div className="relative w-28 h-28 rounded-xl overflow-hidden border border-gray-300 dark:border-gray-600 shadow-md">
         <img
           src={item?.coffee?.foto_barang}
           alt={item?.coffee?.nama_produk}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
       </div>
 
-      {/* Product Details */}
-      <div className="flex-grow space-y-1.5">
-        <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
+      <div className="flex-grow space-y-2">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
           {item?.coffee?.nama_produk}
         </h3>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {item?.quantity} x{" "}
+          {item?.quantity} ×{" "}
           {item?.coffee?.harga_produk?.toLocaleString("id-ID")}
         </p>
+
         <QuantityControl
           quantity={item?.quantity || 1}
           stok={item?.coffee?.stok}
@@ -94,10 +92,9 @@ export default function CheckableCartItem({
         />
       </div>
 
-      {/* Remove Button */}
       <button
         onClick={() => handleRemove(item?.coffee_id)}
-        className="text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all hover:scale-110 p-2 rounded-full"
+        className="text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all transform hover:scale-110 p-2 rounded-full"
       >
         <FaTrashAlt className="text-lg sm:text-xl" />
       </button>

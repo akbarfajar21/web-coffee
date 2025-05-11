@@ -7,19 +7,17 @@ const QuantityControl = ({ quantity, stok, onIncrease, onDecrease }) => {
       onIncrease(); // Hanya tambah jika belum mencapai stok maksimal
     } else {
       Swal.fire({
-        title: "⚠️ Stok Tidak Cukup!",
-        text: "Anda tidak dapat menambah quantity lebih banyak.",
-        iconHtml: "🚫",
-        confirmButtonText: "OK, Mengerti",
+        title: "Insufficient Stock",
+        text: "You cannot increase the quantity further.",
+        icon: "error", // Using the error icon from SweetAlert2
+        confirmButtonText: "OK, Got it",
         background: "#FFFFFF",
-        color: "#000000",
-        confirmButtonColor: "#EF4444",
-        showClass: { popup: "animate__animated animate__bounceIn" },
-        hideClass: { popup: "animate__animated animate__fadeOut" },
+        color: "#333333", // Darker text for better readability
+        confirmButtonColor: "#EF4444", // Red confirm button color
         customClass: {
-          popup:
-            "rounded-xl shadow-2xl backdrop-blur-lg border border-gray-600",
-          confirmButton: "px-5 py-2 rounded-lg text-lg font-semibold",
+          popup: "rounded-xl shadow-xl backdrop-blur-lg border border-gray-300", // Modern popup design
+          confirmButton:
+            "px-6 py-3 rounded-lg text-lg font-semibold transition-all transform hover:scale-105", // Smooth transition and hover effect for the button
         },
       });
     }

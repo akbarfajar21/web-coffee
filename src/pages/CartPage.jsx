@@ -213,9 +213,6 @@ export default function CartPage() {
                 )}
               </div>
 
-              {/* Divider Line */}
-              <hr className="my-6 border-gray-300 dark:border-gray-600" />
-
               {/* Total Price */}
               <div className="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
                 <p>Total</p>
