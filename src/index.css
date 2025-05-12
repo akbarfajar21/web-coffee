@@ -312,3 +312,28 @@
   padding: 6px 14px !important;
 }
 
+.dark-swal-popup {
+  background-color: #1f2937 !important; /* slate-800 */
+  color: #f9fafb !important; /* gray-50 */
+}
+
+.dark-swal-title {
+  color: #f9fafb !important;
+}
+
+.swal-container {
+  padding-top: 10px;
+}
+
+.swal-product {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.swal-total {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 15px;
+}

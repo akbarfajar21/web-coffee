@@ -22,10 +22,11 @@ export default function ProductPage() {
   const [progress, setProgress] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [ratingSortOrder, setRatingSortOrder] = useState("");
-  const productsPerPage = 24;
+  const productsPerPage = 30;
   const navigate = useNavigate();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const isDarkMode = document.documentElement.classList.contains("dark");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -154,7 +155,7 @@ export default function ProductPage() {
     };
 
     fetchCart();
-  }, []); 
+  }, []);
 
   // Reset filters
   const resetFilters = () => {
@@ -207,29 +208,29 @@ export default function ProductPage() {
       showConfirmButton: false,
       timer: 1400,
       timerProgressBar: true,
-      background: "#ffffff",
-      color: "#1f2937", // slate-800
+      background: isDarkMode ? "#1f2937" : "#ffffff", // dark: slate-800, light: white
+      color: isDarkMode ? "#f9fafb" : "#1f2937", // dark: gray-50, light: slate-800
       iconColor: "#22c55e", // green-500
       customClass: {
         popup: `
       rounded-lg 
       shadow-lg 
       border 
-      border-gray-200 
+      ${
+        isDarkMode
+          ? "border-gray-700 bg-gray-900/80"
+          : "border-gray-200 bg-white/80"
+      } 
       px-5 py-4 
       animate__animated 
       animate__fadeInRight 
       animate__faster 
       backdrop-blur-sm 
-      bg-white/80 
-      dark:bg-gray-900/80 
-      dark:border-gray-700 
     `,
         title: `
       text-sm 
       font-semibold 
-      text-gray-800 
-      dark:text-white 
+      ${isDarkMode ? "text-white" : "text-gray-800"} 
       tracking-wide
     `,
         timerProgressBar: "bg-green-500 h-1 rounded-b-lg",
@@ -303,7 +304,7 @@ export default function ProductPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); 
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
   const handleProductClick = (productId) => {

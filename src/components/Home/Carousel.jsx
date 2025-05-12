@@ -40,44 +40,48 @@ const Carousel = () => {
   }, [currentIndex]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto mt-12 relative rounded-2xl overflow-hidden shadow-xl group">
-      <img
-        src={slides[currentIndex].image}
-        alt={slides[currentIndex].title}
-        className="w-full h-[400px] md:h-[400px] object-cover transition-all duration-1000 ease-in-out"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white flex flex-col justify-end p-6 md:p-10">
-        <h2 className="text-2xl md:text-4xl font-bold mb-2">
-          {slides[currentIndex].title}
-        </h2>
-        <p className="text-sm md:text-lg">{slides[currentIndex].description}</p>
-      </div>
+    <div className="dark:bg-gray-900">
+      <div className="w-full max-w-7xl mx-auto  relative rounded-2xl overflow-hidden shadow-xl group">
+        <img
+          src={slides[currentIndex].image}
+          alt={slides[currentIndex].title}
+          className="w-full h-[400px] md:h-[400px] object-cover transition-all duration-1000 ease-in-out"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white flex flex-col justify-end p-6 md:p-10">
+          <h2 className="text-2xl md:text-4xl font-bold mb-2">
+            {slides[currentIndex].title}
+          </h2>
+          <p className="text-sm md:text-lg">
+            {slides[currentIndex].description}
+          </p>
+        </div>
 
-      {/* Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full transition-all hidden group-hover:flex"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full transition-all hidden group-hover:flex"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
+        {/* Arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full transition-all hidden group-hover:flex"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full transition-all hidden group-hover:flex"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
 
-      {/* Dots */}
-      <div className="absolute bottom-4 w-full flex justify-center gap-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all ${
-              currentIndex === index ? "bg-white scale-110" : "bg-white/40"
-            }`}
-          />
-        ))}
+        {/* Dots */}
+        <div className="absolute bottom-4 w-full flex justify-center gap-3">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                currentIndex === index ? "bg-white scale-110" : "bg-white/40"
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

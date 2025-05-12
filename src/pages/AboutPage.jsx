@@ -15,7 +15,7 @@ function AboutPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
         <div className="relative flex items-center justify-center">
           <div className="absolute -top-8 flex space-x-2">
             {[0, 1, 2].map((i) => (
@@ -42,7 +42,7 @@ function AboutPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen dark:bg-gray-900">
+    <div className="flex flex-col min-h-screen dark:bg-gray-800">
       <Helmet>
         <title>CoffeeShopMe | About</title>
       </Helmet>

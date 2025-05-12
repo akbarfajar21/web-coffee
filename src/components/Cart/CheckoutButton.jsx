@@ -14,12 +14,20 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const confirmCheckout = () => {
+    const isDarkMode = document.documentElement.classList.contains("dark");
+
     if (cart.length === 0) {
       Swal.fire({
         icon: "warning",
         title: "Cart is Empty!",
         text: "Please select products before proceeding to checkout.",
         confirmButtonColor: "#f97316",
+        background: isDarkMode ? "#1f2937" : "#ffffff",
+        color: isDarkMode ? "#f9fafb" : "#1f2937",
+        customClass: {
+          popup: isDarkMode ? "dark-swal-popup" : "",
+          title: isDarkMode ? "dark-swal-title" : "",
+        },
       });
       return;
     }
@@ -28,31 +36,33 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
       .map(
         (item) =>
           `<div class="swal-product">
-            <span>${item.quantity}×</span> 
-            <span>${item.coffee.nama_produk}</span> 
-            <span>${formatHarga(
-              item.coffee.harga_produk * item.quantity
-            )}</span>
-          </div>`
+          <span>${item.quantity}×</span> 
+          <span>${item.coffee.nama_produk}</span> 
+          <span>${formatHarga(item.coffee.harga_produk * item.quantity)}</span>
+        </div>`
       )
       .join("");
 
     Swal.fire({
       title: "Confirm Purchase",
       html: `
-        <div class="swal-container">
-          <div class="swal-products">${productList}</div>
-          <div class="swal-total">
-            <b>Total Price: ${formatHarga(totalHarga)}</b>
-          </div>
+      <div class="swal-container" style="color: ${
+        isDarkMode ? "#f9fafb" : "#1f2937"
+      }">
+        <div class="swal-products">${productList}</div>
+        <div class="swal-total dark:text-white">
+          <b>Total Price: ${formatHarga(totalHarga)}</b>
         </div>
-      `,
+      </div>
+    `,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes, Buy Now",
       cancelButtonText: "Cancel",
       confirmButtonColor: "#f97316",
       cancelButtonColor: "#d33",
+      background: isDarkMode ? "#1f2937" : "#ffffff",
+      color: isDarkMode ? "#f9fafb" : "#1f2937",
       customClass: {
         popup: "swal-popup",
         title: "swal-title",

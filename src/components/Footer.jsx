@@ -77,16 +77,10 @@ const Footer = () => {
                 <i className="fab fa-whatsapp"></i>
               </a>
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/pjarrr.rr"
                 className="text-gray-600 dark:text-gray-400 hover:text-pink-500 transition-all"
               >
                 <i className="fab fa-instagram"></i>
-              </a>
-              <a
-                href="https://tiktok.com"
-                className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-all"
-              >
-                <i className="fab fa-tiktok"></i>
               </a>
             </div>
           </div>
@@ -96,7 +90,7 @@ const Footer = () => {
           <p className="text-gray-600 dark:text-gray-400">
             &copy; {new Date().getFullYear()}{" "}
             <span className="font-semibold text-orange-600 dark:text-orange-400">
-              MyCoffee
+              CoffeeShopMe
             </span>
             . All Rights Reserved.
           </p>

@@ -108,13 +108,18 @@ const ContactPage = () => {
         Swal.fire({
           icon: "success",
           title: "Testimoni Terkirim!",
-          text: "Terima kasih telah memberikan testimoni.",
+          html: `
+          <p>Terima kasih telah memberikan testimoni. Berikut adalah proses selanjutnya:</p>
+          <ol class="space-y-4 mt-4 text-left">
+            <li><strong>1. Masuk ke Admin:</strong> Testimoni kamu akan masuk ke sistem kami.</li>
+            <li><strong>2. Diverifikasi Manual:</strong> Kami tinjau dan pastikan testimoni sesuai.</li>
+            <li><strong>3. Dipublikasikan:</strong> Jika lolos, akan tampil di homepage!</li>
+          </ol>
+        `,
           confirmButtonText: "Kembali ke Beranda",
           confirmButtonColor: "#22c55e", // Warna hijau modern
           background: "#ffffff",
           color: "#333333",
-          timer: 2500,
-          timerProgressBar: true,
           customClass: {
             popup: "rounded-xl shadow-lg",
             title: "text-lg font-semibold",
@@ -166,7 +171,7 @@ const ContactPage = () => {
   return (
     <>
       <Header />
-      <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
+      <div className="flex flex-col min-h-screen bg-gradient-to-br to-indigo-100 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
         <div className="py-10 px-8 max-w-4xl mx-auto flex-grow">
           <h1 className="text-5xl font-bold text-center mb-8 text-gray-800 mt-14 dark:text-gray-100">
             Contact Us
@@ -241,28 +246,91 @@ const ContactPage = () => {
           </form>
         </div>
 
-        <div className="py-16 bg-white dark:bg-gray-800">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-gray-100">
+        <div className="py-16 bg-white dark:bg-gray-800 ">
+          <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <h2 className="text-3xl font-semibold text-center mb-12 text-gray-800 dark:text-gray-100">
               Our Location
             </h2>
-            <div className="relative pb-[56.25%] rounded-2xl overflow-hidden shadow-lg dark:shadow-2xl">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.8199462264847!2d107.17822927605911!3d-6.287382861543163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699b445d8375b1%3A0x2be0e0c5314813b1!2sPesantren%20SMP%20dan%20SMA%20Rabbaanii%20Islamic%20School!5e0!3m2!1sen!2sid!4v1733210702268!5m2!1sen!2sid"
-                width="100%"
-                height="100%"
-                style={{
-                  border: 0,
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
+            <div className="flex flex-col md:flex-row gap-10 ">
+              <div className="md:w-1/2 space-y-10">
+                <div className="border-l-4 border-blue-500 pl-4">
+                  <blockquote className="italic text-lg text-gray-700 dark:text-gray-300">
+                    "Kami percaya bahwa setiap tegukan kopi menyimpan cerita,
+                    dan setiap pelanggan layak untuk didengar."
+                  </blockquote>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    — CoffeeShopMe
+                  </p>
+                </div>
+
+                {/* New section: Kontak Langsung */}
+                <div className="border-l-4 border-green-500 pl-4">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    Hubungi Kami
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    Kami senang mendengar dari Anda! Untuk pertanyaan atau
+                    informasi lebih lanjut, jangan ragu untuk menghubungi kami
+                    melalui kontak pada footer website kami.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-purple-500 pl-4">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    Ayo Bergabung dengan Kami!
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    Tertarik menjadi bagian dari tim CoffeeShopMe? Kami membuka
+                    kesempatan bagi barista, kasir, dan staf kreatif. Kirimkan
+                    CV dan portofolio Anda melalui email kami yang tertera di
+                    footer.
+                  </p>
+                </div>
+
+                {/* New section: Galeri Foto */}
+                <div className="space-y-4 mt-10">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    Galeri Suasana CoffeeShopMe
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <img
+                      src="https://media.istockphoto.com/id/1428594094/photo/empty-coffee-shop-interior-with-wooden-tables-coffee-maker-pastries-and-pendant-lights.jpg?s=612x612&w=0&k=20&c=dMqeYCJDs3BeBP_jv93qHRISDt-54895SPoVc6_oJt4="
+                      alt="CoffeeShopMe Interior"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <img
+                      src="gallery2.jpg"
+                      alt="CoffeeShopMe Coffee"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <img
+                      src="https://asset.kompas.com/crops/S8dfqn6WJCQ3kWaPxeroDa6KxEg=/0x76:4032x2764/750x500/data/photo/2021/09/11/613c98c27631e.jpg"
+                      alt="CoffeeShopMe Customers"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Kanan: Google Maps */}
+              <div className="md:w-1/2 relative pb-[56.25%] rounded-2xl overflow-hidden shadow-lg dark:shadow-2xl">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.8199462264847!2d107.17822927605911!3d-6.287382861543163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699b445d8375b1%3A0x2be0e0c5314813b1!2sPesantren%20SMP%20dan%20SMA%20Rabbaanii%20Islamic%20School!5e0!3m2!1sen!2sid!4v1733210702268!5m2!1sen!2sid"
+                  width="100%"
+                  height="100%"
+                  style={{
+                    border: 0,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
             </div>
           </div>
         </div>
