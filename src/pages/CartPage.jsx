@@ -43,6 +43,42 @@ export default function CartPage() {
     fetchCart();
   }, []);
 
+  useEffect(() => {
+    const coffeeChannel = supabase
+      .channel("realtime-coffee-price")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "coffee",
+        },
+        (payload) => {
+          const updatedCoffee = payload.new;
+
+          setCart((prevCart) =>
+            prevCart.map((item) => {
+              if (item.coffee_id === updatedCoffee.id) {
+                return {
+                  ...item,
+                  coffee: {
+                    ...item.coffee,
+                    harga_produk: updatedCoffee.harga_produk,
+                  },
+                };
+              }
+              return item;
+            })
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(coffeeChannel);
+    };
+  }, []);
+
   const formatHarga = (harga) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",

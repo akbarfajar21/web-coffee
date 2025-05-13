@@ -44,32 +44,33 @@ function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen dark:bg-gray-800">
       <Helmet>
-        <title>CoffeeShopMe | About</title>
+        <title>CoffeeShopMe | Tentang Kami</title>
       </Helmet>
       <Header />
       <main className="flex-grow mt-20 px-6 md:px-16 lg:px-24">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white text-center mb-12">
-          About Us
+          Tentang Kami
         </h1>
 
         <section className="py-16 bg-white dark:bg-gray-800 rounded-3xl shadow-lg px-8 md:px-12">
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-3xl">
-              At{" "}
+              Di{" "}
               <span className="font-semibold text-orange-600 dark:text-orange-400">
                 CoffeeShopMe
               </span>
-              , we believe that coffee is more than just a beverage—it's a way
-              of life. Established in 2022, we are dedicated to serving the
-              finest coffee with authentic flavors. Whether you’re looking for a
-              cozy spot to relax, work, or catch up with friends, we are here to
-              make your coffee moments special.
+              , kami percaya bahwa kopi lebih dari sekadar minuman—kopi adalah
+              cara hidup. Didirikan pada tahun 2022, kami berdedikasi untuk
+              menyajikan kopi terbaik dengan rasa yang autentik. Baik Anda
+              sedang mencari tempat nyaman untuk bersantai, bekerja, atau
+              bertemu teman, kami ada untuk membuat momen kopi Anda istimewa.
             </p>
             <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mt-6 md:mt-0">
-              Our journey began with a passion for great coffee and a dream to
-              create a warm, welcoming space for coffee lovers. From the moment
-              you step inside, our cozy ambiance and friendly staff will make
-              you feel right at home.
+              Perjalanan kami dimulai dengan hasrat untuk kopi yang luar biasa
+              dan impian untuk menciptakan tempat yang hangat dan ramah bagi
+              para pecinta kopi. Dari saat Anda memasuki kedai kami, suasana
+              yang nyaman dan staf yang ramah akan membuat Anda merasa seperti
+              di rumah.
             </p>
           </div>
         </section>
@@ -77,13 +78,14 @@ function AboutPage() {
         <section className="py-16 px-8 md:py-20 bg-gradient-to-r mt-12 from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-3xl shadow-lg text-white text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl font-extrabold mb-6 leading-tight">
-              Our Mission
+              Misi Kami
             </h2>
             <p className="text-lg max-w-3xl mx-auto leading-relaxed">
-              We are committed to providing a unique and unforgettable coffee
-              experience. By using ethically sourced beans and creating a warm,
-              inclusive community, we strive to inspire a deep appreciation for
-              coffee culture.
+              Kami berkomitmen untuk memberikan pengalaman kopi yang unik dan
+              tak terlupakan. Dengan menggunakan biji kopi yang bersumber secara
+              etis dan menciptakan komunitas yang hangat dan inklusif, kami
+              berusaha untuk menginspirasi apresiasi mendalam terhadap budaya
+              kopi.
             </p>
           </div>
         </section>
@@ -91,21 +93,21 @@ function AboutPage() {
         {/* Timeline Section */}
         <section className="mt-24 px-8">
           <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-10">
-            Our Journey
+            Perjalanan Kami
           </h2>
           <div className="relative border-l-4 border-orange-500 dark:border-orange-400 pl-6 max-w-3xl mx-auto">
             {[
               {
                 year: "2022",
-                desc: "CoffeeShopMe was founded with a dream to redefine local coffee culture.",
+                desc: "CoffeeShopMe didirikan dengan impian untuk mendefinisikan ulang budaya kopi lokal.",
               },
               {
                 year: "2023",
-                desc: "Opened our first shop and launched our signature blends.",
+                desc: "Membuka kedai pertama kami dan meluncurkan campuran kopi andalan kami.",
               },
               {
                 year: "2024",
-                desc: "Built a strong online presence and expanded our coffee community.",
+                desc: "Membangun kehadiran online yang kuat dan memperluas komunitas kopi kami.",
               },
             ].map((event, index) => (
               <div key={index} className="mb-10">
@@ -120,7 +122,7 @@ function AboutPage() {
 
         <section className="mt-16 px-8">
           <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-10">
-            Our Gallery
+            Galeri Kami
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -136,7 +138,7 @@ function AboutPage() {
               >
                 <img
                   src={src}
-                  alt={`Gallery ${index + 1}`}
+                  alt={`Galeri ${index + 1}`}
                   className="w-full h-full object-cover rounded-xl"
                 />
               </div>
@@ -146,13 +148,13 @@ function AboutPage() {
 
         <section className="text-center mt-20 px-8">
           <h2 className="text-4xl font-extrabold dark:text-white mb-6">
-            Join Our Coffee Community
+            Bergabung dengan Komunitas Kopi Kami
           </h2>
           <p className="text-lg max-w-2xl mx-auto dark:text-gray-300 mb-8">
-            Follow us on social media and be part of our journey. Share your
-            coffee moments using{" "}
+            Ikuti kami di media sosial dan jadilah bagian dari perjalanan kami.
+            Bagikan momen kopi Anda menggunakan{" "}
             <span className="font-semibold text-orange-500">#CoffeeShopMe</span>
-            and connect with fellow coffee lovers.
+            dan terhubung dengan sesama pecinta kopi.
           </p>
         </section>
       </main>

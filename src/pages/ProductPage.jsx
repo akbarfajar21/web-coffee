@@ -51,6 +51,63 @@ export default function ProductPage() {
     };
 
     fetchProducts();
+
+    // Realtime subscription
+    const coffeeChannel = supabase
+      .channel("realtime-coffee")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "coffee",
+        },
+        (payload) => {
+          const { eventType, new: newItem, old: oldItem } = payload;
+
+          setProducts((prev) => {
+            if (eventType === "INSERT") {
+              return [newItem, ...prev];
+            }
+
+            if (eventType === "UPDATE") {
+              return prev.map((item) =>
+                item.id === newItem.id ? newItem : item
+              );
+            }
+
+            if (eventType === "DELETE") {
+              return prev.filter((item) => item.id !== oldItem.id);
+            }
+
+            return prev;
+          });
+
+          // Update filteredProducts juga (biar sinkron)
+          setFilteredProducts((prev) => {
+            if (eventType === "INSERT") {
+              return [newItem, ...prev];
+            }
+
+            if (eventType === "UPDATE") {
+              return prev.map((item) =>
+                item.id === newItem.id ? newItem : item
+              );
+            }
+
+            if (eventType === "DELETE") {
+              return prev.filter((item) => item.id !== oldItem.id);
+            }
+
+            return prev;
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(coffeeChannel);
+    };
   }, []);
 
   // Handle search
@@ -272,7 +329,6 @@ export default function ProductPage() {
     } catch (error) {
       console.error("Error handling cart:", error.message);
 
-      // ❗ Rollback cart count jika error
       setCartCount((prevCount) => Math.max(0, prevCount - 1));
 
       Swal.fire({
@@ -344,7 +400,7 @@ export default function ProductPage() {
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white">
-                Filters
+                Filter
               </h2>
               <button
                 onClick={() => navigate("/cart")}
@@ -359,51 +415,51 @@ export default function ProductPage() {
               </button>
             </div>
 
-            {/* Search Input */}
+            {/* Input Pencarian */}
             <div className="mb-4">
               <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Search Product
+                Cari Produk
               </label>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search..."
+                placeholder="Cari..."
                 className="w-full px-3 py-1.5 border rounded-md shadow-sm text-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white transition-all"
               />
             </div>
 
-            {/* Filter Options */}
+            {/* Opsi Filter */}
             <div className="space-y-4">
               {[
                 {
                   id: "price",
-                  label: "Sort by Price",
+                  label: "Urutkan Berdasarkan Harga",
                   value: priceSortOrder,
                   onChange: (value) =>
-                    setPriceSortOrder(value === priceSortOrder ? null : value), // Toggle between selected value and null
+                    setPriceSortOrder(value === priceSortOrder ? null : value), // Toggle antara nilai yang dipilih dan null
                   options: [
-                    { value: "asc", label: "Low - High" },
-                    { value: "desc", label: "High - Low" },
+                    { value: "asc", label: "Rendah - Tinggi" },
+                    { value: "desc", label: "Tinggi - Rendah" },
                   ],
                 },
                 {
                   id: "stock",
-                  label: "Stock Availability",
+                  label: "Ketersediaan Stok",
                   value: stockSortOrder,
                   onChange: (value) =>
-                    setStockSortOrder(value === stockSortOrder ? null : value), // Toggle between selected value and null
+                    setStockSortOrder(value === stockSortOrder ? null : value), // Toggle antara nilai yang dipilih dan null
                   options: [
-                    { value: "asc", label: "Most Stock" },
-                    { value: "desc", label: "Least Stock" },
+                    { value: "asc", label: "Stok Terbanyak" },
+                    { value: "desc", label: "Stok Terbatas" },
                   ],
                 },
                 {
                   id: "name",
-                  label: "Sort by Name",
+                  label: "Urutkan Berdasarkan Nama",
                   value: nameSortOrder,
                   onChange: (value) =>
-                    setNameSortOrder(value === nameSortOrder ? null : value), // Toggle between selected value and null
+                    setNameSortOrder(value === nameSortOrder ? null : value), // Toggle antara nilai yang dipilih dan null
                   options: [
                     { value: "asc", label: "A - Z" },
                     { value: "desc", label: "Z - A" },
@@ -411,15 +467,15 @@ export default function ProductPage() {
                 },
                 {
                   id: "rating",
-                  label: "Sort by Rating",
+                  label: "Urutkan Berdasarkan Rating",
                   value: ratingSortOrder,
                   onChange: (value) =>
                     setRatingSortOrder(
                       value === ratingSortOrder ? null : value
-                    ), // Toggle between selected value and null
+                    ), // Toggle antara nilai yang dipilih dan null
                   options: [
-                    { value: "asc", label: "Low - High" },
-                    { value: "desc", label: "High - Low" },
+                    { value: "asc", label: "Rendah - Tinggi" },
+                    { value: "desc", label: "Tinggi - Rendah" },
                   ],
                 },
               ].map(({ id, label, value, onChange, options }) => (
@@ -439,7 +495,7 @@ export default function ProductPage() {
                         <input
                           type="checkbox" // Ganti menjadi checkbox
                           checked={value === option.value}
-                          onChange={() => onChange(option.value)} // Toggle like before
+                          onChange={() => onChange(option.value)} // Toggle seperti sebelumnya
                           className="hidden"
                         />
                         <span
@@ -462,12 +518,12 @@ export default function ProductPage() {
               ))}
             </div>
 
-            {/* Reset Filters Button */}
+            {/* Tombol Reset Filter */}
             <button
               onClick={resetFilters}
               className="w-full py-2 rounded-md shadow-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out mt-4 text-xs sm:text-sm font-medium"
             >
-              Reset Filters
+              Reset Filter
             </button>
           </aside>
 

@@ -78,13 +78,19 @@ const Login = () => {
     if (!recaptchaToken) {
       setIsLoading(false);
       Swal.fire({
-        title: "⚠️ Verifikasi Gagal!",
+        title: "Verifikasi Gagal",
         text: "Silakan selesaikan reCAPTCHA terlebih dahulu.",
-        iconHtml: "⚠️",
+        icon: "warning",
+        iconColor: "#F59E0B",
         confirmButtonText: "OK",
-        background: "#FFFFFF",
-        color: "#333",
         confirmButtonColor: "#F59E0B",
+        background: "#FFFFFF",
+        color: "#1F2937",
+        customClass: {
+          popup: "rounded-xl shadow-lg",
+          title: "text-lg font-semibold",
+          confirmButton: "px-6 py-2",
+        },
       });
       return;
     }

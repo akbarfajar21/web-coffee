@@ -57,11 +57,11 @@ const Register = () => {
       });
 
       if (profileError) throw new Error("Error saving user profile.");
-
+      await supabase.auth.signOut();
       setSuccessMessage(
-        "Success! Your account has been registered. Redirecting to login page..."
+        "Akun berhasil dibuat! Silakan login menggunakan akun baru Anda."
       );
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/login"), 1000);
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
