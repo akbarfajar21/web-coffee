@@ -42,11 +42,11 @@ const ContactPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (formData.message.trim().length < 10) {
-      newErrors.message = "Message must be at least 10 characters long.";
+    if (formData.message.trim().length < 5) {
+      newErrors.message = "Pesan harus terdiri dari minimal 5 karakter.";
     }
     if (formData.rating === 0) {
-      newErrors.rating = "Please select a rating.";
+      newErrors.rating = "Silakan pilih rating.";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -65,11 +65,11 @@ const ContactPage = () => {
       Swal.fire({
         title: "Login Diperlukan",
         text: "Anda harus login terlebih dahulu untuk mengirim testimoni.",
-        imageUrl: "/login.gif", // Gambar ilustrasi
+        imageUrl: "/login.gif",
         imageWidth: 250,
         imageHeight: 250,
         imageAlt: "Login Required",
-        confirmButtonColor: "#2563eb", // Warna biru modern
+        confirmButtonColor: "#2563eb",
         confirmButtonText: "Login Sekarang",
         background: "#ffffff",
         color: "#333333",
@@ -162,7 +162,7 @@ const ContactPage = () => {
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
-          Brewing your coffee...
+          Memuat...
         </p>
       </div>
     );
@@ -174,11 +174,11 @@ const ContactPage = () => {
       <div className="flex flex-col min-h-screen bg-gradient-to-br to-indigo-100 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
         <div className="py-10 px-8 max-w-4xl mx-auto flex-grow">
           <h1 className="text-5xl font-bold text-center mb-8 text-gray-800 mt-14 dark:text-gray-100">
-            Contact Us
+            Hubungi Kami
           </h1>
           <p className="text-center text-lg text-gray-600 mb-12 dark:text-gray-300">
-            We greatly value your feedback. Please send your message or
-            testimonial below.
+            Kami sangat menghargai masukan Anda. Silakan kirim pesan atau
+            testimoni Anda di bawah ini.
           </p>
 
           <form
@@ -190,7 +190,7 @@ const ContactPage = () => {
                 htmlFor="message"
                 className="block text-lg font-medium text-gray-700 dark:text-gray-300"
               >
-                Your Message
+                Pesan Anda
               </label>
               <textarea
                 id="message"
@@ -200,7 +200,7 @@ const ContactPage = () => {
                 required
                 className="w-full p-4 border-2 border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-blue-400 transition-all"
                 rows="5"
-                placeholder="Write your message here..."
+                placeholder="Tulis pesan Anda di sini..."
               />
               {errors.message && (
                 <p className="text-red-500 text-sm">{errors.message}</p>
@@ -212,7 +212,7 @@ const ContactPage = () => {
                 htmlFor="rating"
                 className="block text-lg font-medium text-gray-700 dark:text-gray-300"
               >
-                Give a Rating
+                Berikan Penilaian
               </label>
               <div className="flex space-x-3 mt-2">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -240,7 +240,7 @@ const ContactPage = () => {
                 type="submit"
                 className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all transform hover:scale-105 dark:bg-gradient-to-r dark:from-blue-600 dark:to-indigo-700 dark:hover:from-blue-700 dark:hover:to-indigo-800"
               >
-                Submit Testimonial
+                Kirim Testimoni
               </button>
             </div>
           </form>
@@ -249,7 +249,7 @@ const ContactPage = () => {
         <div className="py-16 bg-white dark:bg-gray-800 ">
           <div className="max-w-6xl mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-semibold text-center mb-12 text-gray-800 dark:text-gray-100">
-              Our Location
+              Lokasi Kami
             </h2>
             <div className="flex flex-col md:flex-row gap-10 ">
               <div className="md:w-1/2 space-y-10">
@@ -295,17 +295,17 @@ const ContactPage = () => {
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     <img
                       src="https://media.istockphoto.com/id/1428594094/photo/empty-coffee-shop-interior-with-wooden-tables-coffee-maker-pastries-and-pendant-lights.jpg?s=612x612&w=0&k=20&c=dMqeYCJDs3BeBP_jv93qHRISDt-54895SPoVc6_oJt4="
-                      alt="CoffeeShopMe Interior"
+                      alt="Interior CoffeeShopMe"
                       className="w-full h-full object-cover rounded-lg"
                     />
                     <img
                       src="gallery2.jpg"
-                      alt="CoffeeShopMe Coffee"
+                      alt="Kopi CoffeeShopMe"
                       className="w-full h-full object-cover rounded-lg"
                     />
                     <img
                       src="https://asset.kompas.com/crops/S8dfqn6WJCQ3kWaPxeroDa6KxEg=/0x76:4032x2764/750x500/data/photo/2021/09/11/613c98c27631e.jpg"
-                      alt="CoffeeShopMe Customers"
+                      alt="Pelanggan CoffeeShopMe"
                       className="w-full h-full object-cover rounded-lg"
                     />
                   </div>

@@ -28,18 +28,21 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
+    let channel;
     const fetchUser = async () => {
       const { data: session } = await supabase.auth.getSession();
 
       if (session?.session?.user) {
-        setUser(session.session.user);
+        const userData = session.session.user;
+        setUser(userData);
+
         const { data: profileData, error } = await supabase
           .from("profiles")
           .select("username, avatar_url, email, full_name")
-          .eq("id", session.session.user.id)
+          .eq("id", userData.id)
           .single();
 
-        if (!error) {
+        if (!error && profileData) {
           setProfile(profileData);
 
           if (!localStorage.getItem("hasLoggedIn")) {
@@ -47,41 +50,58 @@ const Header = () => {
             Swal.fire({
               title: "Selamat Datang Kembali!",
               html: `
-                <div class="text-gray-700 dark:text-gray-200 text-lg font-medium">
-                  Hai, <span class="font-bold">${
-                    profileData.full_name || "Pengguna"
-                  }</span>! 
-                  Semoga harimu menyenangkan!
-                </div>
-              `,
-              icon: "success", // Menggunakan ikon bawaan SweetAlert2 yang lebih minimal dan bersih
+              <div class="text-gray-700 dark:text-gray-200 text-lg font-medium">
+                Hai, <span class="font-bold">${
+                  profileData.full_name || "Pengguna"
+                }</span>! 
+                Semoga harimu menyenangkan!
+              </div>
+            `,
+              icon: "success",
               confirmButtonText: "Lanjutkan",
               background: document.documentElement.classList.contains("dark")
-                ? "#1E293B" // Warna latar belakang gelap
-                : "#FFFAF0", // Warna latar belakang terang
+                ? "#1E293B"
+                : "#FFFAF0",
               color: document.documentElement.classList.contains("dark")
-                ? "#E5E7EB" // Warna teks terang saat mode gelap
-                : "#333", // Warna teks gelap saat mode terang
+                ? "#E5E7EB"
+                : "#333",
               confirmButtonColor: document.documentElement.classList.contains(
                 "dark"
               )
-                ? "#F97316" // Warna tombol konfirmasi mode gelap
-                : "#FF5733", // Warna tombol konfirmasi mode terang
+                ? "#F97316"
+                : "#FF5733",
               showClass: {
-                popup: "animate__animated animate__zoomIn animate__faster", // Animasi popup yang smooth
+                popup: "animate__animated animate__zoomIn animate__faster",
               },
               hideClass: {
-                popup: "animate__animated animate__fadeOut animate__faster", // Animasi keluar yang halus
+                popup: "animate__animated animate__fadeOut animate__faster",
               },
               customClass: {
                 popup:
-                  "rounded-3xl shadow-2xl px-10 py-8 border border-gray-200 dark:border-gray-700", // Desain kotak popup dengan sudut bulat dan bayangan
-                title: "text-3xl font-extrabold text-gray-900 dark:text-white", // Teks judul besar dengan font tebal
+                  "rounded-3xl shadow-2xl px-10 py-8 border border-gray-200 dark:border-gray-700",
+                title: "text-3xl font-extrabold text-gray-900 dark:text-white",
                 confirmButton:
-                  "px-6 py-3 rounded-lg text-lg font-semibold bg-orange-500 hover:bg-orange-600 transition-all duration-300 shadow-lg", // Tombol konfirmasi yang menarik dengan efek hover
+                  "px-6 py-3 rounded-lg text-lg font-semibold bg-orange-500 hover:bg-orange-600 transition-all duration-300 shadow-lg",
               },
             });
           }
+
+          // 🟢 SUBSCRIBE REALTIME PROFILE UPDATE
+          channel = supabase
+            .channel("public:profiles")
+            .on(
+              "postgres_changes",
+              {
+                event: "UPDATE",
+                schema: "public",
+                table: "profiles",
+                filter: `id=eq.${userData.id}`,
+              },
+              (payload) => {
+                setProfile(payload.new);
+              }
+            )
+            .subscribe();
         }
       } else {
         setUser(null);
@@ -115,6 +135,7 @@ const Header = () => {
 
     return () => {
       authListener.subscription.unsubscribe();
+      if (channel) supabase.removeChannel(channel);
     };
   }, []);
 
@@ -250,7 +271,7 @@ const Header = () => {
                             to="/settings"
                             className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
                           >
-                            <Settings2 className="mr-2 w-5 h-5" /> Settings
+                            <Settings2 className="mr-2 w-5 h-5" /> Pengaturan
                           </Link>
                         </div>
                         <div className="px-4 py-2">
@@ -258,7 +279,7 @@ const Header = () => {
                             to="/history"
                             className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
                           >
-                            <ListOrdered className="mr-2 w-5 h-5" /> History
+                            <ListOrdered className="mr-2 w-5 h-5" /> Riwayat
                           </Link>
                         </div>
                         <div className="px-4 py-2">
@@ -266,7 +287,7 @@ const Header = () => {
                             onClick={handleLogout}
                             className="flex w-full items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
                           >
-                            <LogOut className="mr-2 w-5 h-5" /> Log Out
+                            <LogOut className="mr-2 w-5 h-5" /> Keluar
                           </button>
                         </div>
                       </div>

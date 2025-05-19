@@ -1,29 +1,29 @@
 import React from "react";
-import "animate.css";
 import { Helmet } from "react-helmet";
 
 const NotFoundPage = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-red-500 via-pink-500 to-purple-500 text-white px-6">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-red-600 via-pink-600 to-purple-700 text-white px-6">
       <Helmet>
         <title>CoffeeShopMe | NotFound</title>
       </Helmet>
-      <div className="text-center bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl shadow-xl border border-white/20 animate__animated animate__fadeIn">
-        <h1 className="text-9xl font-extrabold text-white drop-shadow-lg animate__animated animate__fadeInDown">
+      <div className="text-center bg-white/10 backdrop-blur-lg p-12 rounded-3xl shadow-xl border border-white/20 max-w-md w-full">
+        <h1 className="text-8xl font-extrabold text-white drop-shadow-md mb-6">
           404
         </h1>
-        <h2 className="text-3xl font-semibold text-white mt-4 animate__animated animate__fadeInUp animate__delay-1s">
+        <h2 className="text-3xl font-semibold mb-4">
           Oops! Halaman Tidak Ditemukan
         </h2>
-        <p className="text-lg text-white mt-3 mb-6 opacity-90 animate__animated animate__fadeInUp animate__delay-2s">
+        <p className="text-lg text-white/90 mb-8 leading-relaxed">
           Sepertinya halaman yang Anda cari tidak tersedia. Mari kembali ke
           halaman utama.
         </p>
         <a
           href="/home"
-          className="inline-block bg-white text-pink-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 hover:text-white transition-all duration-300 animate__animated animate__fadeInUp animate__delay-3s"
+          className="inline-block bg-white text-pink-600 font-semibold py-3 px-10 rounded-full shadow-md hover:bg-pink-600 hover:text-white transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-pink-400"
+          aria-label="Kembali ke Beranda"
         >
-          Kembali ke Beranda
+          Kembali ke Home
         </a>
       </div>
     </div>

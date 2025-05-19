@@ -44,7 +44,7 @@ const TermsOfService = () => {
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
-          Brewing your coffee...
+          Memuat...
         </p>
       </div>
     );
@@ -55,59 +55,59 @@ const TermsOfService = () => {
       icon: (
         <FaGlobe className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Use of Website",
+      title: "Penggunaan Situs",
       content:
-        "Our website and services are intended for personal, non-commercial use only. You agree to use the site responsibly and comply with applicable laws and regulations. Any misuse or unauthorized access may result in legal actions.",
+        "Situs dan layanan kami hanya diperuntukkan untuk penggunaan pribadi dan non-komersial. Anda setuju untuk menggunakan situs secara bertanggung jawab dan mematuhi hukum serta peraturan yang berlaku. Penyalahgunaan atau akses tanpa izin dapat berakibat tindakan hukum.",
     },
     {
       icon: (
         <FaUserShield className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Account Responsibilities",
+      title: "Tanggung Jawab Akun",
       content:
-        "You are responsible for maintaining the confidentiality of your account and password. Notify us immediately of any unauthorized access or security breaches. We are not liable for losses caused by your failure to safeguard your account.",
+        "Anda bertanggung jawab menjaga kerahasiaan akun dan kata sandi Anda. Segera beri tahu kami jika terjadi akses tidak sah atau pelanggaran keamanan. Kami tidak bertanggung jawab atas kerugian akibat kelalaian Anda dalam menjaga akun.",
     },
     {
       icon: (
         <FaGavel className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Termination",
+      title: "Penghentian",
       content:
-        "We reserve the right to terminate or suspend access to our services without prior notice for any reason, including but not limited to violations of these terms or illegal activities.",
+        "Kami berhak menghentikan atau menangguhkan akses layanan tanpa pemberitahuan sebelumnya atas alasan apapun, termasuk pelanggaran ketentuan atau aktivitas ilegal.",
     },
     {
       icon: (
         <FaCopyright className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Intellectual Property",
+      title: "Kekayaan Intelektual",
       content:
-        "All content on this website, including text, images, logos, and software, is the intellectual property of MyCoffee or its licensors. Unauthorized use or reproduction is strictly prohibited.",
+        "Semua konten di situs ini, termasuk teks, gambar, logo, dan perangkat lunak, merupakan kekayaan intelektual milik MyCoffee atau pemegang lisensinya. Penggunaan atau reproduksi tanpa izin dilarang keras.",
     },
     {
       icon: (
         <FaExclamationTriangle className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Limitation of Liability",
+      title: "Batasan Tanggung Jawab",
       content:
-        "To the extent permitted by law, MyCoffee is not liable for any damages arising from your use of our services, including direct, indirect, or incidental losses. Use our services at your own risk.",
+        "Sesuai dengan hukum yang berlaku, MyCoffee tidak bertanggung jawab atas kerugian yang timbul dari penggunaan layanan kami, baik langsung, tidak langsung, maupun insidental. Gunakan layanan kami dengan risiko Anda sendiri.",
     },
     {
       icon: (
         <FaSyncAlt className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Changes to Terms",
+      title: "Perubahan Ketentuan",
       content:
-        "We reserve the right to update these Terms of Service at any time. Continued use of our services after changes indicates your acceptance of the updated terms.",
+        "Kami berhak memperbarui Ketentuan Layanan ini kapan saja. Penggunaan layanan secara terus-menerus setelah perubahan berarti Anda menerima ketentuan yang diperbarui.",
     },
     {
       icon: (
         <FaEnvelope className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Contact Us",
+      title: "Hubungi Kami",
       content: (
         <>
-          If you have any questions or concerns regarding these terms, please
-          contact us at{" "}
+          Jika Anda memiliki pertanyaan atau kekhawatiran terkait ketentuan ini,
+          silakan hubungi kami di{" "}
           <a
             href="mailto:akbarfajar2112@gmail.com"
             className="text-blue-500 hover:underline"
@@ -123,7 +123,7 @@ const TermsOfService = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 bg-gray-900">
       <Helmet>
-        <title>CoffeeShopMe | TermsOfService</title>
+        <title>CoffeeShopMe | Ketentuan Layanan</title>
       </Helmet>
       {/* Background Image */}
       <div
@@ -145,16 +145,17 @@ const TermsOfService = () => {
           className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition mb-6"
         >
           <FaArrowLeft className="text-lg" />
-          <span className="text-sm font-medium">Back</span>
+          <span className="text-sm font-medium">Kembali</span>
         </button>
 
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
-            Terms of Service
+            Ketentuan Layanan
           </h1>
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-            Please read these terms carefully before using our services.
+            Harap baca ketentuan ini dengan seksama sebelum menggunakan layanan
+            kami.
           </p>
         </div>
 

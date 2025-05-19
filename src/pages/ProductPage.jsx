@@ -396,7 +396,7 @@ export default function ProductPage() {
         </button>
 
         <div className="bg-white dark:bg-gray-900 px-4 flex gap-6">
-          <aside className="w-full lg:w-1/5 lg:block bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 sticky top-20 max-h-[83vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700 lg:visible hidden">
+          <aside className="w-full max-w-xs lg:max-w-[250px] lg:w-1/5 lg:block bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 sticky top-20 max-h-[83vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700 lg:visible hidden">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white">
@@ -685,7 +685,7 @@ export default function ProductPage() {
                 </div>
 
                 <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
-                  Brewing your coffee...
+                  Memuat...
                 </p>
               </div>
             ) : (
@@ -699,7 +699,6 @@ export default function ProductPage() {
                       onClick={() => handleProductClick(product.id)}
                       className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col"
                     >
-                      {/* Product Image */}
                       <div className="relative group">
                         <img
                           src={product.foto_barang}
@@ -715,7 +714,6 @@ export default function ProductPage() {
                         )}
                       </div>
 
-                      {/* Product Info (Menggunakan flex-grow agar tombol selalu di bawah) */}
                       <div className="p-4 flex flex-col flex-grow">
                         <h2 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                           {product.nama_produk}
@@ -725,7 +723,6 @@ export default function ProductPage() {
                           {product.deskripsi}
                         </p>
 
-                        {/* Stock & Rating */}
                         <div className="flex justify-between items-center text-xs text-gray-600 dark:text-gray-400 mt-3">
                           <span className="flex items-center space-x-1">
                             <i className="fas fa-box"></i>
@@ -746,12 +743,10 @@ export default function ProductPage() {
                           </span>
                         </div>
 
-                        {/* Price */}
                         <p className="text-lg font-bold text-orange-600 dark:text-orange-400 mt-3">
                           {formatRupiah(product.harga_produk)}
                         </p>
 
-                        {/* Add to Cart Button (Selalu di bawah) */}
                         <div className="mt-auto pt-4">
                           <button
                             onClick={(e) => {

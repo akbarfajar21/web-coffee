@@ -95,7 +95,7 @@ const SettingPage = () => {
 
     try {
       if (!profile.id) {
-        throw new Error("Profile ID not found.");
+        throw new Error("ID profil tidak ditemukan.");
       }
 
       const { data, error } = await supabase
@@ -108,23 +108,22 @@ const SettingPage = () => {
           avatar_url: editData.avatar_url,
         })
         .eq("id", profile.id)
-        .select(); // ambil data terbaru yang diupdate
+        .select();
 
       if (error) {
         throw new Error(error.message);
       }
 
-      // Update state lokal profile
       if (data && data.length > 0) {
-        setProfile(data[0]); // update state global atau lokal dengan data baru
+        setProfile(data[0]);
       }
 
       setTimeout(() => {
         setIsProcessing(false);
-        toggleModal(); // <-- Tutup modal
+        toggleModal();
         Swal.fire({
-          title: "Success!",
-          text: "Profile updated successfully.",
+          title: "Berhasil!",
+          text: "Profil kamu berhasil diperbarui.",
           icon: "success",
           showConfirmButton: false,
           timer: 1200,
@@ -137,10 +136,10 @@ const SettingPage = () => {
       setIsProcessing(false);
       document.body.classList.remove("overflow-hidden");
       Swal.fire({
-        title: "Error",
-        text: error.message || "Failed to update profile.",
+        title: "Terjadi Kesalahan",
+        text: error.message || "Gagal memperbarui profil.",
         icon: "error",
-        confirmButtonText: "OK",
+        confirmButtonText: "Oke",
       });
     } finally {
       document.body.classList.remove("overflow-hidden");
@@ -170,7 +169,7 @@ const SettingPage = () => {
   const handleAvatarSelect = async (event) => {
     try {
       const file = event.target.files[0];
-      if (!file) throw new Error("No file selected.");
+      if (!file) throw new Error("Tidak ada file yang dipilih.");
 
       setUploading(true);
       setProgress(0);
@@ -187,39 +186,80 @@ const SettingPage = () => {
 
       const avatarUrl = await uploadAvatarToStorage(file);
 
-      // Update Supabase
+      // Update ke Supabase
       const { data, error } = await supabase
         .from("profiles")
         .update({ avatar_url: avatarUrl })
         .eq("id", profile.id)
         .select();
 
-      if (error) throw new Error("Failed to update avatar in database.");
+      if (error) throw new Error("Gagal memperbarui avatar di database.");
       if (data && data.length > 0) {
-        setProfile(data[0]); // Update global/local state profile
+        setProfile(data[0]); // Perbarui state profil
       }
 
-      // Tunggu progress selesai dulu
+      // Tunggu hingga progress selesai
       setTimeout(() => {
         setUploading(false);
         setProgress(100);
-        toggleAvatarModal(); // Tutup modal setelah loading
+        toggleAvatarModal(); // Tutup modal setelah selesai
         Swal.fire({
-          title: "Avatar Updated!",
-          text: "Your profile picture has been updated.",
+          title: "Avatar Diperbarui!",
+          text: "Foto profil kamu berhasil diperbarui.",
           icon: "success",
           timer: 1600,
           showConfirmButton: false,
+          iconColor: "#22C55E", // hijau segar
+          background: "#FFFFFF", // putih bersih
+          color: "#1E293B", // teks abu gelap modern
+          customClass: {
+            popup: "rounded-xl shadow-md p-6", // tampilan bersih dan rapi
+            title: "text-base font-semibold",
+            htmlContainer: "text-sm",
+          },
         });
       }, 1200);
     } catch (error) {
       setUploading(false);
       Swal.fire({
-        title: "Error",
-        text: error.message || "Failed to update avatar.",
+        title: "Terjadi Kesalahan",
+        text: error.message || "Gagal memperbarui avatar.",
         icon: "error",
         confirmButtonText: "OK",
       });
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    const confirm = await Swal.fire({
+      title: "Hapus Avatar?",
+      text: "Avatar kamu akan diganti dengan avatar default.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, hapus",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#e3342f",
+      cancelButtonColor: "#6b7280",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const defaultAvatar =
+          "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
+
+        const { error } = await supabase
+          .from("profiles")
+          .update({ avatar_url: defaultAvatar })
+          .eq("id", profile.id);
+
+        if (error) throw error;
+
+        Swal.fire("Berhasil!", "Avatar telah direset.", "success");
+        setProfile((prev) => ({ ...prev, avatar_url: defaultAvatar }));
+      } catch (error) {
+        console.error("Gagal menghapus avatar:", error);
+        Swal.fire("Error", "Gagal menghapus avatar.", "error");
+      }
     }
   };
 
@@ -248,7 +288,7 @@ const SettingPage = () => {
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
-          Brewing your coffee...
+          Memuat...
         </p>
       </div>
     );
@@ -259,7 +299,7 @@ const SettingPage = () => {
       <Header />
       <div className="mt-16 flex flex-1 items-center justify-center px-6 py-10 bg-gradient-to-b from-indigo-100 via-white to-indigo-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-2xl backdrop-blur-sm">
-          {/* Back Button */}
+          {/* Tombol Kembali */}
           <button
             onClick={handleBack}
             className="absolute top-6 left-6 text-gray-500 hover:text-indigo-500 transition dark:text-gray-300 dark:hover:text-indigo-400"
@@ -280,12 +320,12 @@ const SettingPage = () => {
             </svg>
           </button>
 
-          {/* Heading */}
+          {/* Judul */}
           <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-10">
-            Profile Settings
+            Pengaturan Profil
           </h1>
 
-          {/* Profile Section */}
+          {/* Bagian Profil */}
           <div className="grid md:grid-cols-2 gap-8 items-center">
             {/* Avatar */}
             <div className="flex flex-col items-center gap-4">
@@ -317,13 +357,13 @@ const SettingPage = () => {
               </div>
             </div>
 
-            {/* Info */}
+            {/* Informasi */}
             <div className="space-y-5">
               {[
-                { label: "Username", value: profile.username },
-                { label: "Full Name", value: profile.full_name },
+                { label: "Nama Pengguna", value: profile.username },
+                { label: "Nama Lengkap", value: profile.full_name },
                 { label: "Email", value: profile.email },
-                { label: "Phone Number", value: profile.no_telepon },
+                { label: "Nomor Telepon", value: profile.no_telepon },
               ].map((field, idx) => (
                 <div key={idx} className="border-b pb-2">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -337,17 +377,55 @@ const SettingPage = () => {
             </div>
           </div>
 
-          <div className="mt-10 text-center">
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+            {/* Tombol Edit Profil */}
             <button
               onClick={toggleModal}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold text-sm sm:text-base shadow-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 transition-all duration-200 shadow-lg dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
-              Edit Profile
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m0 0H5v-4"
+                />
+              </svg>
+              Edit Profil
+            </button>
+
+            {/* Tombol Hapus Avatar */}
+            <button
+              onClick={handleDeleteAvatar}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white bg-red-600 hover:bg-red-500 active:bg-red-700 transition-all duration-200 shadow-lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+              Hapus Avatar
             </button>
           </div>
         </div>
       </div>
 
+      {/* Modal Edit Profil */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
           <div className="relative w-full max-w-sm mx-auto p-6 bg-white/80 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 animate-fadeIn">
@@ -370,18 +448,18 @@ const SettingPage = () => {
               </svg>
             </button>
             <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
-              Edit Profile
+              Edit Profil
             </h2>
             <div className="space-y-4">
               {[
                 {
-                  label: "Username",
+                  label: "Nama Pengguna",
                   name: "username",
                   type: "text",
                   value: editData.username,
                 },
                 {
-                  label: "Full Name",
+                  label: "Nama Lengkap",
                   name: "full_name",
                   type: "text",
                   value: editData.full_name,
@@ -393,7 +471,7 @@ const SettingPage = () => {
                   value: editData.email,
                 },
                 {
-                  label: "Phone Number",
+                  label: "Nomor Telepon",
                   name: "no_telepon",
                   type: "text",
                   value: editData.no_telepon,
@@ -419,13 +497,14 @@ const SettingPage = () => {
                 onClick={handleUpdate}
                 className="py-2 px-6 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition-all w-full sm:w-auto"
               >
-                Save
+                Simpan
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Loading Upload */}
       {uploading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-xs bg-white/80 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 backdrop-blur-xl rounded-xl shadow-xl px-4 py-5 text-center relative">
@@ -434,7 +513,7 @@ const SettingPage = () => {
             </div>
 
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-              Updating...
+              Memperbarui...
             </h2>
 
             <div className="w-full bg-gray-300 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden shadow-inner">
@@ -451,15 +530,16 @@ const SettingPage = () => {
         </div>
       )}
 
+      {/* Modal Avatar */}
       {isAvatarModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
           <div className="bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 backdrop-blur-lg rounded-2xl shadow-2xl p-6 max-w-md w-full animate-fadeIn transition-all duration-300">
             <h2 className="text-xl font-semibold text-center text-gray-900 dark:text-white mb-5 tracking-wide">
-              Select Avatar Photo
+              Pilih Foto Avatar
             </h2>
 
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Upload Image
+              Unggah Gambar
             </label>
             <input
               type="file"
@@ -471,7 +551,7 @@ const SettingPage = () => {
             {uploading && (
               <div className="w-full mt-4 space-y-2">
                 <p className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
-                  Uploading...
+                  Mengunggah...
                 </p>
                 <div className="w-full h-2 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
@@ -487,7 +567,7 @@ const SettingPage = () => {
                 onClick={toggleAvatarModal}
                 className="px-5 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-medium rounded-lg shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
               >
-                Cancel
+                Batal
               </button>
             </div>
           </div>

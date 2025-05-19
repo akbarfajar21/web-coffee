@@ -35,7 +35,7 @@ function AboutPage() {
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
-          Brewing your coffee...
+          Memuat...
         </p>
       </div>
     );

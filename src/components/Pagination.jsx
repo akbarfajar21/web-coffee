@@ -6,14 +6,11 @@ export default function Pagination({ totalPages, currentPage, onPageChange }) {
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
-
-  // Fungsi untuk scroll ke atas ketika halaman berpindah
   const handlePageChange = (pageNumber) => {
     onPageChange(pageNumber);
-    // Scroll ke atas halaman
     window.scrollTo({
       top: 0,
-      behavior: "smooth", 
+      behavior: "smooth",
     });
   };
 

@@ -159,7 +159,6 @@ export default function CartPage() {
 
       if (error) {
         console.error("Database update failed:", error.message);
-        // (Opsional) Rollback jika perlu
       }
     } catch (err) {
       console.error("Update failed:", err.message);
@@ -170,7 +169,7 @@ export default function CartPage() {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
       <Helmet>
-        <title>CoffeeShopMe | Cart</title>
+        <title>CoffeeShopMe | Keranjang Belanja</title>
       </Helmet>
 
       <div className="p-6 flex-grow max-w-7xl mx-auto mt-12">
@@ -182,7 +181,7 @@ export default function CartPage() {
             <FaArrowLeft className="text-xl sm:text-2xl" />
           </button>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white drop-shadow-md">
-            Shopping Cart
+            Keranjang Belanja
           </h1>
           <div className="w-8 sm:w-10"></div>
         </div>
@@ -191,18 +190,18 @@ export default function CartPage() {
           <div className="flex flex-col items-center justify-center text-center py-8 sm:py-10">
             <img
               src="/Empty.gif"
-              alt="Empty Cart"
+              alt="Keranjang Kosong"
               className="w-48 sm:w-64 h-auto rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
             />
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mt-4 sm:mt-6 max-w-xs sm:max-w-md">
-              Oops! Looks like your cart is empty. Start adding your favorite
-              coffee!
+              Ups! Sepertinya keranjang Anda kosong. Mulai tambahkan kopi
+              favorit Anda!
             </p>
             <button
               onClick={() => navigate("/product")}
               className="mt-4 sm:mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg shadow-md text-base sm:text-lg font-semibold hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300"
             >
-              Start Shopping
+              Mulai Belanja
             </button>
           </div>
         ) : (
@@ -221,12 +220,10 @@ export default function CartPage() {
             </div>
 
             <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl p-6 sticky top-20 flex flex-col min-h-[320px] transition-all duration-300">
-              {/* Order Summary Title */}
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight">
-                Order Summary
+                Ringkasan Pesanan
               </h2>
 
-              {/* Item List */}
               <div className="space-y-4 text-gray-800 dark:text-gray-300 flex-grow">
                 {filteredCart.length > 0 ? (
                   filteredCart.map((item) => (
@@ -244,18 +241,18 @@ export default function CartPage() {
                   ))
                 ) : (
                   <p className="text-gray-500 dark:text-gray-400 text-center italic">
-                    Select products to checkout
+                    Pilih produk untuk checkout
                   </p>
                 )}
               </div>
 
-              {/* Total Price */}
+              {/* Total Harga */}
               <div className="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
                 <p>Total</p>
                 <p>{formatHarga(totalHarga)}</p>
               </div>
 
-              {/* Checkout Button */}
+              {/* Tombol Checkout */}
               <div className="mt-6">
                 <CheckoutButton
                   cart={filteredCart}

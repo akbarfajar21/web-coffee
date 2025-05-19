@@ -3,46 +3,46 @@ import { useSpring, animated } from "react-spring";
 import { FaChevronDown } from "react-icons/fa";
 
 const FAQ = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [indexAktif, setIndexAktif] = useState(null);
 
   const toggleFAQ = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
+    setIndexAktif(indexAktif === index ? null : index);
   };
 
   const faqs = [
     {
-      question: "What is CoffeeShopMe?",
+      question: "Apa itu CoffeeShopMe?",
       answer:
-        "CoffeeShopMe is a platform that offers a wide variety of the best coffee from all over the country with premium quality.",
+        "CoffeeShopMe adalah platform yang menawarkan berbagai jenis kopi terbaik dari seluruh negeri dengan kualitas premium.",
     },
     {
-      question: "How can I order coffee on CoffeeShopMe?",
+      question: "Bagaimana cara memesan kopi di CoffeeShopMe?",
       answer:
-        "You can order coffee directly through our website by selecting the desired product and following the checkout steps.",
+        "Anda dapat memesan kopi langsung melalui website kami dengan memilih produk yang diinginkan dan mengikuti langkah checkout.",
     },
     {
-      question: "Do you offer delivery services?",
+      question: "Apakah ada layanan pengiriman?",
       answer:
-        "Yes, we provide delivery services to all areas with fast and secure delivery times.",
+        "Ya, kami menyediakan layanan pengiriman ke seluruh wilayah dengan waktu pengiriman yang cepat dan aman.",
     },
     {
-      question: "What payment methods are accepted?",
+      question: "Metode pembayaran apa saja yang diterima?",
       answer:
-        "We accept various payment methods, including credit cards, bank transfers, and digital wallets like OVO and GoPay.",
+        "Kami menerima berbagai metode pembayaran, termasuk kartu kredit, transfer bank, dan dompet digital seperti OVO dan GoPay.",
     },
   ];
 
   return (
     <div className=" dark:bg-gray-800 py-16 px-6">
       <h2 className="text-4xl font-extrabold text-center text-gray-800 dark:text-white mb-12">
-        Frequently Asked Questions
+        FAQ
       </h2>
       <div className="max-w-3xl mx-auto space-y-4">
         {faqs.map((faq, index) => {
           const props = useSpring({
-            opacity: activeIndex === index ? 1 : 0,
-            maxHeight: activeIndex === index ? "150px" : "0px",
-            transform: activeIndex === index ? "scaleY(1)" : "scaleY(0.9)",
+            opacity: indexAktif === index ? 1 : 0,
+            maxHeight: indexAktif === index ? "150px" : "0px",
+            transform: indexAktif === index ? "scaleY(1)" : "scaleY(0.9)",
             overflow: "hidden",
             config: { tension: 220, friction: 25 },
           });
@@ -59,7 +59,7 @@ const FAQ = () => {
                 <span>{faq.question}</span>
                 <FaChevronDown
                   className={`transition-transform duration-300 ${
-                    activeIndex === index ? "rotate-180 text-orange-500" : ""
+                    indexAktif === index ? "rotate-180 text-orange-500" : ""
                   }`}
                 />
               </button>

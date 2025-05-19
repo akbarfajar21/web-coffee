@@ -28,7 +28,7 @@ const Register = () => {
     setSuccessMessage("");
 
     if (formData.password !== formData.confirmPassword) {
-      setErrorMessage("Passwords do not match");
+      setErrorMessage("Kata sandi tidak cocok");
       return;
     }
 
@@ -42,7 +42,7 @@ const Register = () => {
       if (error) throw new Error(error.message);
 
       const user = data.user;
-      if (!user) throw new Error("User not returned from Supabase");
+      if (!user) throw new Error("Data pengguna tidak diterima dari Supabase");
 
       const defaultAvatarUrl =
         "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
@@ -56,10 +56,12 @@ const Register = () => {
         avatar_url: defaultAvatarUrl,
       });
 
-      if (profileError) throw new Error("Error saving user profile.");
+      if (profileError)
+        throw new Error("Terjadi kesalahan saat menyimpan profil pengguna.");
+
       await supabase.auth.signOut();
       setSuccessMessage(
-        "Akun berhasil dibuat! Silakan login menggunakan akun baru Anda."
+        "Akun berhasil dibuat! Silakan masuk menggunakan akun baru Anda."
       );
       setTimeout(() => navigate("/login"), 1000);
     } catch (error) {
@@ -72,14 +74,14 @@ const Register = () => {
   return (
     <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-400 via-blue-500 to-purple-600 px-4">
       <Helmet>
-        <title>CoffeeShopMe | Register</title>
+        <title>CoffeeShopMe | Daftar</title>
       </Helmet>
       <div className="max-w-md w-full bg-white dark:bg-[#121212] shadow-2xl rounded-2xl p-6 sm:p-8 border border-gray-200 dark:border-gray-700">
         <h2 className="text-2xl font-extrabold text-center text-gray-900 dark:text-white">
-          Create a New Account
+          Buat Akun Baru
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-center text-sm mb-4">
-          Create an account to enjoy our best services
+          Buat akun untuk menikmati layanan terbaik kami
         </p>
 
         {errorMessage && (
@@ -96,28 +98,28 @@ const Register = () => {
         <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Full Name
+              Nama Lengkap
             </label>
             <input
               type="text"
               value={formData.fullName}
               onChange={handleChange("fullName")}
               className="w-full px-4 py-2 border rounded-xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white text-sm"
-              placeholder="Enter your full name"
+              placeholder="Masukkan nama lengkap Anda"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Username
+              Nama Pengguna
             </label>
             <input
               type="text"
               value={formData.username}
               onChange={handleChange("username")}
               className="w-full px-4 py-2 border rounded-xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white text-sm"
-              placeholder="Enter your username"
+              placeholder="Masukkan nama pengguna"
               required
             />
           </div>
@@ -131,49 +133,49 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange("email")}
               className="w-full px-4 py-2 border rounded-xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white text-sm"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Phone Number
+              Nomor Telepon
             </label>
             <input
               type="tel"
               value={formData.noTelepon}
               onChange={handleChange("noTelepon")}
               className="w-full px-4 py-2 border rounded-xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white text-sm"
-              placeholder="Enter your phone number"
+              placeholder="Masukkan nomor telepon"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Password
+              Kata Sandi
             </label>
             <input
               type="password"
               value={formData.password}
               onChange={handleChange("password")}
               className="w-full px-4 py-2 border rounded-xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white text-sm"
-              placeholder="Enter your password"
+              placeholder="Masukkan kata sandi"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Confirm Password
+              Konfirmasi Kata Sandi
             </label>
             <input
               type="password"
               value={formData.confirmPassword}
               onChange={handleChange("confirmPassword")}
               className="w-full px-4 py-2 border rounded-xl bg-gray-50 dark:bg-[#1E1E1E] text-gray-900 dark:text-white text-sm"
-              placeholder="Confirm your password"
+              placeholder="Konfirmasi kata sandi"
               required
             />
           </div>
@@ -187,18 +189,18 @@ const Register = () => {
                 : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-85"
             }`}
           >
-            {isLoading ? "Registering..." : "Create Account"}
+            {isLoading ? "Mendaftarkan..." : "Buat Akun"}
           </button>
         </form>
 
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Already have an account?{" "}
+            Sudah punya akun?{" "}
             <a
               href="/login"
               className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 font-semibold"
             >
-              Login Now
+              Masuk Sekarang
             </a>
           </p>
         </div>

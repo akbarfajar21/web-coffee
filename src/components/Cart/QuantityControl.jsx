@@ -4,20 +4,20 @@ import Swal from "sweetalert2";
 const QuantityControl = ({ quantity, stok, onIncrease, onDecrease }) => {
   const handleIncrease = () => {
     if (quantity < stok) {
-      onIncrease(); // Hanya tambah jika belum mencapai stok maksimal
+      onIncrease();
     } else {
       Swal.fire({
-        title: "Insufficient Stock",
-        text: "You cannot increase the quantity further.",
-        icon: "error", // Using the error icon from SweetAlert2
-        confirmButtonText: "OK, Got it",
+        title: "Stok Tidak Mencukupi",
+        text: "Anda tidak dapat menambah jumlah lebih lanjut.",
+        icon: "error",
+        confirmButtonText: "Oke, Mengerti",
         background: "#FFFFFF",
-        color: "#333333", // Darker text for better readability
-        confirmButtonColor: "#EF4444", // Red confirm button color
+        color: "#333333",
+        confirmButtonColor: "#EF4444",
         customClass: {
-          popup: "rounded-xl shadow-xl backdrop-blur-lg border border-gray-300", // Modern popup design
+          popup: "rounded-xl shadow-xl backdrop-blur-lg border border-gray-300",
           confirmButton:
-            "px-6 py-3 rounded-lg text-lg font-semibold transition-all transform hover:scale-105", // Smooth transition and hover effect for the button
+            "px-6 py-3 rounded-lg text-lg font-semibold transition-all transform hover:scale-105",
         },
       });
     }

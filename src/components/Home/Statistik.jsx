@@ -4,42 +4,42 @@ import CountUp from "react-countup";
 import { Users, ShoppingCart } from "lucide-react";
 
 const Statistik = ({ isDarkMode }) => {
-  const [activeUsers, setActiveUsers] = useState(0);
-  const [totalSoldProducts, setTotalSoldProducts] = useState(0);
-  const [inView, setInView] = useState(false);
+  const [penggunaAktif, setPenggunaAktif] = useState(0);
+  const [totalProdukTerjual, setTotalProdukTerjual] = useState(0);
+  const [dalamTampilan, setDalamTampilan] = useState(false);
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    const fetchStatistics = async () => {
+    const ambilStatistik = async () => {
       try {
-        const { data: usersData, error: usersError } = await supabase
+        const { data: dataPengguna, error: errorPengguna } = await supabase
           .from("profiles")
           .select("role");
 
-        if (usersError) throw new Error(usersError.message);
-        setActiveUsers(usersData.length);
+        if (errorPengguna) throw new Error(errorPengguna.message);
+        setPenggunaAktif(dataPengguna.length);
 
-        const { data: historyData, error: historyError } = await supabase
+        const { data: dataHistory, error: errorHistory } = await supabase
           .from("history")
           .select("quantity");
 
-        if (historyError) throw new Error(historyError.message);
+        if (errorHistory) throw new Error(errorHistory.message);
 
-        const totalQuantity = historyData.reduce(
+        const totalJumlah = dataHistory.reduce(
           (total, item) => total + item.quantity,
           0
         );
-        setTotalSoldProducts(totalQuantity);
+        setTotalProdukTerjual(totalJumlah);
       } catch (error) {
-        console.error("Error fetching statistics:", error);
+        console.error("Kesalahan saat mengambil statistik:", error);
       }
     };
 
-    fetchStatistics();
+    ambilStatistik();
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInView(entry.isIntersecting);
+        setDalamTampilan(entry.isIntersecting);
       },
       { threshold: 0.3 }
     );
@@ -64,8 +64,8 @@ const Statistik = ({ isDarkMode }) => {
         {[
           {
             icon: <Users size={32} className="text-white dark:text-gray-300" />,
-            title: "Active Users",
-            count: activeUsers,
+            title: "Pengguna Aktif",
+            count: penggunaAktif,
             color: "bg-blue-500 dark:bg-blue-600",
           },
           {
@@ -75,8 +75,8 @@ const Statistik = ({ isDarkMode }) => {
                 className="text-white dark:text-gray-300"
               />
             ),
-            title: "Products Sold",
-            count: totalSoldProducts,
+            title: "Produk Terjual",
+            count: totalProdukTerjual,
             color: "bg-green-500 dark:bg-green-600",
           },
         ].map((stat, index) => (
@@ -84,16 +84,16 @@ const Statistik = ({ isDarkMode }) => {
             key={index}
             className={`p-6 rounded-xl shadow-md text-white text-center flex flex-col items-center border border-white/10 dark:border-gray-700 ${stat.color}`}
           >
-            {/* Icon with Soft Background */}
+            {/* Ikon dengan Latar Belakang Lembut */}
             <div className="p-3 bg-white/20 dark:bg-white/10 rounded-lg">
               {stat.icon}
             </div>
 
-            {/* Title */}
+            {/* Judul */}
             <h3 className="text-sm font-medium mt-3 mb-1">{stat.title}</h3>
 
-            {/* CountUp Number */}
-            {inView && (
+            {/* Angka CountUp */}
+            {dalamTampilan && (
               <p className="text-3xl font-bold tracking-tight">
                 <CountUp
                   start={0}

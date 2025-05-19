@@ -80,7 +80,7 @@ export default function HistoryUI({
   return (
     <div className="flex flex-col min-h-screen">
       <h1 className="text-3xl mt-20 font-bold text-center text-gray-800 dark:text-gray-200 mb-6">
-        Purchase History
+        Riwayat Pembelian
       </h1>
 
       <div className="mx-4 text-center mb-6 relative">
@@ -89,7 +89,7 @@ export default function HistoryUI({
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            placeholder="Search product or Order ID..."
+            placeholder="Cari produk atau ID Pesanan..."
             className="w-full px-5 py-3 pl-12 border rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
           <BiSearch className="absolute top-1/2 left-4 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 text-lg" />
@@ -114,16 +114,16 @@ export default function HistoryUI({
           </svg>
 
           <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
-            No purchase history available
+            Belum ada riwayat pembelian
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Start shopping and find your favorite coffee!
+            Mulailah berbelanja dan temukan kopi favoritmu!
           </p>
           <a
             href="/product"
             className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium shadow-md hover:bg-blue-700 transition-all"
           >
-            Shop Now
+            Belanja Sekarang
           </a>
         </div>
       ) : (
@@ -133,12 +133,12 @@ export default function HistoryUI({
               <thead>
                 <tr className="bg-gradient-to-r from-indigo-200 to-indigo-400 dark:from-indigo-700 dark:to-indigo-900 text-white text-xs sm:text-sm">
                   <th className="px-3 sm:px-4 py-2 sm:py-3">No</th>
-                  <th className="px-3 sm:px-4 py-2 sm:py-3">Order ID</th>
+                  <th className="px-3 sm:px-4 py-2 sm:py-3">ID Pesanan</th>
                   <th className="px-3 sm:px-4 py-2 sm:py-3 hidden sm:table-cell">
                     Total
                   </th>
                   <th className="px-3 sm:px-4 py-2 sm:py-3">Status</th>
-                  <th className="px-3 sm:px-4 py-2 sm:py-3">Action</th>
+                  <th className="px-3 sm:px-4 py-2 sm:py-3">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,7 +156,6 @@ export default function HistoryUI({
                     <td className="px-3 sm:px-4 py-2 sm:py-3 text-center font-medium text-gray-700 dark:text-gray-300 hidden sm:table-cell">
                       Rp {item.total.toLocaleString("id-ID")}
                     </td>
-
                     <td className="px-3 sm:px-4 py-2 sm:py-3 text-center">
                       <span
                         className={`px-3 py-1 rounded-full text-white text-[10px] sm:text-xs font-medium ${
@@ -170,7 +169,6 @@ export default function HistoryUI({
                         {item.status || "Pending"}
                       </span>
                     </td>
-
                     <td className="px-3 sm:px-4 py-2 sm:py-3 text-center">
                       <button
                         onClick={() => setSelectedOrder(item)}
@@ -191,12 +189,12 @@ export default function HistoryUI({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-[90%] p-6 sm:p-8 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 animate-fadeIn">
             <h2 className="text-xl sm:text-2xl font-bold border-b border-gray-300 dark:border-gray-700 pb-4 mb-4 text-center">
-              🧾 Order Details
+              🧾 Detail Pesanan
             </h2>
 
             <div className="space-y-3 text-sm sm:text-base">
               <p>
-                <span className="font-medium">Order ID:</span>{" "}
+                <span className="font-medium">ID Pesanan:</span>{" "}
                 {selectedOrder.order_id}
               </p>
               <p className="flex items-center gap-2">
@@ -224,14 +222,25 @@ export default function HistoryUI({
                   .toLocaleString("id-ID")}
               </p>
               <p>
-                <span className="font-medium">Date:</span>{" "}
-                {new Date(selectedOrder.created_at).toLocaleString("id-ID")}
+                <span className="font-medium">Tanggal:</span>{" "}
+                {new Date(selectedOrder.created_at).toLocaleDateString("id-ID")}
+              </p>
+              <p>
+                <span className="font-medium">Waktu:</span>{" "}
+                {new Date(selectedOrder.created_at).toLocaleTimeString(
+                  "id-ID",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  }
+                )}
               </p>
             </div>
 
             <div className="mt-6">
               <h3 className="text-base font-semibold border-b border-gray-300 dark:border-gray-700 pb-2 mb-3">
-                🛍️ Ordered Items
+                🛍️ Produk Dipesan
               </h3>
               <ul className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                 {selectedOrder.items.map((item, i) => (
@@ -254,7 +263,7 @@ export default function HistoryUI({
               onClick={() => setSelectedOrder(null)}
               className="mt-6 w-full bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 text-white py-2.5 rounded-xl font-semibold transition-all duration-200"
             >
-              Close
+              Tutup
             </button>
           </div>
         </div>

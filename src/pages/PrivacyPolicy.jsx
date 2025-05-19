@@ -25,7 +25,7 @@ const PrivacyPolicy = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <Helmet>
-          <title>CoffeeShopMe | PrivacyPolicy</title>
+          <title>CoffeeShopMe | Kebijakan Privasi</title>
         </Helmet>
         <div className="relative flex items-center justify-center">
           <div className="absolute -top-8 flex space-x-2">
@@ -46,7 +46,7 @@ const PrivacyPolicy = () => {
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
-          Brewing your coffee...
+          Memuat...
         </p>
       </div>
     );
@@ -57,51 +57,51 @@ const PrivacyPolicy = () => {
       icon: (
         <FaUserSecret className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Information Collection",
+      title: "Pengumpulan Informasi",
       content:
-        "We collect personal information that you provide to us, such as your name, email address, and payment details. This information helps us to serve you better and personalize your experience.",
+        "Kami mengumpulkan informasi pribadi yang Anda berikan, seperti nama, alamat email, dan detail pembayaran. Informasi ini membantu kami melayani Anda lebih baik dan mempersonalisasi pengalaman Anda.",
     },
     {
       icon: (
         <FaShieldAlt className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Usage of Information",
+      title: "Penggunaan Informasi",
       content:
-        "Your information is used to process orders, improve our services, and send promotional materials. We ensure your data is handled responsibly and securely.",
+        "Informasi Anda digunakan untuk memproses pesanan, meningkatkan layanan kami, dan mengirim materi promosi. Kami memastikan data Anda ditangani secara bertanggung jawab dan aman.",
     },
     {
       icon: (
         <FaLock className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Data Security",
+      title: "Keamanan Data",
       content:
-        "We implement industry-standard security measures, including encryption and secure servers, to protect your personal information. Your trust and safety are our top priorities.",
+        "Kami menerapkan langkah-langkah keamanan standar industri, termasuk enkripsi dan server yang aman, untuk melindungi informasi pribadi Anda. Kepercayaan dan keamanan Anda adalah prioritas utama kami.",
     },
     {
       icon: (
         <FaCookieBite className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Cookies and Tracking",
+      title: "Cookie dan Pelacakan",
       content:
-        "Our website uses cookies to enhance your browsing experience. Cookies help us remember your preferences, understand user behavior, and provide relevant content. You can manage cookies through your browser settings.",
+        "Website kami menggunakan cookie untuk meningkatkan pengalaman browsing Anda. Cookie membantu kami mengingat preferensi Anda, memahami perilaku pengguna, dan menyediakan konten yang relevan. Anda dapat mengatur cookie melalui pengaturan browser Anda.",
     },
     {
       icon: (
         <FaShareAlt className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Third-Party Sharing",
+      title: "Berbagi dengan Pihak Ketiga",
       content:
-        "We do not sell your personal information. However, we may share your data with trusted partners who assist in providing our services, under strict confidentiality agreements to ensure your privacy.",
+        "Kami tidak menjual informasi pribadi Anda. Namun, kami mungkin berbagi data dengan mitra terpercaya yang membantu menyediakan layanan kami, dengan perjanjian kerahasiaan yang ketat untuk melindungi privasi Anda.",
     },
     {
       icon: (
         <FaUserCheck className="text-orange-500 dark:text-orange-400 text-2xl" />
       ),
-      title: "Your Rights",
+      title: "Hak Anda",
       content: (
         <>
-          You have the right to access, correct, or delete your personal data at
-          any time. For assistance, please contact us at{" "}
+          Anda berhak mengakses, mengoreksi, atau menghapus data pribadi Anda
+          kapan saja. Untuk bantuan, silakan hubungi kami di{" "}
           <a
             href="mailto:akbarfajar2112@gmail.com"
             className="text-blue-500 hover:underline"
@@ -136,17 +136,17 @@ const PrivacyPolicy = () => {
           className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition mb-6"
         >
           <FaArrowLeft className="text-lg" />
-          <span className="text-sm font-medium">Back</span>
+          <span className="text-sm font-medium">Kembali</span>
         </button>
 
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
-            Privacy Policy
+            Kebijakan Privasi
           </h1>
           <p className="text-md text-gray-600 dark:text-gray-300 mt-3">
-            Your privacy is important to us. Learn how we protect your data with
-            transparency and care.
+            Privasi Anda penting bagi kami. Pelajari bagaimana kami melindungi
+            data Anda dengan transparansi dan perhatian.
           </p>
         </div>
 

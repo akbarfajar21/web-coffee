@@ -2,7 +2,7 @@ import React from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import QuantityControl from "./QuantityControl"; // Pastikan path benar
+import QuantityControl from "./QuantityControl"; 
 
 export default function CheckableCartItem({
   item,
@@ -15,7 +15,6 @@ export default function CheckableCartItem({
     return <div className="text-gray-500 dark:text-gray-400">Loading...</div>;
   }
 
-  // Fungsi untuk menampilkan konfirmasi sebelum menghapus item
   const handleRemove = (coffee_id) => {
     Swal.fire({
       title: "Hapus Item?",

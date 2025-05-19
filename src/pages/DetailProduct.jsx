@@ -102,9 +102,9 @@ export default function DetailProduct() {
 
       if (comment.trim() === "") {
         Swal.fire({
-          title: "⚠️ Isi Semua Formulir!",
+          title: "Isi Semua Formulir!",
           text: "Harap berikan komentar sebelum mengirim.",
-          iconHtml: "⚠️",
+          icon: "warning",
           confirmButtonText: "OK, Mengerti",
           background: "#ffffff",
           color: "#333",
@@ -124,7 +124,6 @@ export default function DetailProduct() {
         return;
       }
 
-      // Cek apakah pengguna sudah memberi rating
       const { data: existingRatings, error: existingError } = await supabase
         .from("rating")
         .select("id")
@@ -143,7 +142,6 @@ export default function DetailProduct() {
         return;
       }
 
-      // Simpan rating baru
       const { error: insertError } = await supabase.from("rating").insert([
         {
           coffee_id: id,
@@ -155,7 +153,6 @@ export default function DetailProduct() {
 
       if (insertError) throw insertError;
 
-      // Ambil data profil dari tabel profiles
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("full_name, avatar_url")
@@ -164,7 +161,6 @@ export default function DetailProduct() {
 
       if (profileError) throw profileError;
 
-      // Update state komentar secara lokal (langsung tampil tanpa reload)
       setUserRatings((prev) => [
         ...prev,
         {
@@ -178,31 +174,35 @@ export default function DetailProduct() {
         },
       ]);
 
-      // Reset input
       setUserRating(0);
       setComment("");
 
-      // Tampilkan notifikasi sukses
       Swal.fire({
-        title: "🎉 Terima Kasih!",
+        title: "Terima Kasih!",
         html: `
-          <div class="text-gray-700 dark:text-gray-200">
-            <p class="text-lg font-medium">
-              Anda memberikan rating <strong class="text-orange-500">${userRating} / 5</strong>
-            </p>
-            <p class="italic text-sm mt-2">"${comment}"</p>
-          </div>
+        <div style="color: #374151;">
+        <p style="font-size: 1rem; font-weight: 500;">
+        Anda memberikan rating <strong style="color: #f97316;">${userRating} / 5</strong>
+        </p>
+        <p style="font-style: italic; font-size: 0.875rem; margin-top: 0.5rem;">"${comment}"</p>
+        </div>
         `,
         icon: "success",
-        background: "#ffffff",
-        color: "#333",
-        confirmButtonColor: "#ff7b00",
-        confirmButtonText: "🎯 Oke",
+        iconColor: "#10b981", // hijau modern
+        background: "#f9fafb", // abu terang elegan
+        color: "#1f2937", // abu gelap
+        confirmButtonColor: "#10b981", // hijau toska
+        confirmButtonText: "Oke",
+        showClass: {
+          popup: "swal2-show",
+        },
+        hideClass: {
+          popup: "swal2-hide",
+        },
         customClass: {
-          popup: "rounded-xl shadow-lg p-6",
-          title: "text-2xl font-bold text-gray-900",
-          confirmButton:
-            "py-2 px-4 rounded-lg text-white bg-orange-500 hover:bg-orange-600 transition-all",
+          popup: "rounded-xl shadow-lg px-6 pt-6 pb-4",
+          title: "text-xl font-semibold",
+          confirmButton: "swal2-confirm swal2-styled",
         },
       });
 
@@ -226,9 +226,9 @@ export default function DetailProduct() {
       setRating(avgRating);
     } catch (error) {
       Swal.fire({
-        title: "❌ Gagal Memberikan Rating!",
+        title: "Gagal Memberikan Rating!",
         text: error.message || "Silakan coba lagi nanti.",
-        iconHtml: "❌",
+        icon: "error", // icon bawaan SweetAlert (error)
         confirmButtonText: "OK, Mengerti",
         background: "#ffffff",
         color: "#333",
@@ -264,7 +264,6 @@ export default function DetailProduct() {
 
       if (error) throw error;
 
-      // Hapus dari state userRatings
       setUserRatings((prevRatings) =>
         prevRatings.filter(
           (ratingItem) =>
@@ -275,10 +274,8 @@ export default function DetailProduct() {
         )
       );
 
-      // Reset rating bintang di UI
-      setUserRating(0); // ← INI penting agar bintang langsung hilang
+      setUserRating(0);
 
-      // Hitung ulang rata-rata rating
       const { data: ratingsData, error: ratingsError } = await supabase
         .from("rating")
         .select("rating")
@@ -295,7 +292,7 @@ export default function DetailProduct() {
         .update({ rating_produk: avgRating })
         .eq("id", id);
 
-      setRating(avgRating); // Update rata-rata di UI
+      setRating(avgRating);
 
       Swal.fire({
         title: "Rating Dihapus!",
@@ -373,7 +370,6 @@ export default function DetailProduct() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-12 px-6 lg:px-16">
-        {/* Tombol Kembali */}
         <button
           onClick={() => navigate("/product")}
           className="flex items-center text-gray-700 mt-5 hover:text-gray-900 dark:text-white transition-all duration-300"
@@ -383,7 +379,6 @@ export default function DetailProduct() {
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-8 px-4 md:px-8">
-          {/* Gambar Produk */}
           <div className="flex justify-center items-center">
             <img
               src={product.foto_barang}
@@ -392,7 +387,6 @@ export default function DetailProduct() {
             />
           </div>
 
-          {/* Info Produk */}
           <div className="flex flex-col space-y-6">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">
               {product.nama_produk}
@@ -409,15 +403,13 @@ export default function DetailProduct() {
               <strong>Stok:</strong> {product.stok}
             </p>
 
-            {/* Rating Produk */}
             <div className="flex items-center mt-4 space-x-1">
               <FaStar className="text-yellow-500 text-xl sm:text-2xl" />
               <p className="text-lg font-medium text-gray-800 dark:text-white ml-2">
-                {rating ? Number(rating).toFixed(1) : "N/A"} / 5
+                {rating ? Number(rating).toFixed(1) : "0"} / 5
               </p>
             </div>
 
-            {/* Form Rating dan Komentar */}
             <div className="mt-6 space-y-6">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                 Berikan Rating dan Komentar:
@@ -487,7 +479,6 @@ export default function DetailProduct() {
                     </p>
                   </div>
 
-                  {/* Dropdown Menu untuk Edit / Hapus */}
                   {user && ratingItem.profile_id === user.id && (
                     <div className="relative">
                       <button
@@ -498,12 +489,13 @@ export default function DetailProduct() {
                       </button>
 
                       {showDropdown === index && (
-                        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-xl transition-all duration-200 ease-in-out">
+                        <div className="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg z-10">
                           <button
-                            onClick={() =>
-                              handleDeleteRating(ratingItem.profile_id)
-                            }
-                            className="block w-full px-4 py-2 text-sm text-red-600 hover:bg-red-200 dark:text-red-400 dark:hover:bg-red-600 focus:outline-none transition-all duration-200 ease-in-out rounded-lg"
+                            onClick={() => {
+                              handleDeleteRating(user.id);
+                              setShowDropdown(null);
+                            }}
+                            className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100 rounded-md"
                           >
                             Hapus Rating
                           </button>
