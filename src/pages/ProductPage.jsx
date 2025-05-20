@@ -393,51 +393,88 @@ export default function ProductPage() {
           className="lg:hidden fixed bottom-6 right-6 z-50 bg-orange-600 text-white p-3 rounded-full shadow-lg"
         >
           <BsFilter className="text-2xl" />
+
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 text-[10px] font-bold text-white bg-red-600 border border-white rounded-full px-1 py-0.5 shadow-md">
+              {cartCount}
+            </span>
+          )}
         </button>
 
         <div className="bg-white dark:bg-gray-900 px-4 flex gap-6">
-          <aside className="w-full max-w-xs lg:max-w-[250px] lg:w-1/5 lg:block bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 sticky top-20 max-h-[83vh] min-h-fit overflow-y-auto border border-gray-200 dark:border-gray-700 lg:visible hidden">
+          <aside
+            className="
+            w-full max-w-xs lg:max-w-[270px] lg:w-1/5 lg:block
+          bg-white dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-gray-900
+            shadow-md rounded-xl p-5
+            sticky top-16
+            max-h-[75vh] overflow-y-auto
+            border border-gray-200 dark:border-gray-700
+            lg:visible hidden
+            "
+          >
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white tracking-wide">
                 Filter
               </h2>
               <button
                 onClick={() => navigate("/cart")}
-                className="relative flex items-center justify-center text-orange-500 border border-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out p-2 rounded-lg shadow-sm dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:text-white hover:scale-105"
+                className="
+                relative flex items-center justify-center
+              text-orange-500 border border-orange-500
+              hover:bg-orange-500 hover:text-white
+                transition-all duration-300 ease-in-out
+                p-2 rounded-lg shadow-md
+              dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:text-white
+                hover:scale-110
+                focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-orange-400
+                "
+                aria-label="Go to cart"
               >
-                <BsCart4 className="w-5 h-5 sm:w-6 sm:h-6" />
+                <BsCart4 className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 text-xs font-bold text-white bg-red-600 border border-white dark:border-gray-800 rounded-full px-1.5 py-0.5 shadow-md">
+                  <span className="absolute -top-2 -right-2 text-[10px] font-bold text-white bg-red-600 border border-white dark:border-gray-800 rounded-full px-1 py-0.5 shadow-md select-none">
                     {cartCount}
                   </span>
                 )}
               </button>
             </div>
 
-            {/* Input Pencarian */}
-            <div className="mb-4">
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            {/* Search Input */}
+            <div className="mb-5">
+              <label
+                htmlFor="search"
+                className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Cari Produk
               </label>
               <input
+                id="search"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Cari..."
-                className="w-full px-3 py-1.5 border rounded-md shadow-sm text-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white transition-all"
+                className="
+                w-full px-3 py-1.5
+                border border-gray-300 rounded-md shadow-sm
+                text-xs text-gray-900
+                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent
+              dark:bg-gray-700 dark:text-white dark:border-gray-600
+                transition-all duration-300
+                "
               />
             </div>
 
-            {/* Opsi Filter */}
-            <div className="space-y-4">
+            {/* Filter Options */}
+            <div className="space-y-5">
               {[
                 {
                   id: "price",
                   label: "Urutkan Berdasarkan Harga",
                   value: priceSortOrder,
                   onChange: (value) =>
-                    setPriceSortOrder(value === priceSortOrder ? null : value), // Toggle antara nilai yang dipilih dan null
+                    setPriceSortOrder(value === priceSortOrder ? null : value),
                   options: [
                     { value: "asc", label: "Rendah - Tinggi" },
                     { value: "desc", label: "Tinggi - Rendah" },
@@ -448,10 +485,10 @@ export default function ProductPage() {
                   label: "Ketersediaan Stok",
                   value: stockSortOrder,
                   onChange: (value) =>
-                    setStockSortOrder(value === stockSortOrder ? null : value), // Toggle antara nilai yang dipilih dan null
+                    setStockSortOrder(value === stockSortOrder ? null : value),
                   options: [
-                    { value: "asc", label: "Stok Terbanyak" },
-                    { value: "desc", label: "Stok Terbatas" },
+                    { value: "desc", label: "Stok Terbanyak" },
+                    { value: "asc", label: "Stok Terdikit" },
                   ],
                 },
                 {
@@ -459,55 +496,55 @@ export default function ProductPage() {
                   label: "Urutkan Berdasarkan Nama",
                   value: nameSortOrder,
                   onChange: (value) =>
-                    setNameSortOrder(value === nameSortOrder ? null : value), // Toggle antara nilai yang dipilih dan null
+                    setNameSortOrder(value === nameSortOrder ? null : value),
                   options: [
                     { value: "asc", label: "A - Z" },
                     { value: "desc", label: "Z - A" },
                   ],
                 },
-                {
-                  id: "rating",
-                  label: "Urutkan Berdasarkan Rating",
-                  value: ratingSortOrder,
-                  onChange: (value) =>
-                    setRatingSortOrder(
-                      value === ratingSortOrder ? null : value
-                    ), // Toggle antara nilai yang dipilih dan null
-                  options: [
-                    { value: "asc", label: "Rendah - Tinggi" },
-                    { value: "desc", label: "Tinggi - Rendah" },
-                  ],
-                },
               ].map(({ id, label, value, onChange, options }) => (
                 <div key={id} className="space-y-2">
-                  <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
+                  <h3 className="text-xs font-semibold text-gray-900 dark:text-white">
                     {label}
                   </h3>
-                  <div className="flex flex-col space-y-2">
+                  <div className="flex flex-col space-y-1.5">
                     {options.map((option) => (
                       <label
                         key={option.value}
-                        className="flex items-center justify-between px-2 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer text-xs sm:text-sm"
+                        className={`
+                      flex items-center justify-between
+                      p-1.5 rounded-md border cursor-pointer
+                      transition-shadow duration-300
+                    ${
+                      value === option.value
+                        ? "bg-orange-500 border-orange-500 text-white shadow-md"
+                        : "bg-gray-50 border-gray-300 dark:bg-gray-800 dark:border-gray-600 text-gray-800 dark:text-gray-300 hover:shadow-sm"
+                    }
+              `}
                       >
-                        <span className="text-gray-800 dark:text-gray-300 font-medium">
+                        <span className="font-medium text-xs">
                           {option.label}
                         </span>
                         <input
-                          type="checkbox" // Ganti menjadi checkbox
+                          type="checkbox"
                           checked={value === option.value}
-                          onChange={() => onChange(option.value)} // Toggle seperti sebelumnya
+                          onChange={() => onChange(option.value)}
                           className="hidden"
+                          aria-checked={value === option.value}
+                          aria-labelledby={`${id}-${option.value}`}
                         />
                         <span
-                          className={`relative w-7 h-4 sm:w-8 sm:h-5 flex items-center bg-gray-300 dark:bg-gray-500 rounded-full p-0.5 transition-all duration-200 ${
+                          className={`relative w-7 h-4 flex items-center rounded-full p-0.5 transition-colors duration-300 ${
                             value === option.value
-                              ? "bg-orange-500 dark:bg-orange-400"
-                              : ""
+                              ? "bg-white"
+                              : "bg-gray-300 dark:bg-gray-600"
                           }`}
                         >
                           <span
-                            className={`w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-all duration-200 ${
-                              value === option.value ? "translate-x-3" : ""
+                            className={`w-3.5 h-3.5 bg-orange-500 rounded-full shadow transform transition-transform duration-300 ${
+                              value === option.value
+                                ? "translate-x-2.5"
+                                : "translate-x-0"
                             }`}
                           />
                         </span>
@@ -518,10 +555,16 @@ export default function ProductPage() {
               ))}
             </div>
 
-            {/* Tombol Reset Filter */}
+            {/* Reset Button */}
             <button
               onClick={resetFilters}
-              className="w-full py-2 rounded-md shadow-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-200 ease-in-out mt-4 text-xs sm:text-sm font-medium"
+              className="
+              mt-6 w-full py-1.5 rounded-md border border-orange-500
+            text-orange-600 font-semibold text-sm
+            hover:bg-orange-500 hover:text-white
+              transition-all duration-300 ease-in-out shadow-md
+              focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-1
+              "
             >
               Reset Filter
             </button>
@@ -529,117 +572,162 @@ export default function ProductPage() {
 
           {isFilterOpen && (
             <div className="fixed inset-0 z-50 bg-black/50 flex">
-              <div className="bg-white dark:bg-gray-800 w-4/5 sm:w-1/2 h-full p-4 sm:p-6 shadow-lg overflow-y-auto">
+              <div
+                className="
+            bg-white dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-gray-900
+              w-4/5 sm:w-1/2 h-full p-5
+              shadow-md rounded-xl overflow-y-auto
+              border border-gray-200 dark:border-gray-700
+              "
+              >
+                {/* Header */}
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                    Product Filter
+                  <h2 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white tracking-wide">
+                    Filter
                   </h2>
-                  <div className="flex items-center space-x-3">
+                  <div className="flex gap-2 items-center">
+                    {/* Tombol Close */}
+                    <button
+                      onClick={() => setIsFilterOpen(false)}
+                      className="text-gray-500 hover:text-red-500 transition-colors duration-200 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-400"
+                      aria-label="Close filter panel"
+                    >
+                      <IoClose className="h-5 w-5" />
+                    </button>
+
+                    {/* Tombol ke Cart */}
                     <button
                       onClick={() => navigate("/cart")}
-                      className="relative text-xl text-orange-500 hover:text-orange-600 transition-all p-2 rounded-full bg-gray-100 dark:bg-gray-700 shadow-md"
+                      className="
+                    relative flex items-center justify-center
+                  text-orange-500 border border-orange-500
+                  hover:bg-orange-500 hover:text-white
+                    transition-all duration-300 ease-in-out
+                    p-2 rounded-lg shadow-md
+                  dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:text-white
+                    hover:scale-110
+                    focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-orange-400
+                    "
+                      aria-label="Go to cart"
                     >
-                      <BsCart4 className="w-6 h-6" />
+                      <BsCart4 className="w-5 h-5" />
                       {cartCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 text-xs font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full px-2">
+                        <span className="absolute -top-2 -right-2 text-[10px] font-bold text-white bg-red-600 border border-white dark:border-gray-800 rounded-full px-1 py-0.5 shadow-md select-none">
                           {cartCount}
                         </span>
                       )}
                     </button>
-                    <button
-                      onClick={() => setIsFilterOpen(false)}
-                      className="text-2xl text-gray-600 hover:text-gray-800 transition-all"
-                    >
-                      <IoClose />
-                    </button>
                   </div>
                 </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Search Product
+                {/* Search Input */}
+                <div className="mb-5">
+                  <label
+                    htmlFor="search"
+                    className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Cari Produk
                   </label>
                   <input
+                    id="search"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
-                    placeholder="Search for products..."
-                    className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white"
+                    placeholder="Cari..."
+                    className="
+                    w-full px-3 py-1.5
+                    border border-gray-300 rounded-md shadow-sm
+                    text-xs text-gray-900
+                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent
+                  dark:bg-gray-700 dark:text-white dark:border-gray-600
+                    transition-all duration-300
+                    "
                   />
                 </div>
-
-                <div className="space-y-4">
+                {/* Filter Options */}
+                <div className="space-y-5">
                   {[
                     {
                       id: "price",
-                      label: "Sort by Price",
+                      label: "Urutkan Berdasarkan Harga",
                       value: priceSortOrder,
-                      onChange: setPriceSortOrder,
+                      onChange: (value) =>
+                        setPriceSortOrder(
+                          value === priceSortOrder ? null : value
+                        ),
                       options: [
-                        { value: "asc", label: "Lowest to Highest" },
-                        { value: "desc", label: "Highest to Lowest" },
+                        { value: "asc", label: "Rendah - Tinggi" },
+                        { value: "desc", label: "Tinggi - Rendah" },
                       ],
                     },
                     {
                       id: "stock",
-                      label: "Stock Availability",
+                      label: "Ketersediaan Stok",
                       value: stockSortOrder,
-                      onChange: setStockSortOrder,
+                      onChange: (value) =>
+                        setStockSortOrder(
+                          value === stockSortOrder ? null : value
+                        ),
                       options: [
-                        { value: "asc", label: "Most Stock" },
-                        { value: "desc", label: "Least Stock" },
+                        { value: "desc", label: "Stok Terbanyak" },
+                        { value: "asc", label: "Stok Terdikit" },
                       ],
                     },
                     {
                       id: "name",
-                      label: "Sort by Name",
+                      label: "Urutkan Berdasarkan Nama",
                       value: nameSortOrder,
-                      onChange: setNameSortOrder,
+                      onChange: (value) =>
+                        setNameSortOrder(
+                          value === nameSortOrder ? null : value
+                        ),
                       options: [
                         { value: "asc", label: "A - Z" },
                         { value: "desc", label: "Z - A" },
                       ],
                     },
-                    {
-                      id: "rating",
-                      label: "Sort by Rating",
-                      value: ratingSortOrder,
-                      onChange: setRatingSortOrder,
-                      options: [
-                        { value: "asc", label: "Lowest to Highest" },
-                        { value: "desc", label: "Highest to Lowest" },
-                      ],
-                    },
                   ].map(({ id, label, value, onChange, options }) => (
-                    <div key={id} className="space-y-1">
-                      <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                    <div key={id} className="space-y-2">
+                      <h3 className="text-xs font-semibold text-gray-900 dark:text-white">
                         {label}
                       </h3>
-                      <div className="flex flex-col space-y-1">
+                      <div className="flex flex-col space-y-1.5">
                         {options.map((option) => (
                           <label
                             key={option.value}
-                            className="flex items-center justify-between p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 transition-all duration-200 shadow-sm"
+                            className={`
+                      flex items-center justify-between
+                      p-1.5 rounded-md border cursor-pointer
+                      transition-shadow duration-300
+                  ${
+                    value === option.value
+                      ? "bg-orange-500 border-orange-500 text-white shadow-md"
+                      : "bg-gray-50 border-gray-300 dark:bg-gray-800 dark:border-gray-600 text-gray-800 dark:text-gray-300 hover:shadow-sm"
+                  }
+                `}
                           >
-                            <span className="text-gray-800 dark:text-gray-300 text-xs font-medium">
+                            <span className="font-medium text-xs">
                               {option.label}
                             </span>
                             <input
-                              type="radio"
-                              name={id}
-                              value={option.value}
+                              type="checkbox"
                               checked={value === option.value}
                               onChange={() => onChange(option.value)}
                               className="hidden"
+                              aria-checked={value === option.value}
+                              aria-labelledby={`${id}-${option.value}`}
                             />
                             <span
-                              className={`relative w-8 h-4 flex items-center bg-gray-300 dark:bg-gray-600 rounded-full p-0.5 transition-all duration-200 ${
-                                value === option.value ? "bg-orange-500" : ""
+                              className={`relative w-7 h-4 flex items-center rounded-full p-0.5 transition-colors duration-300 ${
+                                value === option.value
+                                  ? "bg-white"
+                                  : "bg-gray-300 dark:bg-gray-600"
                               }`}
                             >
                               <span
-                                className={`w-3 h-3 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-all duration-200 ${
-                                  value === option.value ? "translate-x-4" : ""
+                                className={`w-3.5 h-3.5 bg-orange-500 rounded-full shadow transform transition-transform duration-300 ${
+                                  value === option.value
+                                    ? "translate-x-2.5"
+                                    : "translate-x-0"
                                 }`}
                               />
                             </span>
@@ -655,9 +743,15 @@ export default function ProductPage() {
                     resetFilters();
                     setIsFilterOpen(false);
                   }}
-                  className="w-full py-2 bg-orange-500 text-white font-semibold rounded-lg mt-4"
+                  className="
+                  mt-6 w-full py-1.5 rounded-md border border-orange-500
+                text-orange-600 font-semibold text-sm
+                hover:bg-orange-500 hover:text-white
+                  transition-all duration-300 ease-in-out shadow-md
+                  focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-1
+                  "
                 >
-                  Reset Filters
+                  Reset Filter
                 </button>
               </div>
             </div>
@@ -691,7 +785,7 @@ export default function ProductPage() {
             ) : (
               <>
                 <div
-                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2"
+                  className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-5 gap-2"
                   style={{ gridAutoRows: "minmax(320px, auto)" }}
                 >
                   {currentProducts.map((product) => (

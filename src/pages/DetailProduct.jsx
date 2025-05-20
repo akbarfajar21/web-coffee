@@ -430,7 +430,7 @@ export default function DetailProduct() {
                 ))}
               </div>
               <textarea
-                placeholder="Tambahkan komentar Anda..."
+                placeholder="Tambahkan Rating Anda..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 className="w-full p-4 border-2 border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mt-4"

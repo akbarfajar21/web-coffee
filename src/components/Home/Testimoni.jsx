@@ -14,11 +14,11 @@ const Testimonials = () => {
     try {
       setLoading(true);
       setError(null);
+      setTestimonials([]);
 
       const start = (page - 1) * testimonialsPerPage;
       const end = start + testimonialsPerPage - 1;
 
-      // Ambil jumlah total testimoni
       const { count, error: countError } = await supabase
         .from("testimoni")
         .select("*", { count: "exact", head: true })
@@ -26,10 +26,9 @@ const Testimonials = () => {
 
       if (countError) throw countError;
 
-      // Ambil data testimoni per halaman
       const { data, error: fetchError } = await supabase
         .from("testimoni")
-        .select("message, rating, profiles(full_name, avatar_url)")
+        .select("id, message, rating, profiles(full_name, avatar_url)")
         .eq("status", true)
         .range(start, end);
 
@@ -49,6 +48,31 @@ const Testimonials = () => {
     fetchTestimonials(currentPage);
   }, [currentPage]);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime:testimoni")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "testimoni" },
+        (payload) => {
+          console.log("Perubahan realtime:", payload);
+
+          if (
+            payload.eventType === "INSERT" ||
+            payload.eventType === "DELETE" ||
+            payload.eventType === "UPDATE"
+          ) {
+            fetchTestimonials(currentPage); // Refresh data sesuai halaman sekarang
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentPage]);
+
   if (error) {
     return (
       <p className="text-center text-red-500 dark:text-red-400">
@@ -63,7 +87,11 @@ const Testimonials = () => {
         Apa Kata Pelanggan Kami
       </h2>
 
-      {testimonials.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      ) : testimonials.length === 0 ? (
         <div className="flex flex-col justify-center items-center text-center">
           <img
             src="/testimoni.gif"
@@ -78,16 +106,16 @@ const Testimonials = () => {
         <>
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentPage} // supaya animasi trigger saat page berubah
+              key={currentPage}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-14"
             >
-              {testimonials.map((testimonial, index) => (
+              {testimonials.map((testimonial) => (
                 <div
-                  key={index}
+                  key={testimonial.id}
                   className="relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:scale-105"
                 >
                   <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
@@ -124,7 +152,6 @@ const Testimonials = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Render pagination hanya jika lebih dari 1 halaman */}
           {totalPages > 1 && (
             <div className="flex justify-center mt-10 space-x-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
