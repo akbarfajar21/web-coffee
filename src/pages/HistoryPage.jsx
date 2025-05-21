@@ -8,6 +8,7 @@ export default function HistoryPage() {
   const [history, setHistory] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // state loading
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -19,12 +20,14 @@ export default function HistoryPage() {
         <HistoryLogic
           setHistory={setHistory}
           setShowNotification={setShowNotification}
+          setIsLoading={setIsLoading} // pass setIsLoading ke Logic
         />
         <HistoryUI
           history={history}
           showNotification={showNotification}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          isLoading={isLoading} // pass isLoading ke UI
         />
       </main>
     </div>

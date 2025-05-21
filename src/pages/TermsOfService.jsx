@@ -121,13 +121,14 @@ const TermsOfService = () => {
   ];
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-6 bg-gray-900">
+    <div className="relative min-h-screen flex items-center justify-center p-4 bg-gray-900">
       <Helmet>
         <title>CoffeeShopMe | Ketentuan Layanan</title>
       </Helmet>
+
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center blur-sm opacity-50"
+        className="absolute inset-0 bg-cover bg-center blur-sm opacity-40"
         style={{
           backgroundImage:
             "url('https://cdn.pixabay.com/photo/2020/07/18/16/29/coffee-5417663_1280.png')",
@@ -135,40 +136,40 @@ const TermsOfService = () => {
       ></div>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 bg-black/50"></div>
 
       {/* Content */}
-      <div className="relative max-w-4xl w-full bg-white/80 dark:bg-gray-800/80 shadow-2xl backdrop-blur-lg rounded-3xl p-8">
+      <div className="relative max-w-2xl w-full bg-white/80 dark:bg-gray-800/80 shadow-2xl backdrop-blur-lg rounded-2xl p-6">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition mb-6"
+          className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition mb-4 text-sm"
         >
-          <FaArrowLeft className="text-lg" />
-          <span className="text-sm font-medium">Kembali</span>
+          <FaArrowLeft className="text-base" />
+          <span>Kembali</span>
         </button>
 
         {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Ketentuan Layanan
           </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
             Harap baca ketentuan ini dengan seksama sebelum menggunakan layanan
             kami.
           </p>
         </div>
 
-        {/* Content */}
-        <div className="space-y-6">
+        {/* Content Sections */}
+        <div className="space-y-4">
           {sections.map((section, index) => (
             <section
               key={index}
-              className="flex gap-4 items-start p-5 bg-gray-100 dark:bg-gray-700 rounded-xl shadow-md transition hover:scale-105 duration-300 ease-in-out"
+              className="flex gap-3 items-start p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow transition hover:scale-[1.02] duration-200"
             >
-              <div className="text-orange-500 text-2xl">{section.icon}</div>
+              <div className="text-orange-500 text-lg">{section.icon}</div>
               <div>
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                <h2 className="text-base font-semibold text-gray-800 dark:text-gray-200">
                   {section.title}
                 </h2>
                 <p className="text-sm text-gray-700 dark:text-gray-400 leading-relaxed">

@@ -72,11 +72,18 @@ const Register = () => {
   };
 
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-400 via-blue-500 to-purple-600 px-4">
+    <section
+      className="relative flex items-center justify-center min-h-screen bg-cover bg-center p-6"
+      style={{
+        backgroundImage:
+          "url('https://texascoffeeschool.com/wp-content/uploads/2021/10/DSC_0052-scaled.jpg')",
+      }}
+    >
+      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       <Helmet>
         <title>CoffeeShopMe | Daftar</title>
       </Helmet>
-      <div className="max-w-md w-full bg-white dark:bg-[#121212] shadow-2xl rounded-2xl p-6 sm:p-8 border border-gray-200 dark:border-gray-700">
+      <div className="max-w-md w-full bg-white/90 dark:bg-[#121212]/90 backdrop-blur-xl shadow-2xl rounded-2xl p-6 sm:p-8 border border-gray-200 dark:border-gray-700">
         <h2 className="text-2xl font-extrabold text-center text-gray-900 dark:text-white">
           Buat Akun Baru
         </h2>
@@ -96,6 +103,8 @@ const Register = () => {
         )}
 
         <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
+          {/* Semua input form tetap sama */}
+          {/* Nama Lengkap */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Nama Lengkap
@@ -110,6 +119,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Nama Pengguna
@@ -124,6 +134,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Email
@@ -138,6 +149,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Nomor Telepon */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Nomor Telepon
@@ -152,6 +164,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Kata Sandi
@@ -166,6 +179,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Konfirmasi Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Konfirmasi Kata Sandi
@@ -180,6 +194,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}

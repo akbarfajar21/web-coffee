@@ -3,16 +3,17 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../utils/SupaClient";
 import Swal from "sweetalert2";
 import { Settings2, ListOrdered, LogOut } from "lucide-react";
-import { FaMoon, FaSun } from "react-icons/fa"; // Import untuk ikon tema
+import { FaMoon, FaSun } from "react-icons/fa";
+import useUserStore from "../utils/store/useUserStore";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [theme, setTheme] = useState("light");
+  const { user, profile, setUser, setProfile, resetUser } = useUserStore();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -29,9 +30,9 @@ const Header = () => {
 
   useEffect(() => {
     let channel;
+
     const fetchUser = async () => {
       const { data: session } = await supabase.auth.getSession();
-
       if (session?.session?.user) {
         const userData = session.session.user;
         setUser(userData);
@@ -49,14 +50,11 @@ const Header = () => {
             localStorage.setItem("hasLoggedIn", "true");
             Swal.fire({
               title: "Selamat Datang Kembali!",
-              html: `
-              <div class="text-gray-700 dark:text-gray-200 text-lg font-medium">
+              html: `<div class="text-gray-700 dark:text-gray-200 text-lg font-medium">
                 Hai, <span class="font-bold">${
-                  profileData.full_name || "Pengguna"
-                }</span>! 
-                Semoga harimu menyenangkan!
-              </div>
-            `,
+                  profileData.username || "Pengguna"
+                }</span>! Semoga harimu menyenangkan!
+              </div>`,
               icon: "success",
               confirmButtonText: "Lanjutkan",
               background: document.documentElement.classList.contains("dark")
@@ -86,7 +84,6 @@ const Header = () => {
             });
           }
 
-          // 🟢 SUBSCRIBE REALTIME PROFILE UPDATE
           channel = supabase
             .channel("public:profiles")
             .on(
@@ -104,12 +101,16 @@ const Header = () => {
             .subscribe();
         }
       } else {
-        setUser(null);
-        setProfile(null);
+        resetUser();
       }
+      setIsLoading(false);
     };
 
-    fetchUser();
+    if (!user || !profile) {
+      fetchUser();
+    } else {
+      setIsLoading(false);
+    }
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -126,8 +127,7 @@ const Header = () => {
               }
             });
         } else if (event === "SIGNED_OUT") {
-          setUser(null);
-          setProfile(null);
+          resetUser();
           localStorage.removeItem("hasLoggedIn");
         }
       }
@@ -146,11 +146,11 @@ const Header = () => {
       Swal.fire({
         title: "Logout Berhasil",
         text: "Anda telah keluar. Sampai jumpa lagi!",
-        icon: "success", // Menggunakan ikon bawaan SweetAlert2 yang lebih bersih
-        background: "#ffffff", // Latar belakang putih untuk kesan minimalis
-        color: "#333", // Teks dengan warna kontras yang jelas
+        icon: "success",
+        background: "#ffffff",
+        color: "#333",
         confirmButtonText: "Kembali ke Halaman Utama",
-        confirmButtonColor: "#4CAF50", // Warna hijau untuk tombol konfirmasi
+        confirmButtonColor: "#4CAF50",
         showClass: {
           popup: "animate__animated animate__fadeInDown animate__faster",
         },
@@ -158,9 +158,9 @@ const Header = () => {
           popup: "animate__animated animate__fadeOutUp animate__faster",
         },
         customClass: {
-          popup: "rounded-2xl shadow-xl", // Sudut yang lebih tumpul dan bayangan yang lebih halus
+          popup: "rounded-2xl shadow-xl",
           confirmButton:
-            "px-6 py-3 text-lg font-semibold bg-green-500 hover:bg-green-600 rounded-lg transition-all duration-300", // Tombol dengan warna hijau yang lembut
+            "px-6 py-3 text-lg font-semibold bg-green-500 hover:bg-green-600 rounded-lg transition-all duration-300",
         },
       }).then(() => {
         navigate("/home");
@@ -182,7 +182,7 @@ const Header = () => {
         onChange={toggleMenu}
       />
       <nav className="fixed z-20 w-full bg-gradient-to-r from-[#ffffff] to-[#f0f0f0]/80 dark:bg-gradient-to-r dark:from-[#2c2c2c] dark:to-[#1e1e1e]/80 backdrop-blur-lg shadow-lg">
-        <div className="px-6 md:px-12 w-full">
+        <div className="px-6 md:px-10 w-full">
           <div className="w-full flex flex-wrap items-center justify-between gap-6 md:py-3 md:gap-0">
             <div className="w-full flex justify-between lg:w-auto">
               <Link
@@ -191,7 +191,7 @@ const Header = () => {
                 className="flex space-x-2 items-center"
               >
                 <span className="text-2xl font-semibold text-[#3d241c] dark:text-[#e0e0e0] hover:text-[#ff6632] transition duration-300">
-                  Coffee Shop
+                  CoffeeShopMe
                 </span>
               </Link>
               <label
@@ -226,7 +226,7 @@ const Header = () => {
                           className={`relative inline-block w-full text-center px-6 py-2 transition-all transform rounded-lg shadow-md ${
                             isActive
                               ? "bg-gradient-to-r from-[#ff6632] to-[#ff9966] text-white scale-105"
-                              : "text-[#2c2c2c] dark:text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] hover:shadow-lg hover:scale-110"
+                              : "text-[#2c2c2c] dark:text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] "
                           }`}
                         >
                           <span className="relative z-10">{labels[index]}</span>
@@ -245,7 +245,7 @@ const Header = () => {
                     {theme === "light" ? <FaMoon /> : <FaSun />}
                   </button>
                 </div>
-                {user && profile ? (
+                {isLoading ? null : user && profile ? (
                   <div className="relative">
                     <div
                       className="flex items-center space-x-2 cursor-pointer"
@@ -260,7 +260,7 @@ const Header = () => {
                         className="w-9 h-9 rounded-full object-cover transition-transform duration-300 transform hover:scale-105"
                       />
                       <span className="text-sm font-medium text-[#6d4c41] dark:text-[#ffffff] truncate">
-                        {profile?.full_name || profile?.username}
+                        {profile?.username || profile?.username}
                       </span>
                     </div>
 

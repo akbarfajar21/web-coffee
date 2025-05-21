@@ -80,6 +80,52 @@ export default function DetailProduct() {
     fetchProduct();
   }, [id, navigate]);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime-rating")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "rating",
+          filter: `coffee_id=eq.${id}`,
+        },
+        async () => {
+          // Ambil ulang data rating setiap ada perubahan
+          const { data: ratingsData, error: ratingsError } = await supabase
+            .from("rating")
+            .select("rating, profile_id, komentar")
+            .eq("coffee_id", id);
+
+          if (!ratingsError) {
+            const userProfilePromises = ratingsData.map(async (rating) => {
+              const { data: profileData } = await supabase
+                .from("profiles")
+                .select("full_name, avatar_url")
+                .eq("id", rating.profile_id)
+                .single();
+              return { ...rating, profile: profileData };
+            });
+
+            const profiles = await Promise.all(userProfilePromises);
+            setUserRatings(profiles.filter((p) => p !== null));
+
+            // Update rating rata-rata juga
+            const avgRating =
+              ratingsData.reduce((sum, r) => sum + r.rating, 0) /
+              ratingsData.length;
+            setRating(avgRating);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id]);
+
   const handleRating = async () => {
     try {
       if (!user) {
@@ -349,7 +395,7 @@ export default function DetailProduct() {
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
-          Brewing your coffee...
+          Memuat...
         </p>
       </div>
     );
@@ -369,78 +415,82 @@ export default function DetailProduct() {
         }`}</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-12 px-6 lg:px-16">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-black py-10 px-4 md:px-10 lg:px-20">
         <button
           onClick={() => navigate("/product")}
-          className="flex items-center text-gray-700 mt-5 hover:text-gray-900 dark:text-white transition-all duration-300"
+          className="flex items-center text-gray-700 mt-9 dark:text-white hover:text-orange-600 dark:hover:text-orange-400 transition-all duration-300"
         >
           <FaArrowLeft className="text-xl mr-2" />
-          <span className="text-lg font-medium">Kembali</span>
+          <span className="text-lg font-semibold">Kembali ke Produk</span>
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-8 px-4 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-10">
           <div className="flex justify-center items-center">
             <img
               src={product.foto_barang}
               alt={product.nama_produk}
-              className="w-full max-w-lg h-auto object-cover rounded-3xl shadow-xl transform transition-transform duration-300 ease-in-out hover:scale-105"
+              className="w-full max-w-lg h-auto object-cover rounded-3xl shadow-lg"
             />
           </div>
 
-          <div className="flex flex-col space-y-6">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">
+          <div className="flex flex-col space-y-5">
+            <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
               {product.nama_produk}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">
+
+            <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
               {product.deskripsi}
             </p>
 
-            <p className="text-2xl sm:text-3xl font-semibold text-orange-600 dark:text-orange-400 mt-4">
+            <p className="text-3xl font-semibold text-orange-600 dark:text-orange-400">
               Rp {product.harga_produk.toLocaleString("id-ID")}
             </p>
 
-            <p className="text-lg text-gray-700 dark:text-gray-300 mt-2">
+            <p className="text-gray-700 dark:text-gray-300">
               <strong>Stok:</strong> {product.stok}
             </p>
 
-            <div className="flex items-center mt-4 space-x-1">
-              <FaStar className="text-yellow-500 text-xl sm:text-2xl" />
-              <p className="text-lg font-medium text-gray-800 dark:text-white ml-2">
+            <div className="flex items-center mt-2">
+              <FaStar className="text-yellow-500 text-xl" />
+              <span className="ml-2 text-lg font-medium text-gray-800 dark:text-white">
                 {rating ? Number(rating).toFixed(1) : "0"} / 5
-              </p>
+              </span>
             </div>
 
-            <div className="mt-6 space-y-6">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                Berikan Rating dan Komentar:
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                Berikan Rating & Komentar:
               </h2>
-              <div className="flex items-center space-x-3 mt-4">
+
+              <div className="flex space-x-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     onClick={() => setUserRating(star)}
-                    className={`text-2xl sm:text-3xl transition-all duration-300 ${
+                    className={`text-3xl transition-all ${
                       star <= userRating
                         ? "text-yellow-500"
                         : "text-gray-400 dark:text-gray-500"
-                    } hover:text-yellow-600 hover:scale-125`}
+                    } hover:scale-125 hover:text-yellow-600`}
                   >
                     <FaStar />
                   </button>
                 ))}
               </div>
+
               <textarea
-                placeholder="Tambahkan Rating Anda..."
+                placeholder="Tulis komentar Anda..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full p-4 border-2 border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white mt-4"
+                className="w-full mt-4 p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white"
                 rows={4}
               />
+
               <button
                 onClick={handleRating}
-                className="w-full py-3 mt-4 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-all duration-300"
+                className="w-full mt-4 py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition"
               >
-                Kirim
+                Kirim Rating
               </button>
             </div>
           </div>
@@ -448,33 +498,33 @@ export default function DetailProduct() {
 
         <div className="border-t border-gray-300 dark:border-gray-700 my-12"></div>
 
-        {/* Rating Pengguna Lain */}
         <div className="mt-10">
-          <h3 className="text-xl md:text-2xl font-semibold text-gray-800 dark:text-white">
-            Rating Pengguna Lain:
+          <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+            Ulasan Pengguna Lain:
           </h3>
-          <div className="space-y-6 mt-4">
-            {userRatings.length > 0 ? (
-              userRatings.map((ratingItem, index) => (
+
+          {userRatings.length > 0 ? (
+            <div className="space-y-6">
+              {userRatings.map((ratingItem, index) => (
                 <div
                   key={ratingItem.profile_id}
-                  className="flex items-start space-x-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 ease-in-out"
+                  className="flex items-start p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition min-w-0"
                 >
                   <img
                     src={ratingItem.profile.avatar_url || "/default-avatar.png"}
                     alt={ratingItem.profile.full_name}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-orange-500"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-orange-500 mr-4 flex-shrink-0"
                   />
-                  <div className="flex-grow">
-                    <p className="font-semibold text-gray-800 dark:text-white text-sm md:text-base">
+                  <div className="flex-grow min-w-0 overflow-hidden">
+                    <p className="font-semibold text-gray-800 dark:text-white truncate">
                       {ratingItem.profile.full_name}
                     </p>
                     <div className="flex space-x-1 text-yellow-500 mt-1">
                       {[...Array(ratingItem.rating)].map((_, i) => (
-                        <FaStar key={i} className="text-sm md:text-base" />
+                        <FaStar key={i} className="text-sm" />
                       ))}
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 break-words whitespace-normal">
                       {ratingItem.komentar}
                     </p>
                   </div>
@@ -483,19 +533,19 @@ export default function DetailProduct() {
                     <div className="relative">
                       <button
                         onClick={() => toggleDropdown(index)}
-                        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105"
+                        className="text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition"
                       >
                         <FaEllipsisV className="text-lg" />
                       </button>
 
                       {showDropdown === index && (
-                        <div className="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg z-10">
+                        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
                           <button
                             onClick={() => {
                               handleDeleteRating(user.id);
                               setShowDropdown(null);
                             }}
-                            className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100 rounded-md"
+                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-800 rounded-md"
                           >
                             Hapus Rating
                           </button>
@@ -504,13 +554,13 @@ export default function DetailProduct() {
                     </div>
                   )}
                 </div>
-              ))
-            ) : (
-              <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                Belum ada rating dari pengguna lain.
-              </p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-600 dark:text-gray-400">
+              Belum ada rating dari pengguna lain.
+            </p>
+          )}
         </div>
       </div>
     </>

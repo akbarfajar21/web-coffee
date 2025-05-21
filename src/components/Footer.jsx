@@ -6,7 +6,6 @@ const Footer = () => {
     <footer className="bg-gradient-to-t from-gray-100 to-white dark:from-gray-900 dark:to-gray-800 text-sm text-neutral-700 dark:text-neutral-300 py-12  border-t border-neutral-200 dark:border-neutral-700">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          {/* About */}
           <div>
             <h3 className="text-lg font-bold mb-3 text-orange-600 dark:text-orange-400">
               About Us
@@ -17,7 +16,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h3 className="text-lg font-bold mb-3 text-orange-600 dark:text-orange-400">
               Quick Links
@@ -42,7 +40,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
             <h3 className="text-lg font-bold mb-3 text-orange-600 dark:text-orange-400">
               Contact
@@ -68,7 +65,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Social Media */}
           <div>
             <h3 className="text-lg font-bold mb-3 text-orange-600 dark:text-orange-400">
               Follow Us
@@ -90,7 +86,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Footer Bottom */}
         <div className="mt-12 pt-6 text-center border-t border-neutral-200 dark:border-neutral-700">
           <p className="text-neutral-500 dark:text-neutral-400 text-sm">
             &copy; {new Date().getFullYear()}{" "}

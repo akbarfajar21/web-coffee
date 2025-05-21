@@ -261,17 +261,16 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
         }`}
         disabled={isProcessing}
       >
-        <div className="flex items-center space-x-2">
-          {isProcessing && (
-            <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-          )}
-
-          <span>
-            {isProcessing
-              ? "Sedang memproses, harap tunggu."
-              : "Lanjutkan ke Pembayaran"}
-          </span>
-        </div>
+        {isProcessing ? (
+          <div className="flex items-center space-x-3">
+            <div className="w-5 h-5 border-[3px] border-white border-t-transparent rounded-full animate-spin"></div>
+            <div className="flex items-center space-x-1">
+              <span>proses pembayaran</span>
+            </div>
+          </div>
+        ) : (
+          <span>Lanjutkan Pembayaran</span>
+        )}
       </button>
     </div>
   );

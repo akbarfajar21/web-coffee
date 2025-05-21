@@ -47,14 +47,14 @@ function AboutPage() {
         <title>CoffeeShopMe | Tentang Kami</title>
       </Helmet>
       <Header />
-      <main className="flex-grow mt-20 px-6 md:px-16 lg:px-24">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white text-center mb-12">
+      <main className="flex-grow mt-16 px-4 md:px-10 lg:px-16">
+        <h1 className="text-3xl md:text-4xl mt-5 font-extrabold text-gray-900 dark:text-white text-center mb-10">
           Tentang Kami
         </h1>
 
-        <section className="py-16 bg-white dark:bg-gray-800 rounded-3xl shadow-lg px-8 md:px-12">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-12">
-            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-3xl">
+        <section className="py-12 bg-white dark:bg-gray-800 rounded-2xl shadow-md px-6 md:px-10">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+            <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed max-w-3xl">
               Di{" "}
               <span className="font-semibold text-orange-600 dark:text-orange-400">
                 CoffeeShopMe
@@ -65,7 +65,7 @@ function AboutPage() {
               sedang mencari tempat nyaman untuk bersantai, bekerja, atau
               bertemu teman, kami ada untuk membuat momen kopi Anda istimewa.
             </p>
-            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mt-6 md:mt-0">
+            <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed max-w-3xl mt-4 md:mt-0">
               Perjalanan kami dimulai dengan hasrat untuk kopi yang luar biasa
               dan impian untuk menciptakan tempat yang hangat dan ramah bagi
               para pecinta kopi. Dari saat Anda memasuki kedai kami, suasana
@@ -75,12 +75,49 @@ function AboutPage() {
           </div>
         </section>
 
-        <section className="py-16 px-8 md:py-20 bg-gradient-to-r mt-12 from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-3xl shadow-lg text-white text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-extrabold mb-6 leading-tight">
+        {/* Nilai-Nilai Kami */}
+        <section className="py-12 mt-12 bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-md px-6 md:px-10">
+          <h2 className="text-3xl font-extrabold text-center text-gray-900 dark:text-white mb-8">
+            Nilai-Nilai Kami
+          </h2>
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <h3 className="text-xl font-semibold text-orange-600 dark:text-orange-400 mb-2">
+                Kualitas Terbaik
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">
+                Kami hanya menggunakan biji kopi pilihan yang diproses dengan
+                cermat untuk menghasilkan rasa kopi yang autentik dan memuaskan.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-orange-600 dark:text-orange-400 mb-2">
+                Keberlanjutan
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">
+                Kami mendukung praktik pertanian kopi yang ramah lingkungan dan
+                berkontribusi pada kesejahteraan petani lokal.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-orange-600 dark:text-orange-400 mb-2">
+                Komunitas
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">
+                Membangun hubungan hangat dan inklusif dengan pelanggan dan
+                pecinta kopi melalui berbagai kegiatan komunitas.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Misi Kami */}
+        <section className="py-12 px-6 md:py-16 bg-gradient-to-r mt-12 from-orange-500 to-yellow-400 dark:from-orange-700 dark:to-yellow-600 rounded-2xl shadow-md text-white text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-extrabold mb-4 leading-tight">
               Misi Kami
             </h2>
-            <p className="text-lg max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base max-w-3xl mx-auto leading-relaxed">
               Kami berkomitmen untuk memberikan pengalaman kopi yang unik dan
               tak terlupakan. Dengan menggunakan biji kopi yang bersumber secara
               etis dan menciptakan komunitas yang hangat dan inklusif, kami
@@ -91,11 +128,11 @@ function AboutPage() {
         </section>
 
         {/* Timeline Section */}
-        <section className="mt-24 px-8">
-          <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-10">
+        <section className="mt-20 px-6">
+          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-8">
             Perjalanan Kami
           </h2>
-          <div className="relative border-l-4 border-orange-500 dark:border-orange-400 pl-6 max-w-3xl mx-auto">
+          <div className="relative border-l-4 border-orange-500 dark:border-orange-400 pl-5 max-w-3xl mx-auto">
             {[
               {
                 year: "2022",
@@ -110,21 +147,24 @@ function AboutPage() {
                 desc: "Membangun kehadiran online yang kuat dan memperluas komunitas kopi kami.",
               },
             ].map((event, index) => (
-              <div key={index} className="mb-10">
-                <h3 className="text-xl font-bold text-orange-600 dark:text-orange-400">
+              <div key={index} className="mb-8">
+                <h3 className="text-lg font-semibold text-orange-600 dark:text-orange-400">
                   {event.year}
                 </h3>
-                <p className="text-gray-700 dark:text-gray-300">{event.desc}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  {event.desc}
+                </p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mt-16 px-8">
-          <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-10">
+        {/* Galeri Kami */}
+        <section className="mt-14">
+          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-8">
             Galeri Kami
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {[
               "gallery1.webp",
               "gallery2.jpg",
@@ -134,23 +174,23 @@ function AboutPage() {
               <div
                 key={index}
                 data-aos={index % 2 === 0 ? "fade-up" : "fade-down"}
-                className="rounded-xl overflow-hidden shadow-xl transform hover:scale-105 transition-all duration-300"
+                className="rounded-lg overflow-hidden shadow-md transform hover:scale-105 transition duration-300"
               >
                 <img
                   src={src}
                   alt={`Galeri ${index + 1}`}
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               </div>
             ))}
           </div>
         </section>
 
-        <section className="text-center mt-20 px-8">
-          <h2 className="text-4xl font-extrabold dark:text-white mb-6">
+        <section className="text-center mt-16 px-6">
+          <h2 className="text-3xl font-extrabold dark:text-white mb-5">
             Bergabung dengan Komunitas Kopi Kami
           </h2>
-          <p className="text-lg max-w-2xl mx-auto dark:text-gray-300 mb-8">
+          <p className="text-base max-w-2xl mx-auto dark:text-gray-300 mb-6">
             Ikuti kami di media sosial dan jadilah bagian dari perjalanan kami.
             Bagikan momen kopi Anda menggunakan{" "}
             <span className="font-semibold text-orange-500">#CoffeeShopMe</span>
@@ -158,6 +198,7 @@ function AboutPage() {
           </p>
         </section>
       </main>
+
       <Footer />
     </div>
   );

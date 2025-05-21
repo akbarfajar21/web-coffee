@@ -383,49 +383,19 @@ const SettingPage = () => {
               onClick={toggleModal}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 transition-all duration-200 shadow-lg dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m0 0H5v-4"
-                />
-              </svg>
               Edit Profil
             </button>
 
-            {/* Tombol Hapus Avatar */}
             <button
               onClick={handleDeleteAvatar}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white bg-red-600 hover:bg-red-500 active:bg-red-700 transition-all duration-200 shadow-lg"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
               Hapus Avatar
             </button>
           </div>
         </div>
       </div>
 
-      {/* Modal Edit Profil */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
           <div className="relative w-full max-w-sm mx-auto p-6 bg-white/80 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 animate-fadeIn">

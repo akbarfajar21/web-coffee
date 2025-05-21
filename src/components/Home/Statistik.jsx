@@ -58,12 +58,12 @@ const Statistik = ({ isDarkMode }) => {
   return (
     <section
       ref={sectionRef}
-      className="p-6 transition-all duration-300 flex items-center justify-center text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+      className="p-4 sm:p-6 transition-all duration-300 flex items-center justify-center text-gray-900 dark:bg-gray-900 dark:text-gray-100"
     >
-      <div className="max-w-5xl w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="max-w-5xl w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
           {
-            icon: <Users size={32} className="text-white dark:text-gray-300" />,
+            icon: <Users size={24} className="text-white dark:text-gray-300" />,
             title: "Pengguna Aktif",
             count: penggunaAktif,
             color: "bg-blue-500 dark:bg-blue-600",
@@ -71,7 +71,7 @@ const Statistik = ({ isDarkMode }) => {
           {
             icon: (
               <ShoppingCart
-                size={32}
+                size={24}
                 className="text-white dark:text-gray-300"
               />
             ),
@@ -82,19 +82,19 @@ const Statistik = ({ isDarkMode }) => {
         ].map((stat, index) => (
           <div
             key={index}
-            className={`p-6 rounded-xl shadow-md text-white text-center flex flex-col items-center border border-white/10 dark:border-gray-700 ${stat.color}`}
+            className={`p-4 rounded-lg shadow text-white text-center flex flex-col items-center border border-white/10 dark:border-gray-700 ${stat.color}`}
           >
-            {/* Ikon dengan Latar Belakang Lembut */}
-            <div className="p-3 bg-white/20 dark:bg-white/10 rounded-lg">
+            {/* Ikon */}
+            <div className="p-2 bg-white/20 dark:bg-white/10 rounded-md">
               {stat.icon}
             </div>
 
             {/* Judul */}
-            <h3 className="text-sm font-medium mt-3 mb-1">{stat.title}</h3>
+            <h3 className="text-xs font-medium mt-2 mb-0.5">{stat.title}</h3>
 
-            {/* Angka CountUp */}
+            {/* Angka */}
             {dalamTampilan && (
-              <p className="text-3xl font-bold tracking-tight">
+              <p className="text-2xl font-semibold tracking-tight">
                 <CountUp
                   start={0}
                   end={stat.count}

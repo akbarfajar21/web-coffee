@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../utils/SupaClient";
 
-export default function HistoryLogic({ setHistory, setShowNotification }) {
+export default function HistoryLogic({ setHistory, setIsLoading }) {
   const [history, setLocalHistory] = useState([]);
 
-  // Fetch history awal
   useEffect(() => {
     const fetchHistory = async () => {
+      setIsLoading(true);
       const { data: user } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
 
       const { data, error } = await supabase
         .from("history")
@@ -19,12 +22,13 @@ export default function HistoryLogic({ setHistory, setShowNotification }) {
 
       if (error) console.error(error);
       else setLocalHistory(data);
+
+      setIsLoading(false);
     };
 
     fetchHistory();
-  }, []);
+  }, [setIsLoading]);
 
-  // Update realtime jika ada perubahan status
   useEffect(() => {
     const channel = supabase
       .channel("history-updates")
@@ -37,8 +41,6 @@ export default function HistoryLogic({ setHistory, setShowNotification }) {
         },
         (payload) => {
           const updatedItem = payload.new;
-
-          // Update item di local state
           setLocalHistory((prevHistory) =>
             prevHistory.map((item) =>
               item.id === updatedItem.id ? { ...item, ...updatedItem } : item
@@ -53,27 +55,40 @@ export default function HistoryLogic({ setHistory, setShowNotification }) {
     };
   }, []);
 
-  // Show notification (sekali per transaksi Approved)
   useEffect(() => {
     const notifiedItems =
       JSON.parse(localStorage.getItem("notifiedItems")) || [];
 
-    history.forEach((item) => {
-      if (item.status === "Approved" && !notifiedItems.includes(item.id)) {
-        setShowNotification(true);
+    const newApprovedItems = history.filter(
+      (item) => item.status === "Approved" && !notifiedItems.includes(item.id)
+    );
 
-        const updatedNotifiedItems = [...notifiedItems, item.id];
-        localStorage.setItem(
-          "notifiedItems",
-          JSON.stringify(updatedNotifiedItems)
-        );
+    if (newApprovedItems.length > 0) {
+      newApprovedItems.forEach((item) => {
+        import("sweetalert2").then((Swal) => {
+          Swal.default.fire({
+            toast: true,
+            position: "top-end",
+            icon: "success",
+            title: `Pesanan ${item.order_id} disetujui!`,
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+          });
+        });
+      });
 
-        setTimeout(() => setShowNotification(false), 4000);
-      }
-    });
+      const updatedNotifiedItems = [
+        ...new Set([...notifiedItems, ...newApprovedItems.map((i) => i.id)]),
+      ];
+      localStorage.setItem(
+        "notifiedItems",
+        JSON.stringify(updatedNotifiedItems)
+      );
+    }
 
-    setHistory(history); // Kirim data terbaru ke parent
-  }, [history, setHistory, setShowNotification]);
+    setHistory(history);
+  }, [history, setHistory]);
 
   return null;
 }

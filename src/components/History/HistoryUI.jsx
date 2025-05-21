@@ -5,12 +5,11 @@ import { useSearchParams } from "react-router-dom";
 
 export default function HistoryUI({
   history,
-  showNotification, // Diterima dari props
   searchQuery, // Diterima dari props
   setSearchQuery, // Diterima dari props
+  isLoading,
 }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [showNotificationState, setShowNotificationState] = useState(true); // State baru untuk notifikasi
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -18,28 +17,6 @@ export default function HistoryUI({
     const queryFromUrl = searchParams.get("q") || "";
     setSearchQuery(queryFromUrl);
   }, [searchParams, setSearchQuery]);
-
-  useEffect(() => {
-    const hasApprovedStatus = history.some(
-      (item) => item.status?.trim().toLowerCase() === "approved"
-    );
-
-    // Cek jika ada status "approved" dan notifikasi belum pernah ditampilkan
-    if (hasApprovedStatus && showNotificationState) {
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "success",
-        title: "Thank you for your purchase!",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
-
-      // Setelah menampilkan notifikasi, set showNotificationState menjadi false
-      setShowNotificationState(false);
-    }
-  }, [history, showNotificationState]); // Menyebabkan efek saat history berubah
 
   const handleSearchChange = (e) => {
     const query = e.target.value;
@@ -50,6 +27,34 @@ export default function HistoryUI({
       setSearchParams({});
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute -top-8 flex space-x-2">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="w-2 h-6 bg-gray-400 opacity-50 rounded-full animate-steam"
+                style={{ animationDelay: `${i * 0.2}s` }}
+              ></div>
+            ))}
+          </div>
+
+          <div className="relative w-20 h-16 bg-gradient-to-b from-orange-500 to-orange-700 rounded-t-full flex items-end justify-center shadow-lg glow-effect">
+            <div className="absolute bottom-0 w-16 h-12 bg-white dark:bg-gray-800 rounded-t-full"></div>
+          </div>
+
+          <div className="absolute right-[-10px] top-[6px] w-5 h-5 border-4 border-orange-500 rounded-full"></div>
+        </div>
+
+        <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
+          Memuat...
+        </p>
+      </div>
+    );
+  }
 
   const filteredHistory = history.filter(
     (item) =>
@@ -147,7 +152,7 @@ export default function HistoryUI({
                     key={item.order_id}
                     className="border-b bg-gray-50 dark:bg-gray-800 text-xs sm:text-sm hover:bg-indigo-100 dark:hover:bg-indigo-700 transition-all"
                   >
-                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-center">
+                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-center dark:text-gray-300">
                       {index + 1}
                     </td>
                     <td className="px-3 sm:px-4 py-2 sm:py-3 text-center font-semibold text-gray-800 dark:text-gray-300">

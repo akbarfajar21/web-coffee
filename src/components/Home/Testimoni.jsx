@@ -83,9 +83,9 @@ const Testimonials = () => {
 
   return (
     <div className="py-12 px-6 w-full mx-auto bg-gray-50 dark:bg-gray-900">
-      <h2 className="text-4xl font-extrabold text-center mb-10 text-gray-800 dark:text-white">
+      <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-800 dark:text-white">
         Apa Kata Pelanggan Kami
-      </h2>
+      </h1>
 
       {loading ? (
         <div className="flex justify-center items-center h-40">
@@ -111,32 +111,35 @@ const Testimonials = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-14"
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10"
             >
               {testimonials.map((testimonial) => (
                 <div
                   key={testimonial.id}
-                  className="relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:scale-105"
+                  className="relative bg-white dark:bg-gray-800 p-4 rounded-xl shadow border border-gray-200 dark:border-gray-700 transition-all"
                 >
-                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+                  {/* Avatar */}
+                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
                     <img
                       src={testimonial.profiles.avatar_url}
                       alt={`Avatar dari ${testimonial.profiles.full_name}`}
-                      className="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg"
+                      className="w-14 h-14 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow"
                     />
                   </div>
-                  <div className="mt-12 text-center">
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+
+                  {/* Konten */}
+                  <div className="mt-10 text-center">
+                    <h3 className="text-sm font-semibold text-gray-800 dark:text-white">
                       {testimonial.profiles.full_name}
                     </h3>
-                    <p className="italic text-sm text-gray-600 dark:text-gray-300 mt-2">
+                    <p className="italic text-xs text-gray-600 dark:text-gray-300 mt-1">
                       "{testimonial.message}"
                     </p>
-                    <div className="mt-3 flex justify-center space-x-1">
+                    <div className="mt-2 flex justify-center space-x-0.5">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <span
                           key={star}
-                          className={`text-xl ${
+                          className={`text-base ${
                             testimonial.rating >= star
                               ? "text-yellow-500"
                               : "text-gray-300"

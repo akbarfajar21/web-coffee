@@ -45,6 +45,26 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
 
+    if (!recaptchaToken) {
+      setIsLoading(false);
+      Swal.fire({
+        title: "Verifikasi Gagal",
+        text: "Silakan selesaikan reCAPTCHA terlebih dahulu.",
+        icon: "warning",
+        iconColor: "#F59E0B",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#F59E0B",
+        background: "#FFFFFF",
+        color: "#1F2937",
+        customClass: {
+          popup: "rounded-xl shadow-lg",
+          title: "text-lg font-semibold",
+          confirmButton: "px-6 py-2",
+        },
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -227,12 +247,12 @@ const Login = () => {
         </div>
       )}
 
-      <div className="relative max-w-md w-full bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl p-8">
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
-          Selamat Datang 👋
+      <div className="relative max-w-sm w-full bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl shadow-2xl rounded-3xl p-6 transition-all">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-3">
+          Selamat Datang
         </h2>
-        <p className="text-gray-600 text-center mb-6">
-          Masuk untuk melanjutkan ke akun Anda!
+        <p className="text-sm text-black dark:text-gray-300 text-center mb-6">
+          Masuk untuk melanjutkan ke akun Anda
         </p>
 
         <form onSubmit={handleEmailLogin} className="space-y-5">
@@ -242,7 +262,7 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
           />
 
           <div className="relative">
@@ -252,47 +272,47 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2/4 transform -translate-y-2/4 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
-          <div className="flex justify-center">
-            <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-              onChange={(token) => setRecaptchaToken(token)}
-            />
-          </div>
-
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition-all text-sm"
           >
             Masuk
           </button>
         </form>
 
-        <div className="flex items-center justify-between my-6">
-          <hr className="w-full border-gray-300" />
-          <span className="text-gray-400 px-4">atau</span>
-          <hr className="w-full border-gray-300" />
+        <div className="flex items-center justify-between my-5">
+          <hr className="w-full border-gray-300 dark:border-gray-600" />
+          <span className="text-xs text-black dark:text-white px-3">atau</span>
+          <hr className="w-full border-gray-300 dark:border-gray-600" />
         </div>
 
         <button
           onClick={handleGoogleLogin}
-          className="w-full bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-800 transition-all duration-300 flex items-center justify-center space-x-3"
+          className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-100 font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-all flex items-center justify-center space-x-2 text-sm"
         >
-          <img src="/logo-google.png" alt="Google" className="w-6 h-6" />
+          <img src="/logo-google.png" alt="Google" className="w-5 h-5" />
           <span>Masuk dengan Google</span>
         </button>
 
-        <p className="text-gray-500 mt-4 text-center">
+        <div className="flex justify-center mt-5">
+          <ReCAPTCHA
+            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+            onChange={(token) => setRecaptchaToken(token)}
+          />
+        </div>
+
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-5 text-center">
           Belum punya akun?{" "}
           <span
             onClick={() => navigate("/register")}

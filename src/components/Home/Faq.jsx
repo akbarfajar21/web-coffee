@@ -30,41 +30,45 @@ const FAQ = () => {
       answer:
         "Kami menerima berbagai metode pembayaran, termasuk kartu kredit, transfer bank, dan dompet digital seperti OVO dan GoPay.",
     },
+    {
+      question: "Apakah ada opsi pengembalian produk?",
+      answer:
+        "Ya, kami menyediakan opsi pengembalian produk jika produk Anda tidak sesuai dengan pesanan Anda.",
+    },
   ];
 
   return (
-    <div className=" dark:bg-gray-800 py-16 px-6">
-      <h2 className="text-4xl font-extrabold text-center text-gray-800 dark:text-white mb-12">
-        FAQ
+    <div className="dark:bg-gray-900 py-10 px-4">
+      <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">
+        Pertanyaan yang Sering Diajukan
       </h2>
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-2xl mx-auto space-y-3">
         {faqs.map((faq, index) => {
           const props = useSpring({
             opacity: indexAktif === index ? 1 : 0,
-            maxHeight: indexAktif === index ? "150px" : "0px",
-            transform: indexAktif === index ? "scaleY(1)" : "scaleY(0.9)",
+            maxHeight: indexAktif === index ? 120 : 0,
             overflow: "hidden",
-            config: { tension: 220, friction: 25 },
+            config: { tension: 240, friction: 26 },
           });
 
           return (
             <div
               key={index}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl"
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-md px-4 py-3"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full flex justify-between items-center text-lg font-semibold text-gray-800 dark:text-white focus:outline-none"
+                className="w-full flex justify-between items-center text-sm md:text-base font-medium text-gray-800 dark:text-white"
               >
                 <span>{faq.question}</span>
                 <FaChevronDown
-                  className={`transition-transform duration-300 ${
+                  className={`transform transition-transform duration-300 ${
                     indexAktif === index ? "rotate-180 text-orange-500" : ""
                   }`}
                 />
               </button>
               <animated.div style={props}>
-                <p className="mt-4 text-gray-600 dark:text-gray-300">
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                   {faq.answer}
                 </p>
               </animated.div>

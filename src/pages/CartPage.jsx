@@ -136,14 +136,12 @@ export default function CartPage() {
   const updateQuantity = async (coffee_id, newQuantity) => {
     if (newQuantity < 1) return;
 
-    // 1. Optimistic update: langsung update UI
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.coffee_id === coffee_id ? { ...item, quantity: newQuantity } : item
       )
     );
 
-    // 2. Async update ke database tanpa menahan UI
     try {
       const {
         data: { user },
@@ -172,41 +170,41 @@ export default function CartPage() {
         <title>CoffeeShopMe | Keranjang Belanja</title>
       </Helmet>
 
-      <div className="p-6 flex-grow max-w-7xl mx-auto mt-12">
-        <div className="flex items-center mt-7 justify-between mb-6 sm:mb-8">
+      <div className="p-4 sm:p-6 flex-grow max-w-6xl mx-auto mt-8 sm:mt-12">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <button
             onClick={() => navigate("/product")}
-            className="p-2 sm:p-3 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+            className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 shadow-sm text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
           >
-            <FaArrowLeft className="text-xl sm:text-2xl" />
+            <FaArrowLeft className="text-base sm:text-lg" />
           </button>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white drop-shadow-md">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white drop-shadow-sm">
             Keranjang Belanja
           </h1>
-          <div className="w-8 sm:w-10"></div>
+          <div className="w-6 sm:w-8"></div>
         </div>
 
         {cart.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center py-8 sm:py-10">
+          <div className="flex flex-col items-center justify-center text-center py-6 sm:py-10">
             <img
               src="/Empty.gif"
               alt="Keranjang Kosong"
-              className="w-48 sm:w-64 h-auto rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
+              className="w-40 sm:w-56 h-auto rounded-lg shadow"
             />
-            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mt-4 sm:mt-6 max-w-xs sm:max-w-md">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-4 max-w-xs sm:max-w-md">
               Ups! Sepertinya keranjang Anda kosong. Mulai tambahkan kopi
               favorit Anda!
             </p>
             <button
               onClick={() => navigate("/product")}
-              className="mt-4 sm:mt-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg shadow-md text-base sm:text-lg font-semibold hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300"
+              className="mt-5 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-2 sm:px-6 sm:py-2.5 rounded-md shadow-md text-sm sm:text-base font-medium hover:from-orange-600 hover:to-orange-700 hover:scale-105 transition-all duration-300"
             >
               Mulai Belanja
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {cart.map((item) => (
                 <CheckableCartItem
                   key={item.coffee_id}
@@ -219,19 +217,19 @@ export default function CartPage() {
               ))}
             </div>
 
-            <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl p-6 sticky top-20 flex flex-col min-h-[320px] transition-all duration-300">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight">
+            <div className="bg-white/90 dark:bg-gray-900/70 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-4 sm:p-6 sticky top-20 flex flex-col min-h-[280px] transition-all duration-300">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6 text-center">
                 Ringkasan Pesanan
               </h2>
 
-              <div className="space-y-4 text-gray-800 dark:text-gray-300 flex-grow">
+              <div className="space-y-3 text-gray-800 dark:text-gray-300 flex-grow text-sm sm:text-base">
                 {filteredCart.length > 0 ? (
                   filteredCart.map((item) => (
                     <div
                       key={item.coffee_id}
-                      className="flex justify-between items-center text-sm pb-2 border-b border-gray-200 dark:border-gray-700"
+                      className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-700 text-xs sm:text-sm"
                     >
-                      <p className="truncate max-w-[65%]">
+                      <p className="truncate max-w-[60%]">
                         {item.coffee.nama_produk} × {item.quantity}
                       </p>
                       <p className="font-medium">
@@ -240,20 +238,18 @@ export default function CartPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500 dark:text-gray-400 text-center italic">
+                  <p className="text-gray-500 dark:text-gray-400 text-center italic text-xs">
                     Pilih produk untuk checkout
                   </p>
                 )}
               </div>
 
-              {/* Total Harga */}
-              <div className="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
+              <div className="flex justify-between items-center text-base sm:text-lg font-semibold text-gray-900 dark:text-white mt-4">
                 <p>Total</p>
                 <p>{formatHarga(totalHarga)}</p>
               </div>
 
-              {/* Tombol Checkout */}
-              <div className="mt-6">
+              <div className="mt-4 sm:mt-6">
                 <CheckoutButton
                   cart={filteredCart}
                   totalHarga={totalHarga}

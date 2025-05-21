@@ -22,7 +22,7 @@ export default function ProductPage() {
   const [progress, setProgress] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [ratingSortOrder, setRatingSortOrder] = useState("");
-  const productsPerPage = 30;
+  const productsPerPage = 35;
   const navigate = useNavigate();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -384,7 +384,7 @@ export default function ProductPage() {
       <div className="h-screen overflow-hidden py-6 dark:bg-gray-900">
         <div className="mb-8">
           <h1 className="mt-16 text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
-            Our Products
+            Produk Coffee
           </h1>
         </div>
 
@@ -441,7 +441,6 @@ export default function ProductPage() {
               </button>
             </div>
 
-            {/* Search Input */}
             <div className="mb-5">
               <label
                 htmlFor="search"
@@ -785,39 +784,39 @@ export default function ProductPage() {
             ) : (
               <>
                 <div
-                  className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-5 gap-2"
+                  className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-2"
                   style={{ gridAutoRows: "minmax(320px, auto)" }}
                 >
                   {currentProducts.map((product) => (
                     <div
                       onClick={() => handleProductClick(product.id)}
-                      className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col"
+                      className="relative bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col"
                     >
                       <div className="relative group">
                         <img
                           src={product.foto_barang}
                           alt={product.nama_produk}
-                          className="w-full h-48 object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-36 object-cover rounded-t-xl"
                         />
                         {product.stok === 0 && (
-                          <div className="absolute inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center rounded-t-2xl">
-                            <span className="text-white font-semibold text-xs bg-red-600 px-3 py-1 rounded-full shadow-md">
+                          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center rounded-t-xl">
+                            <span className="text-white font-semibold text-[10px] bg-red-600 px-2 py-0.5 rounded-full shadow-sm">
                               Out of Stock
                             </span>
                           </div>
                         )}
                       </div>
 
-                      <div className="p-4 flex flex-col flex-grow">
-                        <h2 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                      <div className="p-3 flex flex-col flex-grow">
+                        <h2 className="text-xs font-semibold text-gray-900 dark:text-white truncate">
                           {product.nama_produk}
                         </h2>
 
-                        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 mt-1">
+                        <p className="text-[11px] text-gray-600 dark:text-gray-300 line-clamp-2 mt-1">
                           {product.deskripsi}
                         </p>
 
-                        <div className="flex justify-between items-center text-xs text-gray-600 dark:text-gray-400 mt-3">
+                        <div className="flex justify-between items-center text-[10px] text-gray-600 dark:text-gray-400 mt-2">
                           <span className="flex items-center space-x-1">
                             <i className="fas fa-box"></i>
                             <span className="font-medium">
@@ -831,24 +830,24 @@ export default function ProductPage() {
                               !isNaN(Number(product.rating_produk))
                                 ? `${parseFloat(
                                     Number(product.rating_produk).toFixed(1)
-                                  )} `
+                                  )}`
                                 : "No Rating"}
                             </span>
                           </span>
                         </div>
 
-                        <p className="text-lg font-bold text-orange-600 dark:text-orange-400 mt-3">
+                        <p className="text-base font-bold text-orange-600 dark:text-orange-400 mt-2">
                           {formatRupiah(product.harga_produk)}
                         </p>
 
-                        <div className="mt-auto pt-4">
+                        <div className="mt-auto pt-3">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleAddToCart(product.id);
                             }}
                             disabled={product.stok === 0}
-                            className={`w-full py-2 rounded-lg text-sm font-medium text-white transition-all shadow-md flex items-center justify-center gap-2 ${
+                            className={`w-full py-1.5 rounded-md text-xs font-medium text-white transition-all shadow-sm flex items-center justify-center gap-2 ${
                               product.stok === 0
                                 ? "bg-gray-400 cursor-not-allowed opacity-60"
                                 : "bg-orange-600 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-800"
