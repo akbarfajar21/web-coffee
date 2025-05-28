@@ -184,7 +184,8 @@ const Header = () => {
       <nav className="fixed z-20 w-full bg-gradient-to-r from-[#ffffff] to-[#f0f0f0]/80 dark:bg-gradient-to-r dark:from-[#2c2c2c] dark:to-[#1e1e1e]/80 backdrop-blur-lg shadow-lg">
         <div className="px-6 md:px-10 w-full">
           <div className="w-full flex flex-wrap items-center justify-between gap-6 md:py-3 md:gap-0">
-            <div className="w-full flex justify-between lg:w-auto">
+            {/* Logo + Hamburger + Mobile theme/profile */}
+            <div className="w-full flex justify-between lg:w-auto items-center">
               <Link
                 to="/"
                 aria-label="logo"
@@ -194,20 +195,78 @@ const Header = () => {
                   CoffeeShopMe
                 </span>
               </Link>
-              <label
-                htmlFor="hbr"
-                className="peer-checked:hamburger block relative z-20 p-6 -mr-6 cursor-pointer lg:hidden ml-auto"
-              >
-                <div
-                  aria-hidden="true"
-                  className="m-auto h-0.5 w-6 rounded bg-[#3e2723] dark:bg-[#d7ccc8] transition duration-300"
-                ></div>
-                <div
-                  aria-hidden="true"
-                  className="m-auto mt-2 h-0.5 w-6 rounded bg-[#3e2723] dark:bg-[#d7ccc8] transition duration-300"
-                ></div>
-              </label>
+
+              {/* Container untuk mobile: theme+profile di kiri, hamburger di kanan */}
+              <div className="flex items-center justify-between lg:hidden">
+                {/* Mobile: Theme & Profile (di kiri) */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={toggleTheme}
+                    className="p-2 rounded-full bg-gray-200 dark:bg-gray-600 text-black dark:text-white"
+                    aria-label="Toggle Theme"
+                  >
+                    {theme === "light" ? <FaMoon /> : <FaSun />}
+                  </button>
+
+                  {isLoading ? null : user && profile ? (
+                    <div className="relative dropdown">
+                      <img
+                        onClick={() => setDropdownVisible(!dropdownVisible)}
+                        src={
+                          profile?.avatar_url ||
+                          "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+                        }
+                        alt="profile"
+                        className="w-9 h-9 rounded-full object-cover cursor-pointer"
+                      />
+                      {dropdownVisible && (
+                        <div className="absolute right-0 mt-2 bg-white dark:bg-[#252525] dark:border dark:border-gray-600 rounded-xl shadow-xl w-52 py-2 transform transition-all duration-300 ease-out scale-95 z-30">
+                          <Link
+                            to="/settings"
+                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            Pengaturan
+                          </Link>
+                          <Link
+                            to="/history"
+                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            Riwayat
+                          </Link>
+                          <button
+                            onClick={handleLogout}
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            Keluar
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Hamburger (paling kanan) */}
+                <label
+                  htmlFor="hbr"
+                  className="peer-checked:hamburger block relative z-20 p-6 -mr-6 cursor-pointer"
+                >
+                  <div
+                    aria-hidden="true"
+                    className="m-auto h-0.5 w-6 rounded bg-[#3e2723] dark:bg-[#d7ccc8] transition duration-300"
+                  ></div>
+                  <div
+                    aria-hidden="true"
+                    className="m-auto mt-2 h-0.5 w-6 rounded bg-[#3e2723] dark:bg-[#d7ccc8] transition duration-300"
+                  ></div>
+                  <div
+                    aria-hidden="true"
+                    className="m-auto mt-2 h-0.5 w-6 rounded bg-[#3e2723] dark:bg-[#d7ccc8] transition duration-300"
+                  ></div>
+                </label>
+              </div>
             </div>
+
+            {/* Menu Navigasi (hidden di mobile kecuali menuVisible) */}
             <div
               className={`navmenu w-full flex-wrap justify-center items-center space-y-8 p-6 lg:space-y-0 lg:p-0 lg:flex md:flex-nowrap lg:w-7/12 ${
                 menuVisible ? "peer-checked:flex" : "hidden"
@@ -220,13 +279,16 @@ const Header = () => {
                     const isActive = location.pathname === path;
 
                     return (
-                      <li key={index} className="relative group">
+                      <li
+                        key={index}
+                        className="relative group flex-1 text-center"
+                      >
                         <Link
                           to={path}
-                          className={`relative inline-block w-full text-center px-6 py-2 transition-all transform rounded-lg shadow-md ${
+                          className={`relative inline-block w-52 md:w-full px-6 py-2 transition-all transform rounded-lg shadow-md ${
                             isActive
                               ? "bg-gradient-to-r from-[#ff6632] to-[#ff9966] text-white scale-105"
-                              : "text-[#2c2c2c] dark:text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] "
+                              : "text-[#2c2c2c] dark:text-[#ffffff] hover:text-white hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966]"
                           }`}
                         >
                           <span className="relative z-10">{labels[index]}</span>
@@ -236,71 +298,73 @@ const Header = () => {
                   }
                 )}
               </ul>
-              <div className="w-full flex justify-end  items-center gap-3 pl-4 relative">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={toggleTheme}
-                    className="p-2 rounded-full bg-gray-200 dark:bg-gray-600 text-black dark:text-white"
-                  >
-                    {theme === "light" ? <FaMoon /> : <FaSun />}
-                  </button>
-                </div>
-                {isLoading ? null : user && profile ? (
-                  <div className="relative">
-                    <div
-                      className="flex items-center space-x-2 cursor-pointer"
-                      onClick={() => setDropdownVisible(!dropdownVisible)}
-                    >
-                      <img
-                        src={
-                          profile?.avatar_url ||
-                          "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-                        } // Pastikan avatar_url sudah terisi
-                        alt={profile?.username || profile?.email}
-                        className="w-9 h-9 rounded-full object-cover transition-transform duration-300 transform hover:scale-105"
-                      />
-                      <span className="text-sm font-medium text-[#6d4c41] dark:text-[#ffffff] truncate">
-                        {profile?.username || profile?.username}
-                      </span>
-                    </div>
+            </div>
 
-                    {dropdownVisible && (
-                      <div className="absolute right-0 mt-2 bg-white dark:bg-[#252525] dark:border dark:border-gray-600 rounded-xl shadow-xl w-52 py-2 transform transition-all duration-300 ease-out scale-95 z-30">
-                        <div className="px-4 py-2">
-                          <Link
-                            to="/settings"
-                            className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
-                          >
-                            <Settings2 className="mr-2 w-5 h-5" /> Pengaturan
-                          </Link>
-                        </div>
-                        <div className="px-4 py-2">
-                          <Link
-                            to="/history"
-                            className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
-                          >
-                            <ListOrdered className="mr-2 w-5 h-5" /> Riwayat
-                          </Link>
-                        </div>
-                        <div className="px-4 py-2">
-                          <button
-                            onClick={handleLogout}
-                            className="flex w-full items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
-                          >
-                            <LogOut className="mr-2 w-5 h-5" /> Keluar
-                          </button>
-                        </div>
-                      </div>
-                    )}
+            {/* Desktop: Theme & Profile (tampil hanya di desktop) */}
+            <div className="hidden lg:flex justify-end items-center gap-3 pl-4 relative">
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-full bg-gray-200 dark:bg-gray-600 text-black dark:text-white"
+                aria-label="Toggle Theme"
+              >
+                {theme === "light" ? <FaMoon /> : <FaSun />}
+              </button>
+
+              {isLoading ? null : user && profile ? (
+                <div className="relative">
+                  <div
+                    className="flex items-center space-x-2 cursor-pointer"
+                    onClick={() => setDropdownVisible(!dropdownVisible)}
+                  >
+                    <img
+                      src={
+                        profile?.avatar_url ||
+                        "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+                      }
+                      alt={profile?.username || profile?.email}
+                      className="w-9 h-9 rounded-full object-cover transition-transform duration-300 transform hover:scale-105"
+                    />
+                    <span className="text-sm font-medium text-[#6d4c41] dark:text-[#ffffff] truncate">
+                      {profile?.username || profile?.email}
+                    </span>
                   </div>
-                ) : (
-                  <Link to="/login">
-                    <button className="bg-[#ff6632] text-white px-4 py-2 rounded-md hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] transition-all duration-300 transform hover:scale-110">
-                      Login
-                    </button>
-                  </Link>
-                )}
-              </div>
+
+                  {dropdownVisible && (
+                    <div className="absolute right-0 mt-2 bg-white dark:bg-[#252525] dark:border dark:border-gray-600 rounded-xl shadow-xl w-52 py-2 transform transition-all duration-300 ease-out scale-95 z-30">
+                      <div className="px-4 py-2">
+                        <Link
+                          to="/settings"
+                          className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
+                        >
+                          <Settings2 className="mr-2 w-5 h-5" /> Pengaturan
+                        </Link>
+                      </div>
+                      <div className="px-4 py-2">
+                        <Link
+                          to="/history"
+                          className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
+                        >
+                          <ListOrdered className="mr-2 w-5 h-5" /> Riwayat
+                        </Link>
+                      </div>
+                      <div className="px-4 py-2">
+                        <button
+                          onClick={handleLogout}
+                          className="flex w-full items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white rounded-lg p-3 transition-all duration-300 ease-in-out"
+                        >
+                          <LogOut className="mr-2 w-5 h-5" /> Keluar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/login">
+                  <button className="bg-[#ff6632] text-white px-4 py-2 rounded-md hover:bg-gradient-to-r hover:from-[#ff6632] hover:to-[#ff9966] transition-all duration-300 transform hover:scale-110">
+                    Login
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

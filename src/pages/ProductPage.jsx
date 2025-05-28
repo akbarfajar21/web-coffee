@@ -30,7 +30,9 @@ export default function ProductPage() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
+      setIsLoading(true); // tampil loading full screen
+      setLoading(true); // prepare skeleton card juga aktif
+
       setProgress(30);
       try {
         const { data, error } = await supabase
@@ -38,15 +40,21 @@ export default function ProductPage() {
           .select(
             "id, nama_produk, harga_produk, deskripsi, stok, foto_barang, rating_produk"
           );
-
         if (error) throw error;
+
         setProducts(data);
         setFilteredProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error.message);
       } finally {
-        setLoading(false);
-        setProgress(100);
+        setTimeout(() => {
+          setIsLoading(false);
+
+          setTimeout(() => {
+            setLoading(false);
+            setProgress(100);
+          }, 800);
+        }, 1800);
       }
     };
 
@@ -83,7 +91,6 @@ export default function ProductPage() {
             return prev;
           });
 
-          // Update filteredProducts juga (biar sinkron)
           setFilteredProducts((prev) => {
             if (eventType === "INSERT") {
               return [newItem, ...prev];
@@ -306,7 +313,7 @@ export default function ProductPage() {
         .select("*")
         .eq("profile_id", user.user.id)
         .eq("coffee_id", product)
-        .single();
+        .maybeSingle();
 
       if (cartData) {
         const updatedQuantity = cartData.quantity + 1;
@@ -366,6 +373,17 @@ export default function ProductPage() {
   const handleProductClick = (productId) => {
     navigate(`/product-detail/${productId}`);
   };
+
+  const SkeletonCard = () => (
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-3 flex flex-col animate-pulse">
+      <div className="w-full h-36 bg-gray-200 dark:bg-gray-700 rounded-md mb-3"></div>
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
+      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6 mb-2"></div>
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mt-auto"></div>
+      <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded mt-3"></div>
+    </div>
+  );
 
   return (
     <>
@@ -756,131 +774,138 @@ export default function ProductPage() {
             </div>
           )}
 
-          <section className="w-full h-screen max-h-screen flex flex-col overflow-y-auto pb-52">
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="relative flex items-center justify-center">
-                  <div className="absolute -top-8 flex space-x-2">
-                    {[0, 1, 2].map((i) => (
-                      <div
-                        key={i}
-                        className="w-2 h-6 bg-gray-400 opacity-50 rounded-full animate-steam"
-                        style={{ animationDelay: `${i * 0.2}s` }}
-                      ></div>
-                    ))}
-                  </div>
-
-                  <div className="relative w-20 h-16 bg-gradient-to-b from-orange-500 to-orange-700 rounded-t-full flex items-end justify-center shadow-lg glow-effect">
-                    <div className="absolute bottom-0 w-16 h-12 bg-white dark:bg-gray-800 rounded-t-full"></div>
-                  </div>
-
-                  <div className="absolute right-[-10px] top-[6px] w-5 h-5 border-4 border-orange-500 rounded-full"></div>
+          {isLoading ? (
+            // Tampilan memuat besar (cangkir kopi)
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-900 z-50">
+              <div className="relative flex flex-col items-center justify-center">
+                <div className="absolute -top-8 flex space-x-2">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="w-2 h-6 bg-gray-400 opacity-50 rounded-full animate-steam"
+                      style={{ animationDelay: `${i * 0.2}s` }}
+                    ></div>
+                  ))}
                 </div>
+
+                <div className="relative w-20 h-16 bg-gradient-to-b from-orange-500 to-orange-700 rounded-t-full flex items-end justify-center shadow-lg glow-effect">
+                  <div className="absolute bottom-0 w-16 h-12 bg-white dark:bg-gray-800 rounded-t-full"></div>
+                </div>
+
+                <div className="absolute right-[-10px] top-[6px] w-5 h-5 border-4 border-orange-500 rounded-full"></div>
 
                 <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold animate-fade-in">
                   Memuat...
                 </p>
               </div>
-            ) : (
-              <>
-                <div
-                  className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-2"
-                  style={{ gridAutoRows: "minmax(320px, auto)" }}
-                >
-                  {currentProducts.map((product) => (
-                    <div
-                      onClick={() => handleProductClick(product.id)}
-                      className="relative bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col"
-                    >
-                      <div className="relative group">
-                        <img
-                          src={product.foto_barang}
-                          alt={product.nama_produk}
-                          className="w-full h-36 object-cover rounded-t-xl"
-                        />
-                        {product.stok === 0 && (
-                          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center rounded-t-xl">
-                            <span className="text-white font-semibold text-[10px] bg-red-600 px-2 py-0.5 rounded-full shadow-sm">
-                              Out of Stock
+            </div>
+          ) : (
+            // Setelah halaman siap → tampilkan produk (dengan loading skeleton)
+            <section className="w-full h-screen max-h-screen flex flex-col overflow-y-auto pb-52">
+              <div
+                className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-2"
+                style={{ gridAutoRows: "minmax(320px, auto)" }}
+              >
+                {loading
+                  ? Array.from({ length: 35 }).map((_, index) => (
+                      <SkeletonCard key={index} />
+                    ))
+                  : currentProducts.map((product) => (
+                      <div
+                        onClick={() => handleProductClick(product.id)}
+                        key={product.id}
+                        className="relative bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-200 dark:border-gray-700 flex flex-col"
+                      >
+                        {/* Gambar */}
+                        <div className="relative group">
+                          <img
+                            src={product.foto_barang}
+                            alt={product.nama_produk}
+                            className="w-full h-36 object-cover rounded-t-xl"
+                          />
+                          {product.stok === 0 && (
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center rounded-t-xl">
+                              <span className="text-white font-semibold text-[10px] bg-red-600 px-2 py-0.5 rounded-full shadow-sm">
+                                Out of Stock
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Deskripsi */}
+                        <div className="p-3 flex flex-col flex-grow">
+                          <h2 className="text-xs font-semibold text-gray-900 dark:text-white truncate">
+                            {product.nama_produk}
+                          </h2>
+                          <p className="text-[11px] text-gray-600 dark:text-gray-300 line-clamp-2 mt-1">
+                            {product.deskripsi}
+                          </p>
+
+                          <div className="flex justify-between items-center text-[10px] text-gray-600 dark:text-gray-400 mt-2">
+                            <span className="flex items-center space-x-1">
+                              <i className="fas fa-box"></i>
+                              <span className="font-medium">
+                                Stok: {product.stok}
+                              </span>
+                            </span>
+                            <span className="flex items-center space-x-1">
+                              <i className="fas fa-star text-yellow-400"></i>
+                              <span className="font-medium">
+                                {product.rating_produk &&
+                                !isNaN(Number(product.rating_produk))
+                                  ? `${parseFloat(
+                                      Number(product.rating_produk).toFixed(1)
+                                    )}`
+                                  : "No Rating"}
+                              </span>
                             </span>
                           </div>
-                        )}
-                      </div>
 
-                      <div className="p-3 flex flex-col flex-grow">
-                        <h2 className="text-xs font-semibold text-gray-900 dark:text-white truncate">
-                          {product.nama_produk}
-                        </h2>
+                          <p className="text-base font-bold text-orange-600 dark:text-orange-400 mt-2">
+                            {formatRupiah(product.harga_produk)}
+                          </p>
 
-                        <p className="text-[11px] text-gray-600 dark:text-gray-300 line-clamp-2 mt-1">
-                          {product.deskripsi}
-                        </p>
-
-                        <div className="flex justify-between items-center text-[10px] text-gray-600 dark:text-gray-400 mt-2">
-                          <span className="flex items-center space-x-1">
-                            <i className="fas fa-box"></i>
-                            <span className="font-medium">
-                              Stok: {product.stok}
-                            </span>
-                          </span>
-                          <span className="flex items-center space-x-1">
-                            <i className="fas fa-star text-yellow-400"></i>
-                            <span className="font-medium">
-                              {product.rating_produk &&
-                              !isNaN(Number(product.rating_produk))
-                                ? `${parseFloat(
-                                    Number(product.rating_produk).toFixed(1)
-                                  )}`
-                                : "No Rating"}
-                            </span>
-                          </span>
-                        </div>
-
-                        <p className="text-base font-bold text-orange-600 dark:text-orange-400 mt-2">
-                          {formatRupiah(product.harga_produk)}
-                        </p>
-
-                        <div className="mt-auto pt-3">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddToCart(product.id);
-                            }}
-                            disabled={product.stok === 0}
-                            className={`w-full py-1.5 rounded-md text-xs font-medium text-white transition-all shadow-sm flex items-center justify-center gap-2 ${
-                              product.stok === 0
-                                ? "bg-gray-400 cursor-not-allowed opacity-60"
-                                : "bg-orange-600 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-800"
-                            }`}
-                          >
-                            {product.stok === 0 ? (
-                              <>
-                                <i className="fas fa-times-circle"></i> Out of
-                                Stock
-                              </>
-                            ) : (
-                              <>
-                                <i className="fas fa-cart-plus"></i> Add To Cart
-                              </>
-                            )}
-                          </button>
+                          <div className="mt-auto pt-3">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(product.id);
+                              }}
+                              disabled={product.stok === 0}
+                              className={`w-full py-1.5 rounded-md text-xs font-medium text-white transition-all shadow-sm flex items-center justify-center gap-2 ${
+                                product.stok === 0
+                                  ? "bg-gray-400 cursor-not-allowed opacity-60"
+                                  : "bg-orange-600 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-800"
+                              }`}
+                            >
+                              {product.stok === 0 ? (
+                                <>
+                                  <i className="fas fa-times-circle"></i> Out of
+                                  Stock
+                                </>
+                              ) : (
+                                <>
+                                  <i className="fas fa-cart-plus"></i> Add To
+                                  Cart
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+              </div>
 
-                {/* Pagination */}
-                <div className="mt-auto">
-                  <Pagination
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-              </>
-            )}
-          </section>
+              {/* Pagination */}
+              <div className="mt-auto">
+                <Pagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </>

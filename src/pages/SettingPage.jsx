@@ -203,6 +203,7 @@ const SettingPage = () => {
         setUploading(false);
         setProgress(100);
         toggleAvatarModal(); // Tutup modal setelah selesai
+
         Swal.fire({
           title: "Avatar Diperbarui!",
           text: "Foto profil kamu berhasil diperbarui.",
@@ -217,6 +218,8 @@ const SettingPage = () => {
             title: "text-base font-semibold",
             htmlContainer: "text-sm",
           },
+        }).then(() => {
+          window.location.reload();
         });
       }, 1200);
     } catch (error) {
@@ -299,7 +302,6 @@ const SettingPage = () => {
       <Header />
       <div className="mt-16 flex flex-1 items-center justify-center px-6 py-10 bg-gradient-to-b from-indigo-100 via-white to-indigo-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-2xl backdrop-blur-sm">
-          {/* Tombol Kembali */}
           <button
             onClick={handleBack}
             className="absolute top-6 left-6 text-gray-500 hover:text-indigo-500 transition dark:text-gray-300 dark:hover:text-indigo-400"
@@ -321,7 +323,7 @@ const SettingPage = () => {
           </button>
 
           {/* Judul */}
-          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-10">
+          <h1 className="text-3xl font-bold text-center mt-3 text-gray-900 dark:text-white mb-10">
             Pengaturan Profil
           </h1>
 

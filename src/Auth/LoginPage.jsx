@@ -42,53 +42,71 @@ const Login = () => {
     };
   }, [navigate]);
 
+  // const handleGoogleLogin = async () => {
+  //   setIsLoading(true);
+
+  //   if (!recaptchaToken) {
+  //     setIsLoading(false);
+  //     Swal.fire({
+  //       title: "Verifikasi Gagal",
+  //       text: "Silakan selesaikan reCAPTCHA terlebih dahulu.",
+  //       icon: "warning",
+  //       iconColor: "#F59E0B",
+  //       confirmButtonText: "OK",
+  //       confirmButtonColor: "#F59E0B",
+  //       background: "#FFFFFF",
+  //       color: "#1F2937",
+  //       customClass: {
+  //         popup: "rounded-xl shadow-lg",
+  //         title: "text-lg font-semibold",
+  //         confirmButton: "px-6 py-2",
+  //       },
+  //     });
+  //     return;
+  //   }
+
+  //   try {
+  //     const { error } = await supabase.auth.signInWithOAuth({
+  //       provider: "google",
+  //       options: {
+  //         redirectTo: `${window.location.origin}/home`,
+  //       },
+  //     });
+
+  //     if (error) {
+  //       Swal.fire({
+  //         title: "Login Gagal!",
+  //         text: "Terjadi masalah saat login dengan Google.",
+  //         icon: "error",
+  //         confirmButtonText: "OK",
+  //         background: "#1E1E1E",
+  //         color: "#FFF",
+  //         confirmButtonColor: "#F87171",
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.error("Unhandled error during Google login:", err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleGoogleLogin = async () => {
-    setIsLoading(true);
-
-    if (!recaptchaToken) {
-      setIsLoading(false);
-      Swal.fire({
-        title: "Verifikasi Gagal",
-        text: "Silakan selesaikan reCAPTCHA terlebih dahulu.",
-        icon: "warning",
-        iconColor: "#F59E0B",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#F59E0B",
-        background: "#FFFFFF",
-        color: "#1F2937",
-        customClass: {
-          popup: "rounded-xl shadow-lg",
-          title: "text-lg font-semibold",
-          confirmButton: "px-6 py-2",
-        },
-      });
-      return;
-    }
-
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/home`,
-        },
-      });
-
-      if (error) {
-        Swal.fire({
-          title: "Login Gagal!",
-          text: "Terjadi masalah saat login dengan Google.",
-          icon: "error",
-          confirmButtonText: "OK",
-          background: "#1E1E1E",
-          color: "#FFF",
-          confirmButtonColor: "#F87171",
-        });
-      }
-    } catch (err) {
-      console.error("Unhandled error during Google login:", err);
-    } finally {
-      setIsLoading(false);
-    }
+    Swal.fire({
+      title: "Fitur Sedang Dalam Perbaikan",
+      text: "Maaf, saat ini login dengan Google sedang tidak tersedia. Silakan login menggunakan email dan password.",
+      icon: "info",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#3B82F6",
+      background: "#F9FAFB",
+      color: "#1F2937",
+      width: "400px",
+      customClass: {
+        popup: "rounded-xl shadow-lg",
+        title: "text-lg font-semibold",
+        confirmButton: "px-6 py-2 font-medium",
+      },
+    });
   };
 
   const handleEmailLogin = async (e) => {

@@ -12,6 +12,7 @@ const formatHarga = (harga) => {
 
 const CheckoutButton = ({ cart, totalHarga, navigate }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showCoffeeLoading, setShowCoffeeLoading] = useState(false);
 
   const confirmCheckout = () => {
     const isDarkMode = document.documentElement.classList.contains("dark");
@@ -122,6 +123,8 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
 
       window.snap.pay(token, {
         onSuccess: async () => {
+          setShowCoffeeLoading(true); // Tampilkan loading segera
+
           const { error: historyError } = await supabase.from("history").insert(
             cart.map((item) => ({
               profile_id: user.user.id,
@@ -135,6 +138,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
 
           if (historyError) {
             console.error(historyError);
+            setShowCoffeeLoading(false);
             Swal.fire(
               "Terjadi kesalahan saat menyimpan riwayat",
               historyError.message,
@@ -154,6 +158,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
 
             if (stockError) {
               console.error(stockError);
+              setShowCoffeeLoading(false);
               Swal.fire(
                 `Gagal mengurangi stok untuk ${item.coffee.nama_produk}`,
                 stockError.message,
@@ -171,10 +176,11 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
             .in(
               "coffee_id",
               cart.map((item) => item.coffee_id)
-            ); // Hapus hanya yang dipilih
+            );
 
           if (cartError) {
             console.error(cartError);
+            setShowCoffeeLoading(false);
             Swal.fire(
               "Terjadi kesalahan saat menghapus keranjang",
               cartError.message,
@@ -184,6 +190,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
             return;
           }
 
+          setShowCoffeeLoading(false); // Sembunyikan loading
           Swal.fire({
             title: "Pembayaran Berhasil!",
             html: `<p>Pesanan Anda sedang diproses.</p>
@@ -211,21 +218,15 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
           Swal.fire({
             title: "Pembayaran Tertunda",
             html: `
-            <p class="text-gray-700 dark:text-gray-200 text-lg">
-            Silakan selesaikan pembayaran Anda untuk melanjutkan transaksi.
-            </p>
+              <p class="text-gray-700 dark:text-gray-200 text-lg">
+                Silakan selesaikan pembayaran Anda untuk melanjutkan transaksi.
+              </p>
             `,
             icon: "warning",
             background: "linear-gradient(135deg, #E0F2FE, #BAE6FD)",
             color: "#333",
             confirmButtonText: "Bayar Sekarang",
             confirmButtonColor: "#0284C7",
-            showClass: {
-              popup: "animate__animated animate__fadeInDown animate__fast",
-            },
-            hideClass: {
-              popup: "animate__animated animate__fadeOutUp animate__fast",
-            },
             customClass: {
               popup: "rounded-xl shadow-2xl px-8 py-6",
               title: "text-2xl font-bold text-gray-800 dark:text-white",
@@ -234,6 +235,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
             },
           });
         },
+
         onError: () => {
           Swal.fire(
             "Pembayaran Gagal",
@@ -252,6 +254,17 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
 
   return (
     <div className="mt-6">
+      {showCoffeeLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-[9999]">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-white text-lg font-semibold">
+              Memproses Pembayaran...
+            </p>
+          </div>
+        </div>
+      )}
+
       <button
         onClick={confirmCheckout}
         className={`relative flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full shadow-xl transition-all duration-300 ease-in-out transform active:scale-95 w-full text-lg font-semibold tracking-wide h-12 min-w-[180px] ${
@@ -264,9 +277,7 @@ const CheckoutButton = ({ cart, totalHarga, navigate }) => {
         {isProcessing ? (
           <div className="flex items-center space-x-3">
             <div className="w-5 h-5 border-[3px] border-white border-t-transparent rounded-full animate-spin"></div>
-            <div className="flex items-center space-x-1">
-              <span>proses pembayaran</span>
-            </div>
+            <span>Proses Pembayaran</span>
           </div>
         ) : (
           <span>Lanjutkan Pembayaran</span>

@@ -124,7 +124,6 @@ export default function CartPage() {
       return;
     }
 
-    // Update state setelah berhasil menghapus
     setCart((prevCart) =>
       prevCart.filter((item) => item.coffee_id !== coffee_id)
     );
@@ -171,7 +170,7 @@ export default function CartPage() {
       </Helmet>
 
       <div className="p-4 sm:p-6 flex-grow max-w-6xl mx-auto mt-8 sm:mt-12">
-        <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <div className="flex items-center mt-9 justify-between mb-4 sm:mb-6">
           <button
             onClick={() => navigate("/product")}
             className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 shadow-sm text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
